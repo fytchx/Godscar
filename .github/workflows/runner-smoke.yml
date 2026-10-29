@@ -1,0 +1,19 @@
+name: GitHub Runner Smoke Test
+
+on:
+  push:
+    paths:
+      - .github/workflows/runner-smoke.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-runner:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Confirm hosted runner
+        run: |
+          echo "GitHub-hosted runner started"
+          uname -a
