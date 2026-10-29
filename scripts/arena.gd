@@ -76,6 +76,13 @@ var last_tap_at: Vector2 = Vector2(-999.0, -999.0)
 var rng := RandomNumberGenerator.new()
 var font: Font
 var settings := ConfigFile.new()
+var perf_elapsed: float = 0.0
+var perf_frames: int = 0
+var perf_fps: int = 0
+var perf_worst_ms: float = 0.0
+var perf_window_worst_ms: float = 0.0
+var perf_hitches: int = 0
+var perf_window_hitches: int = 0
 
 
 func _ready() -> void:
@@ -123,6 +130,27 @@ func _set_class(next_class: int, next_spec: int) -> void:
     touch_id = -1
     joystick_knob = Vector2.ZERO
     last_tap_ms = -9999
+
+
+
+func _process(delta: float) -> void:
+    # Lightweight on-device measurements, only included in debug APKs.
+    # Captures real rendered frames, not the fixed 60 Hz physics tick.
+    if not OS.is_debug_build():
+        return
+    perf_elapsed += delta
+    perf_frames += 1
+    perf_window_worst_ms = maxf(perf_window_worst_ms, delta * 1000.0)
+    if delta > (1.0 / 30.0):
+        perf_window_hitches += 1
+    if perf_elapsed >= 1.0:
+        perf_fps = roundi(float(perf_frames) / perf_elapsed)
+        perf_worst_ms = perf_window_worst_ms
+        perf_hitches = perf_window_hitches
+        perf_elapsed = 0.0
+        perf_frames = 0
+        perf_window_worst_ms = 0.0
+        perf_window_hitches = 0
 
 
 func _physics_process(delta: float) -> void:
@@ -698,6 +726,10 @@ func _draw_hud(s: Vector2) -> void:
     _draw_text("FLOAT" if floating_joystick else "FIXED", Vector2(s.x - 98, 34), 19)
     _draw_text("JOYSTICK", Vector2(s.x - 99, 55), 13, C_MUTED)
     _draw_text("KILLS %d   DEATHS %d" % [kills, deaths], Vector2(17, 105), 15, C_TEXT)
+    # Display live diagnostic metrics on development/debug builds only.
+    if OS.is_debug_build():
+        var perf_color: Color = Color("8bd0a0") if perf_fps >= 55 else Color("e5b86d") if perf_fps >= 30 else Color("eb7a79")
+        _draw_text("FPS %d  WORST %.0f ms  HITCHES %d" % [perf_fps, perf_worst_ms, perf_hitches], Vector2(17, 153), 13, perf_color)
     if class_index == 0 and passive_timer > 0:
         _draw_text("BLOODRUSH ACTIVE", Vector2(17, 129), 15, C_RAGE)
     if respawn_notice > 0.0:
