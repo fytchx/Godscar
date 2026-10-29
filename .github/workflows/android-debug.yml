@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   android-debug:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     container:
       image: barichello/godot-ci:4.7.2
     steps:
@@ -40,7 +40,7 @@ jobs:
                   rel.write_bytes(archive.read(item))
           path.unlink()
           PY
-            echo "Imported Godscar 0.3 source archive."
+            echo "Imported Godscar 0.3 source archive on public runner."
           fi
           if [[ -f project.godot && -f scripts/arena.gd ]]; then
             echo "ready=true" >> "$GITHUB_OUTPUT"
