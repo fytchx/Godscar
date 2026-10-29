@@ -122,24 +122,17 @@ jobs:
           set -euo pipefail
           cd "$GITHUB_WORKSPACE"
           git config --global --add safe.directory "$GITHUB_WORKSPACE"
-          git config --global user.name "godscar-build-bot"
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --global user.name godscar-build-bot
+          git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
           python3 - <<'PY'
-          import re
           from pathlib import Path
-          path = Path("export_presets.cfg")
-          contents = path.read_text()
-          contents = re.sub(r"^version/code=\d+", "version/code=3", contents, flags=re.MULTILINE)
-          contents = re.sub(r'^version/name=.*
-          if ! git diff --cached --quiet; then
-            git commit -m "Bootstrap editable Godscar 0.3 Godot source"
-            git push origin "HEAD:${GITHUB_REF_NAME}"
-          fi
-, 'version/name="0.3"', contents, flags=re.MULTILINE)
-          path.write_text(contents)
+          p = Path('export_presets.cfg')
+          lines = p.read_text().splitlines()
+          lines = ['version/code=3' if x.startswith('version/code=') else 'version/name="0.3"' if x.startswith('version/name=') else x for x in lines]
+          p.write_text(chr(10).join(lines) + chr(10))
           PY
           git add -A
           if ! git diff --cached --quiet; then
-            git commit -m "Bootstrap editable Godscar 0.3 Godot source"
-            git push origin "HEAD:${GITHUB_REF_NAME}"
+            git commit -m 'Bootstrap editable Godscar 0.3 source'
+            git push origin HEAD:"$GITHUB_REF_NAME"
           fi
