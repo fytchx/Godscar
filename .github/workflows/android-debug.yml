@@ -22,11 +22,11 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          if [[ -f Godscar_0_3_GitHub_Automation_Ready.zip ]]; then
+          if [[ -f Godscar_0_3_REUPLOAD.zip ]]; then
             python3 - <<'PY'
           import zipfile
           from pathlib import Path
-          path = Path("Godscar_0_3_GitHub_Automation_Ready.zip")
+          path = Path("Godscar_0_3_REUPLOAD.zip")
           with zipfile.ZipFile(path) as archive:
               for item in archive.infolist():
                   rel = Path(item.filename)
