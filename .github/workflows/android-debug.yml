@@ -85,7 +85,7 @@ jobs:
           config = project.read_text()
           setting = "textures/vram_compression/import_etc2_astc=true"
           if setting not in config:
-              config = config.replace("[rendering]\\n", "[rendering]\\n" + setting + "\\n", 1)
+              config = config.replace("[rendering]", "[rendering]\n" + setting, 1)
               project.write_text(config)
           PY
 
