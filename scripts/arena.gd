@@ -136,8 +136,7 @@ func _set_class(next_class: int, next_spec: int) -> void:
 func _process(delta: float) -> void:
     # Lightweight on-device measurements, only included in debug APKs.
     # Captures real rendered frames, not the fixed 60 Hz physics tick.
-    if not OS.is_debug_build():
-        return
+    # Diagnostic overlay is enabled for every dev APK, independent of signing.
     perf_elapsed += delta
     perf_frames += 1
     perf_window_worst_ms = maxf(perf_window_worst_ms, delta * 1000.0)
@@ -726,10 +725,14 @@ func _draw_hud(s: Vector2) -> void:
     _draw_text("FLOAT" if floating_joystick else "FIXED", Vector2(s.x - 98, 34), 19)
     _draw_text("JOYSTICK", Vector2(s.x - 99, 55), 13, C_MUTED)
     _draw_text("KILLS %d   DEATHS %d" % [kills, deaths], Vector2(17, 105), 15, C_TEXT)
-    # Display live diagnostic metrics on development/debug builds only.
-    if OS.is_debug_build():
-        var perf_color: Color = Color("8bd0a0") if perf_fps >= 55 else Color("e5b86d") if perf_fps >= 30 else Color("eb7a79")
-        _draw_text("FPS %d  WORST %.0f ms  HITCHES %d" % [perf_fps, perf_worst_ms, perf_hitches], Vector2(17, 153), 13, perf_color)
+    # Visible on the dev branch only. Leave the main branch UI untouched.
+    var perf_color: Color = Color("8bd0a0") if perf_fps >= 55 else Color("e5b86d") if perf_fps >= 30 else Color("eb7a79")
+    var perf_box: Rect2 = Rect2(s.x - 233.0, 88.0, 223.0, 67.0)
+    draw_rect(perf_box, Color("0a1119", 0.96))
+    draw_rect(perf_box, Color("6d7e8b"), false, 1.0)
+    _draw_text("DEV / PERFORMANCE", perf_box.position + Vector2(10.0, 16.0), 13, C_GOLD)
+    _draw_text("FPS %d   ENEMIES %d" % [perf_fps, enemies.size()], perf_box.position + Vector2(10.0, 36.0), 14, perf_color)
+    _draw_text("SLOW %d   WORST %.0fms" % [perf_hitches, perf_worst_ms], perf_box.position + Vector2(10.0, 55.0), 12, C_TEXT)
     if class_index == 0 and passive_timer > 0:
         _draw_text("BLOODRUSH ACTIVE", Vector2(17, 129), 15, C_RAGE)
     if respawn_notice > 0.0:
