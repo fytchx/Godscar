@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   android-debug:
@@ -24,38 +24,16 @@ jobs:
           apt-get update -qq
           DEBIAN_FRONTEND=noninteractive apt-get install -y -qq python3
 
-      - name: Import initial Godscar 0.3 source if archive exists
+      - name: Validate Godot project files
         id: source
         shell: bash
         run: |
           set -euo pipefail
-          if [[ -f Godscar_0_3_REUPLOAD.zip ]]; then
-            python3 - <<'PY'
-          import zipfile
-          from pathlib import Path
-          path = Path("Godscar_0_3_REUPLOAD.zip")
-          with zipfile.ZipFile(path) as archive:
-              for item in archive.infolist():
-                  rel = Path(item.filename)
-                  if rel.is_absolute() or ".." in rel.parts:
-                      raise ValueError(f"Unsafe archive entry: {item.filename}")
-                  if item.filename == ".github/workflows/android-debug.yml":
-                      continue  # Keep the tested CI bootstrap workflow.
-                  if item.is_dir():
-                      continue
-                  rel.parent.mkdir(parents=True, exist_ok=True)
-                  rel.write_bytes(archive.read(item))
-          path.unlink()
-          PY
-            echo "Imported Godscar 0.3 source archive on public runner."
-          fi
-          if [[ -f project.godot && -f scripts/arena.gd ]]; then
-            echo "ready=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "ready=false" >> "$GITHUB_OUTPUT"
-            echo "::notice::Upload the Godscar 0.3 bootstrap ZIP to the repository root to enable builds."
-          fi
-
+          test -f project.godot
+          test -f export_presets.cfg
+          test -f scenes/arena.tscn
+          test -f scripts/arena.gd
+          echo 'ready=true' >> "$GITHUB_OUTPUT"
       - name: Configure Godot export templates
         if: steps.source.outputs.ready == 'true'
         shell: bash
@@ -109,30 +87,8 @@ jobs:
         if: steps.source.outputs.ready == 'true'
         uses: actions/upload-artifact@v4
         with:
-          name: Godscar-Android-${{ github.run_number }}
+          name: Godscar-${{ github.ref_name }}-Android-${{ github.run_number }}
           path: build/android/Godscar-debug.apk
           if-no-files-found: error
           retention-days: 30
 
-      - name: Publish editable Godot source after successful build
-        if: steps.source.outputs.ready == 'true'
-        continue-on-error: true
-        shell: bash
-        run: |
-          set -euo pipefail
-          cd "$GITHUB_WORKSPACE"
-          git config --global --add safe.directory "$GITHUB_WORKSPACE"
-          git config --global user.name godscar-build-bot
-          git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          python3 - <<'PY'
-          from pathlib import Path
-          p = Path('export_presets.cfg')
-          lines = p.read_text().splitlines()
-          lines = ['version/code=3' if x.startswith('version/code=') else 'version/name="0.3"' if x.startswith('version/name=') else x for x in lines]
-          p.write_text(chr(10).join(lines) + chr(10))
-          PY
-          git add -A
-          if ! git diff --cached --quiet; then
-            git commit -m 'Bootstrap editable Godscar 0.3 source'
-            git push origin HEAD:"$GITHUB_REF_NAME"
-          fi
