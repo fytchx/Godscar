@@ -83,6 +83,8 @@ var perf_worst_ms: float = 0.0
 var perf_window_worst_ms: float = 0.0
 var perf_hitches: int = 0
 var perf_window_hitches: int = 0
+var perf_mode: int = 0
+const PERF_MODES = ["FULL", "FLAT FLOOR", "LOW FX", "FLOOR + FX"]
 
 
 func _ready() -> void:
@@ -505,6 +507,15 @@ func _touch_down(p: Vector2, id: int) -> void:
             _save_settings()
         last_tap_ms = -9999
         return
+    # The top-right diagnostics panel cycles the controlled visual workload test.
+    if p.x >= s.x - 233.0 and p.x <= s.x - 10.0 and p.y >= 88.0 and p.y <= 174.0:
+        perf_mode = (perf_mode + 1) % PERF_MODES.size()
+        perf_elapsed = 0.0
+        perf_frames = 0
+        perf_window_worst_ms = 0.0
+        perf_window_hitches = 0
+        queue_redraw()
+        return
     # One dedicated ultimate button is the ONLY exclusion in the lower control half.
     if p.distance_to(_skill_center()) < 69.0:
         _cast_ultimate()
@@ -599,13 +610,17 @@ func _draw() -> void:
     _draw_world(s)
     _draw_enemies(s)
     _draw_hero()
-    _draw_damage_numbers()
+    if perf_mode != 2 and perf_mode != 3:
+        _draw_damage_numbers()
     _draw_hud(s)
     if menu_open:
         _draw_menu(s)
 
 
 func _draw_world(s: Vector2) -> void:
+    if perf_mode == 1 or perf_mode == 3:
+        draw_rect(Rect2(Vector2.ZERO, s), Color("191b25"))
+        return
     var cam: Vector2 = _center()
     var start_x: int = int(floor((hero.x - cam.x) / WORLD_TILE)) - 1
     var start_y: int = int(floor((hero.y - cam.y) / WORLD_TILE)) - 1
@@ -658,14 +673,14 @@ func _draw_hero() -> void:
     draw_rect(Rect2(p + Vector2(10, 4), Vector2(10, 24)), Color("a49b93"))
     draw_line(p + last_facing * 10.0, p + last_facing * 42.0, accent, 7.0)
     draw_circle(p, 3.0, C_GOLD)
-    if visual_timer > 0.0:
+    if visual_timer > 0.0 and perf_mode != 2 and perf_mode != 3:
         var end: Vector2 = hit_location - hero + p
         draw_line(p + last_facing * 16.0, end, Color(accent.r, accent.g, accent.b, visual_timer / 0.15), 6.0, true)
         draw_circle(end, 13.0 * visual_timer / 0.15, Color(accent.r, accent.g, accent.b, visual_timer / 0.15 * 0.45))
-    if active_timer > 0.0:
+    if active_timer > 0.0 and perf_mode != 2 and perf_mode != 3:
         var radius: float = 230.0 * (1.0 - active_timer / 0.44)
         draw_arc(p, maxf(radius, 2.0), 0.0, TAU, 64, Color(accent.r, accent.g, accent.b, active_timer / 0.44), 7.0, true)
-    if ultimate_visual_timer > 0.0:
+    if ultimate_visual_timer > 0.0 and perf_mode != 2 and perf_mode != 3:
         var fraction: float = 1.0 - ultimate_visual_timer / 0.75
         var halo: float = 22.0 + 340.0 * fraction
         draw_arc(p, halo, 0.0, TAU, 80, Color(C_GOLD.r, C_GOLD.g, C_GOLD.b, ultimate_visual_timer / 0.75), 12.0, true)
@@ -695,6 +710,12 @@ func _draw_globe(center: Vector2) -> void:
     draw_circle(center + Vector2(0.0, 4.0), 81.0, Color("03050a", 0.8))
     draw_circle(center, 76.0, Color("5f452c"))
     draw_circle(center, 70.0, Color("0c0f18"))
+    if perf_mode == 2 or perf_mode == 3:
+        draw_rect(Rect2(center + Vector2(-57.0, -21.0), Vector2(114.0 * health_fraction, 17.0)), Color("851f39"))
+        draw_rect(Rect2(center + Vector2(-57.0, 7.0), Vector2(114.0 * resource_fraction, 17.0)), accent)
+        _draw_text("HP %d" % int(hp), center + Vector2(-48.0, -26.0), 12)
+        _draw_text("%s %d" % [str(CLASSES[class_index]["resource"]), int(resource)], center + Vector2(-48.0, 4.0), 11)
+        return
     # Scanline-filled hemispheres stay INSIDE the globe rather than rectangular overflow.
     for row in range(-62, 63, 3):
         var y: float = float(row)
@@ -727,12 +748,13 @@ func _draw_hud(s: Vector2) -> void:
     _draw_text("KILLS %d   DEATHS %d" % [kills, deaths], Vector2(17, 105), 15, C_TEXT)
     # Visible on the dev branch only. Leave the main branch UI untouched.
     var perf_color: Color = Color("8bd0a0") if perf_fps >= 55 else Color("e5b86d") if perf_fps >= 30 else Color("eb7a79")
-    var perf_box: Rect2 = Rect2(s.x - 233.0, 88.0, 223.0, 67.0)
+    var perf_box: Rect2 = Rect2(s.x - 233.0, 88.0, 223.0, 86.0)
     draw_rect(perf_box, Color("0a1119", 0.96))
     draw_rect(perf_box, Color("6d7e8b"), false, 1.0)
-    _draw_text("DEV / PERFORMANCE", perf_box.position + Vector2(10.0, 16.0), 13, C_GOLD)
-    _draw_text("FPS %d   ENEMIES %d" % [perf_fps, enemies.size()], perf_box.position + Vector2(10.0, 36.0), 14, perf_color)
-    _draw_text("SLOW %d   WORST %.0fms" % [perf_hitches, perf_worst_ms], perf_box.position + Vector2(10.0, 55.0), 12, C_TEXT)
+    _draw_text("DEV PERF  [TAP TO TEST]", perf_box.position + Vector2(10.0, 16.0), 12, C_GOLD)
+    _draw_text("FPS %d   ENEMIES %d" % [perf_fps, enemies.size()], perf_box.position + Vector2(10.0, 35.0), 14, perf_color)
+    _draw_text("SLOW %d   WORST %.0fms" % [perf_hitches, perf_worst_ms], perf_box.position + Vector2(10.0, 54.0), 12, C_TEXT)
+    _draw_text("MODE: %s" % PERF_MODES[perf_mode], perf_box.position + Vector2(10.0, 73.0), 12, C_GOLD)
     if class_index == 0 and passive_timer > 0:
         _draw_text("BLOODRUSH ACTIVE", Vector2(17, 129), 15, C_RAGE)
     if respawn_notice > 0.0:
