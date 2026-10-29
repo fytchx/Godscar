@@ -1,0 +1,17 @@
+# Godot cache / generated files
+.godot/
+.import/
+.export/
+.exported/
+
+# Local builds and credentials
+build/
+*.apk
+*.aab
+*.keystore
+*.jks
+android/build/
+
+# Desktop/editor files
+.DS_Store
+Thumbs.db

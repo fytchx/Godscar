@@ -1,0 +1,27 @@
+; GODSCAR - Portrait ARPG combat sandbox 0.3
+config_version=5
+
+[application]
+config/name="Godscar"
+run/main_scene="res://scenes/arena.tscn"
+config/description="One thumb. Five classes. Too many demons."
+config/icon="res://assets/icon.png"
+config/features=PackedStringArray("4.7", "GL Compatibility")
+
+[display]
+window/size/viewport_width=540
+window/size/viewport_height=1080
+window/handheld/orientation=1
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+
+[rendering]
+textures/vram_compression/import_etc2_astc=true
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
+textures/default_filters/use_nearest_mipmap_filter=false
+textures/canvas_textures/default_texture_filter=0
+
+[physics]
+common/physics_ticks_per_second=60
+
