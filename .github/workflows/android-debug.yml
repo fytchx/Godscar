@@ -56,19 +56,6 @@ jobs:
             echo "::notice::Upload the Godscar 0.3 bootstrap ZIP to the repository root to enable builds."
           fi
 
-      - name: Commit extracted editable project source
-        if: steps.source.outputs.ready == 'true'
-        shell: bash
-        run: |
-          set -euo pipefail
-          git config user.name "godscar-build-bot"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A
-          if ! git diff --cached --quiet; then
-            git commit -m "Bootstrap editable Godscar 0.3 Godot source"
-            git push origin "HEAD:${GITHUB_REF_NAME}"
-          fi
-
       - name: Configure Godot export templates
         if: steps.source.outputs.ready == 'true'
         shell: bash
@@ -78,7 +65,7 @@ jobs:
             mkdir -p "$HOME/.local/share/godot/export_templates/4.7.2.stable"
             cp -a /root/.local/share/godot/export_templates/4.7.2.stable/. "$HOME/.local/share/godot/export_templates/4.7.2.stable/"
             mkdir -p "$HOME/.config/godot"
-            cp -a /root/.config/godot/. "$HOME/.config/godot/"
+            if [[ -d /root/.config/godot ]]; then cp -a /root/.config/godot/. "$HOME/.config/godot/"; fi
           fi
           godot --version
 
@@ -120,3 +107,20 @@ jobs:
           path: build/android/Godscar-debug.apk
           if-no-files-found: error
           retention-days: 30
+
+      - name: Publish editable Godot source after successful build
+        if: steps.source.outputs.ready == 'true'
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$GITHUB_WORKSPACE"
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          git config --global user.name "godscar-build-bot"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -- export_presets.cfg
+          git add -A
+          if ! git diff --cached --quiet; then
+            git commit -m "Bootstrap editable Godscar 0.3 Godot source"
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+          fi
