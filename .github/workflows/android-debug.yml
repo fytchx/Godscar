@@ -1,0 +1,115 @@
+name: Godscar Android Debug APK
+
+on:
+  push:
+    branches: [main, dev]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  android-debug:
+    runs-on: ubuntu-24.04
+    container:
+      image: barichello/godot-ci:4.7.2
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Import initial Godscar 0.3 source if archive exists
+        id: source
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ -f Godscar_0_3_GitHub_Automation_Ready.zip ]]; then
+            python3 - <<'PY'
+          import zipfile
+          from pathlib import Path
+          path = Path("Godscar_0_3_GitHub_Automation_Ready.zip")
+          with zipfile.ZipFile(path) as archive:
+              for item in archive.infolist():
+                  rel = Path(item.filename)
+                  if rel.is_absolute() or ".." in rel.parts:
+                      raise ValueError(f"Unsafe archive entry: {item.filename}")
+                  if item.filename == ".github/workflows/android-debug.yml":
+                      continue  # Keep the tested CI bootstrap workflow.
+                  if item.is_dir():
+                      continue
+                  rel.parent.mkdir(parents=True, exist_ok=True)
+                  rel.write_bytes(archive.read(item))
+          path.unlink()
+          PY
+            echo "Imported Godscar 0.3 source archive."
+          fi
+          if [[ -f project.godot && -f scripts/arena.gd ]]; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::Upload the Godscar 0.3 bootstrap ZIP to the repository root to enable builds."
+          fi
+
+      - name: Commit extracted editable project source
+        if: steps.source.outputs.ready == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "godscar-build-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if ! git diff --cached --quiet; then
+            git commit -m "Bootstrap editable Godscar 0.3 Godot source"
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+          fi
+
+      - name: Configure Godot export templates
+        if: steps.source.outputs.ready == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ "$HOME" != "/root" ]]; then
+            mkdir -p "$HOME/.local/share/godot/export_templates/4.7.2.stable"
+            cp -a /root/.local/share/godot/export_templates/4.7.2.stable/. "$HOME/.local/share/godot/export_templates/4.7.2.stable/"
+            mkdir -p "$HOME/.config/godot"
+            cp -a /root/.config/godot/. "$HOME/.config/godot/"
+          fi
+          godot --version
+
+      - name: Version APK for this build
+        if: steps.source.outputs.ready == 'true'
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import os
+          from pathlib import Path
+          p = Path("export_presets.cfg")
+          s = p.read_text()
+          s = s.replace('version/code=3', 'version/code=' + str(1000 + int(os.environ["GITHUB_RUN_NUMBER"])))
+          s = s.replace('version/name="0.3"', 'version/name="0.3-ci.' + os.environ["GITHUB_RUN_NUMBER"] + '"')
+          p.write_text(s)
+          PY
+
+      - name: Import resources and check GDScript
+        if: steps.source.outputs.ready == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          godot --headless --path . --editor --import --quit
+
+      - name: Export debug APK
+        if: steps.source.outputs.ready == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build/android
+          godot --headless --path . --export-debug "Android" "$PWD/build/android/Godscar-debug.apk"
+          test -s build/android/Godscar-debug.apk
+
+      - name: Upload installable APK artifact
+        if: steps.source.outputs.ready == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: Godscar-Android-${{ github.run_number }}
+          path: build/android/Godscar-debug.apk
+          if-no-files-found: error
+          retention-days: 30
