@@ -25,6 +25,29 @@ var by_mode: Dictionary = {}
 var events: Array[String] = []
 var discarded_events: int = 0
 var last_state: String = ""
+# Lightweight CPU callback measurements. These do not measure GPU render time.
+var sim_total_us: int = 0
+var sim_count: int = 0
+var sim_peak_us: int = 0
+var draw_total_us: int = 0
+var draw_count: int = 0
+var draw_peak_us: int = 0
+var recent_sim_peak_us: int = 0
+var recent_draw_peak_us: int = 0
+var flush_total_us: int = 0
+var flush_peak_us: int = 0
+var flush_count: int = 0
+var last_spike_at: float = -1000.0
+# Rolling five-second windows, capped at 60 records (five minutes).
+var timeline: Array[String] = []
+var window_fps_sum: int = 0
+var window_fps_samples: int = 0
+var window_fps_low: int = 999
+var window_slow: int = 0
+var window_enemies: int = 0
+var window_frame_worst_ms: float = 0.0
+var window_sim_peak_us: int = 0
+var window_draw_peak_us: int = 0
 
 
 func begin() -> void:
@@ -55,6 +78,27 @@ func _clear() -> void:
     events.clear()
     discarded_events = 0
     last_state = ""
+    sim_total_us = 0
+    sim_count = 0
+    sim_peak_us = 0
+    draw_total_us = 0
+    draw_count = 0
+    draw_peak_us = 0
+    recent_sim_peak_us = 0
+    recent_draw_peak_us = 0
+    flush_total_us = 0
+    flush_peak_us = 0
+    flush_count = 0
+    last_spike_at = -1000.0
+    timeline.clear()
+    window_fps_sum = 0
+    window_fps_samples = 0
+    window_fps_low = 999
+    window_slow = 0
+    window_enemies = 0
+    window_frame_worst_ms = 0.0
+    window_sim_peak_us = 0
+    window_draw_peak_us = 0
 
 
 func start_new(state: String) -> void:
@@ -83,6 +127,19 @@ func event(kind: String, detail: String = "") -> void:
         discarded_events += 1
 
 
+func sample_processing(sim_us: int, sim_ticks: int, sim_worst_us: int, render_us: int, render_frames: int, render_worst_us: int) -> void:
+    sim_total_us += sim_us
+    sim_count += sim_ticks
+    sim_peak_us = maxi(sim_peak_us, sim_worst_us)
+    draw_total_us += render_us
+    draw_count += render_frames
+    draw_peak_us = maxi(draw_peak_us, render_worst_us)
+    recent_sim_peak_us = sim_worst_us
+    recent_draw_peak_us = render_worst_us
+    window_sim_peak_us = maxi(window_sim_peak_us, sim_worst_us)
+    window_draw_peak_us = maxi(window_draw_peak_us, render_worst_us)
+
+
 func sample(fps: int, slow_frames: int, frame_ms: float, enemy_count: int, mode: String) -> void:
     total_samples += 1
     fps_sum += fps
@@ -91,6 +148,27 @@ func sample(fps: int, slow_frames: int, frame_ms: float, enemy_count: int, mode:
     worst_ms = maxf(worst_ms, frame_ms)
     total_slow_frames += slow_frames
     peak_enemies = maxi(peak_enemies, enemy_count)
+    window_fps_sum += fps
+    window_fps_samples += 1
+    window_fps_low = mini(window_fps_low, fps)
+    window_slow += slow_frames
+    window_enemies = maxi(window_enemies, enemy_count)
+    window_frame_worst_ms = maxf(window_frame_worst_ms, frame_ms)
+    if frame_ms >= 80.0 and elapsed - last_spike_at >= 5.0:
+        event("FRAME_SPIKE", "%.1f ms; enemies=%d; sim peak=%.1fms; draw submit peak=%.1fms" % [frame_ms, enemy_count, float(recent_sim_peak_us) / 1000.0, float(recent_draw_peak_us) / 1000.0])
+        last_spike_at = elapsed
+    if window_fps_samples >= 5:
+        timeline.append("%ds: avg=%.1f min=%d slow=%d worst=%.1fms enemies<=%d sim=%.1fms draw_submit=%.1fms" % [int(elapsed), float(window_fps_sum) / float(window_fps_samples), window_fps_low, window_slow, window_frame_worst_ms, window_enemies, float(window_sim_peak_us) / 1000.0, float(window_draw_peak_us) / 1000.0])
+        if timeline.size() > 60:
+            timeline.remove_at(0)
+        window_fps_sum = 0
+        window_fps_samples = 0
+        window_fps_low = 999
+        window_slow = 0
+        window_enemies = 0
+        window_frame_worst_ms = 0.0
+        window_sim_peak_us = 0
+        window_draw_peak_us = 0
 
     var row: Dictionary = by_mode.get(mode, {"samples": 0, "sum_fps": 0, "min_fps": 999, "max_enemies": 0, "slow": 0})
     row["samples"] = int(row["samples"]) + 1
@@ -103,7 +181,7 @@ func sample(fps: int, slow_frames: int, frame_ms: float, enemy_count: int, mode:
     if fps < 25:
         slow_streak += 1
         if slow_streak >= 3 and not low_fps_warning_active:
-            event("PERF_DIP", "under 25 FPS for 3+ seconds; enemies=%d; mode=%s" % [enemy_count, mode])
+            event("PERF_DIP", "under 25 FPS for 3+ seconds; enemies=%d; mode=%s; sim peak=%.1fms; draw submit peak=%.1fms" % [enemy_count, mode, float(recent_sim_peak_us) / 1000.0, float(recent_draw_peak_us) / 1000.0])
             low_fps_warning_active = true
     else:
         slow_streak = 0
@@ -113,7 +191,12 @@ func sample(fps: int, slow_frames: int, frame_ms: float, enemy_count: int, mode:
 
 func save(state: String) -> void:
     last_state = state
+    var started_us: int = Time.get_ticks_usec()
     _write(CURRENT_PATH, report(state))
+    var flush_us: int = Time.get_ticks_usec() - started_us
+    flush_count += 1
+    flush_total_us += flush_us
+    flush_peak_us = maxi(flush_peak_us, flush_us)
 
 
 func has_previous() -> bool:
@@ -148,6 +231,13 @@ func report(state: String) -> String:
     lines.append("FPS avg/min/max: %.1f / %d / %d" % [avg_fps, 0 if total_samples == 0 else fps_low, fps_high])
     lines.append("Worst frame: %.1f ms | Frames >33ms: %d" % [worst_ms, total_slow_frames])
     lines.append("Max enemies: %d" % peak_enemies)
+    lines.append("CPU callback time (not GPU): simulation avg=%.2fms peak=%.2fms (%d ticks); draw submit avg=%.2fms peak=%.2fms (%d draws)" % [float(sim_total_us) / float(maxi(1, sim_count)) / 1000.0, float(sim_peak_us) / 1000.0, sim_count, float(draw_total_us) / float(maxi(1, draw_count)) / 1000.0, float(draw_peak_us) / 1000.0, draw_count])
+    lines.append("Log file saves: %d; avg=%.2fms peak=%.2fms" % [flush_count, float(flush_total_us) / float(maxi(1, flush_count)) / 1000.0, float(flush_peak_us) / 1000.0])
+    lines.append("5-SECOND PERFORMANCE WINDOWS (recent):")
+    for row_text in timeline:
+        lines.append("  " + row_text)
+    if window_fps_samples > 0:
+        lines.append("  [partial] avg=%.1f min=%d slow=%d worst=%.1fms" % [float(window_fps_sum) / float(window_fps_samples), window_fps_low, window_slow, window_frame_worst_ms])
     lines.append("MODE COMPARISON:")
     for mode in by_mode.keys():
         var row: Dictionary = by_mode[mode]
