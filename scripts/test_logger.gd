@@ -142,7 +142,7 @@ func report(state: String) -> String:
     var avg_fps: float = float(fps_sum) / float(maxi(total_samples, 1))
     var lines: PackedStringArray = PackedStringArray()
     lines.append("=== GODSCAR TEST LOG ===")
-    lines.append("Build: 0.3-dev-logging | Engine: %s | OS: %s" % [Engine.get_version_info().get("string", "?"), OS.get_name()])
+    lines.append("Build: %s | Engine: %s | OS: %s" % [str(ProjectSettings.get_setting("application/config/build_label", "local-development")), Engine.get_version_info().get("string", "?"), OS.get_name()])
     lines.append("Started UTC: %s" % started_utc)
     lines.append("Active seconds: %.1f | FPS samples: %d" % [elapsed, total_samples])
     lines.append("FPS avg/min/max: %.1f / %d / %d" % [avg_fps, 0 if total_samples == 0 else fps_low, fps_high])
