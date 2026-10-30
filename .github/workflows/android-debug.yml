@@ -84,11 +84,12 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          godot --headless --path . --quit-after 120 2>&1 | tee /tmp/godscar-smoke.log
-          if grep -E 'SCRIPT ERROR|Parse Error|Invalid call' /tmp/godscar-smoke.log; then
+          godot --headless --path . --quit-after 150 -- --slice-smoke 2>&1 | tee /tmp/godscar-smoke.log
+          if grep -E 'SCRIPT ERROR|Parse Error|Invalid call|Assertion failed' /tmp/godscar-smoke.log; then
             echo "::error::Godot gameplay reported a script failure."
             exit 1
           fi
+          grep -q 'GODSCAR_SLICE_SMOKE_OK' /tmp/godscar-smoke.log
 
       - name: Export debug APK
         if: steps.source.outputs.ready == 'true'
