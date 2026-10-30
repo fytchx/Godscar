@@ -99,6 +99,50 @@ func _ready() -> void:
     class_select = true
     _move_camera()
     queue_redraw()
+    if "--slice-smoke" in OS.get_cmdline_user_args():
+        call_deferred("_slice_smoke_test")
+
+
+func _slice_smoke_test() -> void:
+    # CI-only exercise of the entire first chapter. No Android player sees this.
+    _set_class(0)
+    class_select = false
+    hero = NPCS[0]["pos"]
+    _talk()
+    assert(dialogue and dialogue_next == 1, "Mira dialogue failed")
+    _dialogue_close()
+    assert(quest_stage == 1 and enemies.size() == 4, "First encounter failed")
+    _blast(Vector2(850, 1000), 1000.0, 9999.0)
+    assert(quest_stage == 2, "Blightling quest failed")
+    hero = NPCS[1]["pos"]
+    _talk()
+    _dialogue_close()
+    assert(quest_stage == 3, "Captain encounter failed")
+    _blast(Vector2(1850, 930), 1000.0, 9999.0)
+    assert(quest_stage == 4, "Hexer quest failed")
+    hero = NPCS[2]["pos"]
+    _talk()
+    _dialogue_close()
+    assert(quest_stage == 5, "Sister dialogue or boss spawn failed")
+    _blast(Vector2(2300, 704), 250.0, 9999.0)
+    assert(quest_stage == 6, "Bellkeeper fight resolution failed")
+    hero = NPCS[1]["pos"]
+    _talk()
+    _dialogue_close()
+    assert(quest_stage == 7, "Chapter completion failed")
+    _set_class(1)
+    class_select = false
+    _stage(1)
+    hero = Vector2(800, 1000)
+    _cast(0)
+    assert(skills_cd[0] > 0.0, "Sorcerer attack failed")
+    _cast(1)
+    assert(skills_cd[1] > 0.0, "Sorcerer blink failed")
+    invincible = 0.0
+    _hurt(15.0, "SMOKE")
+    assert(hp < max_hp, "Incoming damage test failed")
+    queue_redraw()
+    print("GODSCAR_SLICE_SMOKE_OK")
 
 
 func _set_class(value: int) -> void:
