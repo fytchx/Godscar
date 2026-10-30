@@ -33,6 +33,9 @@ const SPECS = [
 var hero: Vector2 = Vector2.ZERO
 var move_direction: Vector2 = Vector2.ZERO
 var last_facing: Vector2 = Vector2.RIGHT
+# Auto-run only holds a fixed player-selected heading; no steering, pathfinding, or auto-dodging.
+var auto_run_enabled: bool = false
+var auto_run_direction: Vector2 = Vector2.RIGHT
 var class_index: int = 0
 var spec_index: int = 0
 var hp: float = 120.0
@@ -135,6 +138,8 @@ func _set_class(next_class: int, next_spec: int) -> void:
     ability_notice = ""
     ability_notice_timer = 0.0
     move_direction = Vector2.ZERO
+    auto_run_enabled = false
+    auto_run_direction = last_facing
     touch_id = -1
     joystick_knob = Vector2.ZERO
     last_tap_ms = -9999
@@ -173,10 +178,17 @@ func _physics_process(delta: float) -> void:
         queue_redraw()
         return
 
-    hero += move_direction * MOVE_SPEED * delta
-    hero = hero.clamp(Vector2(-2400, -2400), Vector2(2400, 2400))
+    # The player's joystick takes precedence. On release, auto-run resumes
+    # straight along the most recent player-selected heading.
+    var velocity_dir: Vector2 = move_direction
     if move_direction.length_squared() > 0.01:
         last_facing = move_direction.normalized()
+        if auto_run_enabled:
+            auto_run_direction = last_facing
+    elif auto_run_enabled:
+        velocity_dir = auto_run_direction
+    hero += velocity_dir * MOVE_SPEED * delta
+    hero = hero.clamp(Vector2(-2400, -2400), Vector2(2400, 2400))
 
     attack_timer = maxf(0.0, attack_timer - delta)
     passive_timer = maxf(0.0, passive_timer - delta)
@@ -386,6 +398,8 @@ func _take_damage(amount: float) -> void:
         deaths += 1
         hp = max_hp
         resource = 50.0
+        auto_run_enabled = false
+        move_direction = Vector2.ZERO
         hero = Vector2.ZERO
         enemies.clear()
         damage_numbers.clear()
@@ -478,6 +492,21 @@ func _skill_center() -> Vector2:
     return Vector2(s.x - 95.0, s.y - 91.0)
 
 
+func _auto_run_center() -> Vector2:
+    var s: Vector2 = get_viewport_rect().size
+    return Vector2(58.0, s.y - 307.0)
+
+
+func _toggle_auto_run() -> void:
+    auto_run_enabled = not auto_run_enabled
+    if auto_run_enabled:
+        # If pressed while walking, lock that direction; otherwise reuse
+        # the last direction the player actually faced.
+        auto_run_direction = move_direction.normalized() if move_direction.length_squared() > 0.01 else last_facing.normalized()
+    last_tap_ms = -9999
+    queue_redraw()
+
+
 func _input(event: InputEvent) -> void:
     if event is InputEventScreenTouch:
         if event.pressed:
@@ -511,6 +540,7 @@ func _touch_down(p: Vector2, id: int) -> void:
     if p.y < 86.0:
         if p.x < s.x * 0.69:
             menu_open = true
+            auto_run_enabled = false
             move_direction = Vector2.ZERO
             touch_id = -1
         else:
@@ -537,7 +567,11 @@ func _touch_down(p: Vector2, id: int) -> void:
         perf_window_hitches = 0
         queue_redraw()
         return
-    # One dedicated ultimate button is the ONLY exclusion in the lower control half.
+    # Player-triggered straight-line movement lock. Does NOT drive or steer.
+    if p.distance_to(_auto_run_center()) < 37.0:
+        _toggle_auto_run()
+        return
+    # Dedicated ability controls remain separate from joystick input.
     if p.distance_to(_skill_center()) < 69.0:
         _cast_ultimate()
         last_tap_ms = -9999
@@ -809,6 +843,13 @@ func _draw_hud(s: Vector2) -> void:
         _draw_text("FLOAT", jc + Vector2(-24, 5), 13, C_MUTED)
     _draw_text("MOVE ANYWHERE", Vector2(20, s.y - 10), 12, C_MUTED)
 
+    # Compact manual auto-run toggle; always visible outside the HUD panel.
+    var run_center: Vector2 = _auto_run_center()
+    draw_circle(run_center, 33.0, Color("3c3329") if auto_run_enabled else Color("212b36"))
+    draw_arc(run_center, 34.0, 0.0, TAU, 44, C_GOLD if auto_run_enabled else Color("68798b"), 2.5)
+    _draw_text("STOP" if auto_run_enabled else "RUN", run_center + Vector2(-20.0 if auto_run_enabled else -17.0, 5.0), 14, C_GOLD if auto_run_enabled else C_TEXT)
+    if auto_run_enabled:
+        draw_line(run_center + Vector2(0.0, -14.0), run_center + Vector2(0.0, -23.0), C_GOLD, 2.0)
     var ability: Vector2 = _skill_center()
     var ult_ready: bool = ultimate_cooldown <= 0.0
     draw_circle(ability, 57.0, Color("3b2c34") if ult_ready else Color("292934"))
