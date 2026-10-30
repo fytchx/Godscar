@@ -57,6 +57,13 @@ var ultimate_visual_timer: float = 0.0
 var ability_notice: String = ""
 var ability_notice_timer: float = 0.0
 var respawn_notice: float = 0.0
+var hurt_flash: float = 0.0
+var perf_sim_total_us: int = 0
+var perf_sim_count: int = 0
+var perf_sim_peak_us: int = 0
+var perf_draw_total_us: int = 0
+var perf_draw_count: int = 0
+var perf_draw_peak_us: int = 0
 var hit_location: Vector2 = Vector2.ZERO
 var enemies: Array[Dictionary] = []
 var damage_numbers: Array[Dictionary] = []
@@ -181,7 +188,14 @@ func _process(delta: float) -> void:
         perf_worst_ms = perf_window_worst_ms
         perf_hitches = perf_window_hitches
         if not menu_open and not log_panel_open:
+            test_log.sample_processing(perf_sim_total_us, perf_sim_count, perf_sim_peak_us, perf_draw_total_us, perf_draw_count, perf_draw_peak_us)
             test_log.sample(perf_fps, perf_hitches, perf_worst_ms, enemies.size(), PERF_MODES[perf_mode])
+        perf_sim_total_us = 0
+        perf_sim_count = 0
+        perf_sim_peak_us = 0
+        perf_draw_total_us = 0
+        perf_draw_count = 0
+        perf_draw_peak_us = 0
         if perf_run_elapsed <= 30.0:
             perf_first_sum += perf_fps
             perf_first_samples += 1
@@ -198,6 +212,7 @@ func _physics_process(delta: float) -> void:
     if menu_open or log_panel_open:
         queue_redraw()
         return
+    var sim_started_us: int = Time.get_ticks_usec()
 
     # The player's joystick takes precedence. On release, auto-run resumes
     # straight along the most recent player-selected heading.
@@ -220,6 +235,7 @@ func _physics_process(delta: float) -> void:
     ultimate_visual_timer = maxf(0.0, ultimate_visual_timer - delta)
     ability_notice_timer = maxf(0.0, ability_notice_timer - delta)
     respawn_notice = maxf(0.0, respawn_notice - delta)
+    hurt_flash = maxf(0.0, hurt_flash - delta)
     var regen: float = 1.2 if class_index == 0 else 4.0
     if class_index == 2:
         regen = 5.0 if spec_index != 2 else 8.0
@@ -237,21 +253,41 @@ func _physics_process(delta: float) -> void:
         var diff: Vector2 = hero - ep
         var dist: float = diff.length()
         var speed: float = float(e["speed"])
+        var caster: bool = bool(e["caster"])
         if float(e["slow"]) > 0.0:
             e["slow"] = maxf(0.0, float(e["slow"]) - delta)
             speed *= 0.48
         if float(e["windup"]) > 0.0:
             e["windup"] = maxf(0.0, float(e["windup"]) - delta)
             if float(e["windup"]) == 0.0:
-                if hero.distance_to(e["pos"]) < 57.0:
-                    _take_damage(float(e["damage"]))
-                e["attack_cd"] = 1.25
+                if caster:
+                    # The aim is frozen when casting begins. Walk out of the circle to dodge.
+                    var strike_point: Vector2 = e["aim"]
+                    var hit: bool = hero.distance_to(strike_point) < 77.0
+                    test_log.enemy_attack("HEX", hit)
+                    if hit:
+                        _take_damage(float(e["damage"]), "HEX")
+                    e["attack_cd"] = 1.9
+                else:
+                    var hit: bool = hero.distance_to(e["pos"]) < 62.0
+                    test_log.enemy_attack("MELEE", hit)
+                    if hit:
+                        _take_damage(float(e["damage"]), "MELEE")
+                    e["attack_cd"] = 1.25
         else:
-            if dist > 41.0:
-                e["pos"] = ep + diff.normalized() * speed * delta
             e["attack_cd"] = float(e["attack_cd"]) - delta
-            if dist < 57.0 and float(e["attack_cd"]) <= 0.0:
-                e["windup"] = 0.39 if bool(e["brute"]) else 0.28
+            if caster:
+                # Ranged enemies hold position at medium range instead of charging into melee.
+                if dist > 315.0:
+                    e["pos"] = ep + diff.normalized() * speed * delta
+                if dist < 370.0 and float(e["attack_cd"]) <= 0.0:
+                    e["aim"] = hero
+                    e["windup"] = 0.95
+            else:
+                if dist > 41.0:
+                    e["pos"] = ep + diff.normalized() * speed * delta
+                if dist < 62.0 and float(e["attack_cd"]) <= 0.0:
+                    e["windup"] = 0.44 if bool(e["brute"]) else 0.35
 
     if attack_timer <= 0.0:
         _auto_attack()
@@ -261,20 +297,29 @@ func _physics_process(delta: float) -> void:
         _spawn_enemy()
         wave_timer = 0.55
     queue_redraw()
+    var sim_used_us: int = Time.get_ticks_usec() - sim_started_us
+    perf_sim_total_us += sim_used_us
+    perf_sim_count += 1
+    perf_sim_peak_us = maxi(perf_sim_peak_us, sim_used_us)
 
 
 func _spawn_enemy() -> void:
     var angle: float = rng.randf_range(0.0, TAU)
-    var distance: float = rng.randf_range(310.0, 505.0)
-    var brute: bool = rng.randf() < 0.23
-    var health: float = 73.0 if brute else 37.0
+    # Guarantee a pair of ranged threats in the opening test wave.
+    var starter_hex: bool = kills == 0 and (enemies.size() == 2 or enemies.size() == 6)
+    var brute: bool = not starter_hex and rng.randf() < 0.23
+    var caster: bool = starter_hex or (not brute and rng.randf() < 0.38)
+    var distance: float = rng.randf_range(265.0, 385.0) if caster else rng.randf_range(310.0, 505.0)
+    var health: float = 115.0 if brute else (63.0 if caster else 54.0)
+    health += float(level - 1) * (5.0 if brute else 3.0)
     enemies.append({
         "pos": hero + Vector2.RIGHT.rotated(angle) * distance,
         "hp": health, "max_hp": health,
-        "speed": rng.randf_range(58.0, 79.0) if brute else rng.randf_range(86.0, 110.0),
-        "damage": 11.0 if brute else 5.0,
-        "attack_cd": rng.randf_range(0.8, 1.6), "windup": 0.0,
-        "slow": 0.0, "brute": brute
+        "speed": rng.randf_range(58.0, 79.0) if brute else (75.0 if caster else rng.randf_range(86.0, 110.0)),
+        "damage": (25.0 + float(level) * 0.8) if caster else (17.0 if brute else 10.0),
+        "attack_cd": rng.randf_range(0.7, 1.3), "windup": 0.0,
+        "aim": hero,
+        "slow": 0.0, "brute": brute, "caster": caster
     })
 
 
@@ -409,13 +454,19 @@ func _update_max_hp_on_level() -> void:
     hp = max_hp
 
 
-func _take_damage(amount: float) -> void:
+func _take_damage(amount: float, source: String = "MELEE") -> void:
     if class_index == 1 and spec_index == 2:
         amount *= 0.72  # Martyr prototype: withstand hits, return damage
         _area_attack(hero, 94.0, 7.0 + level * 1.5)
     if class_index == 4 and spec_index == 1 and rng.randf() < 0.28:
+        test_log.player_evade(source)
         return  # Shadow prototype: evade
     hp = maxf(0.0, hp - amount)
+    hurt_flash = 0.38
+    damage_numbers.append({"pos": hero, "amount": -int(round(amount)), "time": 0.58, "color": Color("ff6675")})
+    if damage_numbers.size() > 35:
+        damage_numbers.remove_at(0)
+    test_log.player_damage(amount, source, hp, max_hp)
     if hp <= 0.0:
         deaths += 1
         test_log.event("DEATH", "total=%d at_level=%d; enemies=%d" % [deaths, level, enemies.size()])
@@ -724,9 +775,11 @@ func _handle_menu_touch(p: Vector2) -> void:
 
 
 func _draw() -> void:
+    var draw_started_us: int = Time.get_ticks_usec()
     var s: Vector2 = get_viewport_rect().size
     draw_rect(Rect2(Vector2.ZERO, s), C_BG)
     _draw_world(s)
+    _draw_telegraphs()
     _draw_enemies(s)
     _draw_hero()
     if perf_mode != 2 and perf_mode != 3:
@@ -736,6 +789,22 @@ func _draw() -> void:
         _draw_menu(s)
     if log_panel_open:
         _draw_log_panel(s)
+    var draw_used_us: int = Time.get_ticks_usec() - draw_started_us
+    perf_draw_total_us += draw_used_us
+    perf_draw_count += 1
+    perf_draw_peak_us = maxi(perf_draw_peak_us, draw_used_us)
+
+
+func _draw_telegraphs() -> void:
+    # Ground markers are always visible, even in LOW FX performance mode.
+    for e in enemies:
+        if not bool(e["caster"]) or float(e["windup"]) <= 0.0:
+            continue
+        var point: Vector2 = e["aim"] - hero + _center()
+        var progress: float = 1.0 - float(e["windup"]) / 0.95
+        draw_circle(point, 77.0, Color(0.64, 0.08, 0.17, 0.20))
+        draw_arc(point, 77.0, 0.0, TAU, 48, Color(1.0, 0.26, 0.32, 0.95), 3.5, true)
+        draw_arc(point, maxf(2.0, 77.0 * (1.0 - progress)), 0.0, TAU, 44, Color(1.0, 0.62, 0.34, 0.92), 3.0, true)
 
 
 func _draw_world(s: Vector2) -> void:
@@ -768,18 +837,22 @@ func _draw_enemies(s: Vector2) -> void:
         if p.x < -45 or p.x > s.x + 45 or p.y < -50 or p.y > s.y + 50:
             continue
         var brute: bool = e["brute"]
-        var half: float = 20.0 if brute else 14.0
+        var caster: bool = e["caster"]
+        var half: float = 20.0 if brute else (16.0 if caster else 14.0)
         draw_circle(p + Vector2(0.0, 17.0), half + 5.0, Color(0, 0, 0, 0.43))
-        draw_rect(Rect2(p - Vector2(half, half), Vector2(half * 2.0, half * 2.0)), Color("774650") if brute else Color("544d70"))
-        draw_rect(Rect2(p + Vector2(-half + 4.0, -half - 6.0), Vector2(half * 2 - 8, 9.0)), Color("be826d") if brute else Color("8f6aa0"))
+        draw_rect(Rect2(p - Vector2(half, half), Vector2(half * 2.0, half * 2.0)), Color("774650") if brute else (Color("6b3668") if caster else Color("544d70")))
+        draw_rect(Rect2(p + Vector2(-half + 4.0, -half - 6.0), Vector2(half * 2 - 8, 9.0)), Color("be826d") if brute else (Color("f19b9b") if caster else Color("8f6aa0")))
         draw_rect(Rect2(p + Vector2(-half + 5.0, -2.0), Vector2(5, 5)), Color("e7ac87"))
         draw_rect(Rect2(p + Vector2(half - 10.0, -2.0), Vector2(5, 5)), Color("e7ac87"))
         draw_rect(Rect2(p + Vector2(-half, half - 4), Vector2(half * 2, 5)), Color("2e2635"))
         draw_rect(Rect2(p + Vector2(-half, -half - 18), Vector2(half * 2, 5)), Color("271a25"))
         draw_rect(Rect2(p + Vector2(-half, -half - 18), Vector2(half * 2 * maxf(0.0, float(e["hp"]) / float(e["max_hp"])), 5)), C_BLOOD)
-        if float(e["windup"]) > 0.0:
-            var alpha: float = 0.35 + 0.5 * (1.0 - float(e["windup"]) / 0.39)
+        if float(e["windup"]) > 0.0 and not caster:
+            var duration: float = 0.44 if brute else 0.35
+            var alpha: float = 0.35 + 0.5 * (1.0 - float(e["windup"]) / duration)
             draw_arc(p, 35.0 if brute else 28.0, 0, TAU, 30, Color(1.0, 0.44, 0.27, alpha), 3.0)
+        if caster:
+            draw_circle(p + Vector2(0.0, -8.0), 5.0, Color("f2a2cb"))
 
 
 func _draw_hero() -> void:
@@ -794,6 +867,8 @@ func _draw_hero() -> void:
     draw_rect(Rect2(p + Vector2(10, 4), Vector2(10, 24)), Color("a49b93"))
     draw_line(p + last_facing * 10.0, p + last_facing * 42.0, accent, 7.0)
     draw_circle(p, 3.0, C_GOLD)
+    if hurt_flash > 0.0:
+        draw_arc(p, 43.0, 0.0, TAU, 52, Color(1.0, 0.23, 0.33, hurt_flash / 0.38), 6.0, true)
     if visual_timer > 0.0 and perf_mode != 2 and perf_mode != 3:
         var end: Vector2 = hit_location - hero + p
         draw_line(p + last_facing * 16.0, end, Color(accent.r, accent.g, accent.b, visual_timer / 0.15), 6.0, true)
@@ -886,6 +961,8 @@ func _draw_hud(s: Vector2) -> void:
     _draw_text("RUN %ds  TOTAL SLOW %d" % [int(perf_run_elapsed), perf_run_hitches], perf_box.position + Vector2(10.0, 125.0), 11, C_MUTED)
     if class_index == 0 and passive_timer > 0:
         _draw_text("BLOODRUSH ACTIVE", Vector2(17, 129), 15, C_RAGE)
+    if hp < max_hp * 0.35:
+        _draw_text("LOW HEALTH - MOVE!", Vector2(s.x * 0.5, 141.0), 16, Color("ff727c"), HORIZONTAL_ALIGNMENT_CENTER)
     if respawn_notice > 0.0:
         _draw_text("DEATH HAS FILED A COMPLAINT", Vector2(s.x * 0.5, s.y * 0.33), 19, C_GOLD, HORIZONTAL_ALIGNMENT_CENTER)
 
