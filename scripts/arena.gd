@@ -79,6 +79,10 @@ var last_tap_at: Vector2 = Vector2(-999.0, -999.0)
 var rng := RandomNumberGenerator.new()
 var font: Font
 var settings := ConfigFile.new()
+const TEST_LOG_SCRIPT = preload("res://scripts/test_logger.gd")
+var test_log = TEST_LOG_SCRIPT.new()
+var log_panel_open: bool = false
+var log_status: String = ""
 var perf_elapsed: float = 0.0
 var perf_frames: int = 0
 var perf_fps: int = 0
@@ -99,6 +103,7 @@ const PERF_MODES = ["FULL", "FLAT FLOOR", "LOW FX", "FLOOR + FX"]
 func _ready() -> void:
     rng.randomize()
     font = ThemeDB.fallback_font
+    test_log.begin()
     if settings.load("user://godscar_settings.cfg") == OK:
         floating_joystick = bool(settings.get_value("controls", "floating", false))
         class_index = clampi(int(settings.get_value("character", "class", 0)), 0, 4)
@@ -107,7 +112,18 @@ func _ready() -> void:
     _set_class(class_index, spec_index)
     for i in range(9):
         _spawn_enemy()
+    test_log.save(_log_state())
     queue_redraw()
+
+
+func _log_state() -> String:
+    return "class=%s/%s level=%d kills=%d deaths=%d HP=%.0f resource=%.0f enemies=%d auto_run=%s perf_mode=%s" % [CLASSES[class_index]["name"], SPECS[class_index][spec_index], level, kills, deaths, hp, resource, enemies.size(), str(auto_run_enabled), PERF_MODES[perf_mode]]
+
+
+func _notification(what: int) -> void:
+    if what == NOTIFICATION_APPLICATION_PAUSED or what == NOTIFICATION_WM_GO_BACK_REQUEST:
+        test_log.event("BACKGROUND", "App paused or back pressed")
+        test_log.save(_log_state())
 
 
 func _save_settings() -> void:
@@ -143,6 +159,7 @@ func _set_class(next_class: int, next_spec: int) -> void:
     touch_id = -1
     joystick_knob = Vector2.ZERO
     last_tap_ms = -9999
+    test_log.event("CLASS", "%s / %s" % [CLASSES[class_index]["name"], SPECS[class_index][spec_index]])
 
 
 
@@ -150,6 +167,8 @@ func _process(delta: float) -> void:
     # Lightweight on-device measurements, only included in debug APKs.
     # Captures real rendered frames, not the fixed 60 Hz physics tick.
     # Diagnostic overlay is enabled for every dev APK, independent of signing.
+    if not menu_open and not log_panel_open and test_log.tick(delta):
+        test_log.save(_log_state())
     perf_elapsed += delta
     perf_run_elapsed += delta
     perf_frames += 1
@@ -161,6 +180,8 @@ func _process(delta: float) -> void:
         perf_fps = roundi(float(perf_frames) / perf_elapsed)
         perf_worst_ms = perf_window_worst_ms
         perf_hitches = perf_window_hitches
+        if not menu_open and not log_panel_open:
+            test_log.sample(perf_fps, perf_hitches, perf_worst_ms, enemies.size(), PERF_MODES[perf_mode])
         if perf_run_elapsed <= 30.0:
             perf_first_sum += perf_fps
             perf_first_samples += 1
@@ -174,7 +195,7 @@ func _process(delta: float) -> void:
 
 
 func _physics_process(delta: float) -> void:
-    if menu_open:
+    if menu_open or log_panel_open:
         queue_redraw()
         return
 
@@ -380,6 +401,7 @@ func _defeat_enemy(index: int) -> void:
         xp -= threshold
         level += 1
         _update_max_hp_on_level()
+        test_log.event("LEVEL_UP", "level=%d total_kills=%d" % [level, kills])
 
 
 func _update_max_hp_on_level() -> void:
@@ -396,6 +418,8 @@ func _take_damage(amount: float) -> void:
     hp = maxf(0.0, hp - amount)
     if hp <= 0.0:
         deaths += 1
+        test_log.event("DEATH", "total=%d at_level=%d; enemies=%d" % [deaths, level, enemies.size()])
+        test_log.save(_log_state())
         hp = max_hp
         resource = 50.0
         auto_run_enabled = false
@@ -418,15 +442,18 @@ func _activate() -> void:
     if menu_open:
         return
     if active_cooldown > 0.0:
+        test_log.event("ACTIVE_BLOCKED", "cooldown")
         _show_ability_notice("ACTIVE RECHARGING")
         return
     if resource < 40.0:
+        test_log.event("ACTIVE_BLOCKED", "resources")
         _show_ability_notice("NOT ENOUGH " + str(CLASSES[class_index]["resource"]))
         return
     resource -= 40.0
     active_cooldown = 0.85
     active_timer = 0.44
     _show_ability_notice(str(CLASSES[class_index]["active"]))
+    test_log.event("ACTIVE_CAST", str(CLASSES[class_index]["active"]))
     match class_index:
         0:
             _area_attack(hero, 189.0 if spec_index != 2 else 255.0, 40.0 + level * 5.0)
@@ -452,11 +479,13 @@ func _cast_ultimate() -> void:
     if menu_open:
         return
     if ultimate_cooldown > 0.0:
+        test_log.event("ULT_BLOCKED", "cooldown")
         _show_ability_notice("ULT READY IN " + str(int(ceil(ultimate_cooldown))) + "s")
         return
     ultimate_cooldown = 18.0
     ultimate_visual_timer = 0.75
     _show_ability_notice(str(CLASSES[class_index]["ultimate"]))
+    test_log.event("ULT_CAST", str(CLASSES[class_index]["ultimate"]))
     match class_index:
         0: # Warrior: giant impact; restores some health.
             _area_attack(hero, 315.0, 115.0 + level * 11.0)
@@ -504,6 +533,7 @@ func _toggle_auto_run() -> void:
         # the last direction the player actually faced.
         auto_run_direction = move_direction.normalized() if move_direction.length_squared() > 0.01 else last_facing.normalized()
     last_tap_ms = -9999
+    test_log.event("AUTO_RUN", "ON" if auto_run_enabled else "OFF")
     queue_redraw()
 
 
@@ -534,8 +564,21 @@ func _is_faction_label(p: Vector2) -> bool:
 
 func _touch_down(p: Vector2, id: int) -> void:
     var s: Vector2 = get_viewport_rect().size
+    if log_panel_open:
+        _handle_log_touch(p)
+        return
     if menu_open:
         _handle_menu_touch(p)
+        return
+    # The log button lives below the main header; it never changes movement.
+    if p.x >= 16.0 and p.x <= 118.0 and p.y >= 147.0 and p.y <= 185.0:
+        log_panel_open = true
+        log_status = ""
+        move_direction = Vector2.ZERO
+        touch_id = -1
+        joystick_knob = Vector2.ZERO
+        test_log.event("LOG_OPEN")
+        test_log.save(_log_state())
         return
     if p.y < 86.0:
         if p.x < s.x * 0.69:
@@ -554,6 +597,7 @@ func _touch_down(p: Vector2, id: int) -> void:
     # The top-right diagnostics panel cycles the controlled visual workload test.
     if p.x >= s.x - 233.0 and p.x <= s.x - 10.0 and p.y >= 88.0 and p.y <= 174.0:
         perf_mode = (perf_mode + 1) % PERF_MODES.size()
+        test_log.event("GRAPHICS_MODE", PERF_MODES[perf_mode])
         # Start a fresh comparison window whenever visual load changes.
         perf_run_elapsed = 0.0
         perf_run_hitches = 0
@@ -640,6 +684,26 @@ func _touch_up(id: int, p: Vector2, canceled: bool = false) -> void:
     _activate()
 
 
+func _handle_log_touch(p: Vector2) -> void:
+    var screen: Vector2 = get_viewport_rect().size
+    var top: float = screen.y * 0.23
+    if p.x < 24.0 or p.x > screen.x - 24.0:
+        log_panel_open = false
+        return
+    if p.y >= top + 94.0 and p.y < top + 146.0:
+        var copied: bool = test_log.copy_current(_log_state())
+        log_status = "COPIED - PASTE INTO CHATGPT" if copied else "CLIPBOARD NOT AVAILABLE"
+    elif p.y >= top + 158.0 and p.y < top + 210.0:
+        var copied: bool = test_log.copy_previous()
+        log_status = "PREVIOUS LOG COPIED" if copied else "NO PREVIOUS TEST SAVED"
+    elif p.y >= top + 222.0 and p.y < top + 274.0:
+        test_log.start_new(_log_state())
+        log_status = "NEW TEST STARTED / OLD TEST SAVED"
+    elif p.y >= top + 286.0 and p.y < top + 338.0:
+        log_panel_open = false
+    queue_redraw()
+
+
 func _handle_menu_touch(p: Vector2) -> void:
     var s: Vector2 = get_viewport_rect().size
     if p.y < 141.0 or p.y > s.y - 100.0:
@@ -670,6 +734,8 @@ func _draw() -> void:
     _draw_hud(s)
     if menu_open:
         _draw_menu(s)
+    if log_panel_open:
+        _draw_log_panel(s)
 
 
 func _draw_world(s: Vector2) -> void:
@@ -801,6 +867,9 @@ func _draw_hud(s: Vector2) -> void:
     _draw_text("FLOAT" if floating_joystick else "FIXED", Vector2(s.x - 98, 34), 19)
     _draw_text("JOYSTICK", Vector2(s.x - 99, 55), 13, C_MUTED)
     _draw_text("KILLS %d   DEATHS %d" % [kills, deaths], Vector2(17, 105), 15, C_TEXT)
+    draw_rect(Rect2(16.0, 147.0, 102.0, 38.0), Color("292d3b"))
+    draw_rect(Rect2(16.0, 147.0, 102.0, 38.0), C_GOLD, false, 2.0)
+    _draw_text("TEST LOG", Vector2(24.0, 173.0), 15, C_GOLD)
     # Visible on the dev branch only. Leave the main branch UI untouched.
     var perf_color: Color = Color("8bd0a0") if perf_fps >= 55 else Color("e5b86d") if perf_fps >= 30 else Color("eb7a79")
     var perf_box: Rect2 = Rect2(s.x - 233.0, 88.0, 223.0, 129.0)
@@ -865,6 +934,22 @@ func _draw_hud(s: Vector2) -> void:
     _draw_text("RELEASE = %s    |    DOUBLE TAP = ULT" % CLASSES[class_index]["active"], Vector2(s.x * 0.5, panel_y - 15), 12, C_GOLD, HORIZONTAL_ALIGNMENT_CENTER)
     if ability_notice_timer > 0.0:
         _draw_text(ability_notice, Vector2(s.x * 0.5, panel_y - 61), 16, accent, HORIZONTAL_ALIGNMENT_CENTER)
+
+
+func _draw_log_panel(s: Vector2) -> void:
+    var top: float = s.y * 0.23
+    draw_rect(Rect2(Vector2.ZERO, s), Color("070811", 0.96))
+    draw_rect(Rect2(24.0, top, s.x - 48.0, 390.0), C_PANEL)
+    draw_rect(Rect2(24.0, top, s.x - 48.0, 390.0), C_GOLD, false, 2.0)
+    _draw_text("GODSCAR TEST LOG", Vector2(s.x * 0.5, top + 41.0), 24, C_GOLD, HORIZONTAL_ALIGNMENT_CENTER)
+    _draw_text("%ds active / %d FPS samples" % [int(test_log.elapsed), int(test_log.total_samples)], Vector2(s.x * 0.5, top + 69.0), 14, C_MUTED, HORIZONTAL_ALIGNMENT_CENTER)
+    var labels: Array[String] = ["COPY CURRENT LOG", "COPY PREVIOUS LOG", "START NEW TEST", "RESUME GAME"]
+    for i in range(labels.size()):
+        var button_y: float = top + 94.0 + float(i) * 64.0
+        draw_rect(Rect2(42.0, button_y, s.x - 84.0, 52.0), Color("353343") if i != 2 else Color("394032"))
+        draw_rect(Rect2(42.0, button_y, s.x - 84.0, 52.0), C_GOLD, false, 1.0)
+        _draw_text(labels[i], Vector2(s.x * 0.5, button_y + 32.0), 17, C_TEXT, HORIZONTAL_ALIGNMENT_CENTER)
+    _draw_text(log_status if not log_status.is_empty() else "Autosaves every 10s and on app pause.", Vector2(s.x * 0.5, top + 373.0), 13, C_GOLD, HORIZONTAL_ALIGNMENT_CENTER)
 
 
 func _draw_menu(s: Vector2) -> void:
