@@ -83,6 +83,12 @@ var perf_worst_ms: float = 0.0
 var perf_window_worst_ms: float = 0.0
 var perf_hitches: int = 0
 var perf_window_hitches: int = 0
+var perf_run_elapsed: float = 0.0
+var perf_run_hitches: int = 0
+var perf_first_sum: int = 0
+var perf_first_samples: int = 0
+var perf_later_sum: int = 0
+var perf_later_samples: int = 0
 var perf_mode: int = 0
 const PERF_MODES = ["FULL", "FLAT FLOOR", "LOW FX", "FLOOR + FX"]
 
@@ -140,14 +146,22 @@ func _process(delta: float) -> void:
     # Captures real rendered frames, not the fixed 60 Hz physics tick.
     # Diagnostic overlay is enabled for every dev APK, independent of signing.
     perf_elapsed += delta
+    perf_run_elapsed += delta
     perf_frames += 1
     perf_window_worst_ms = maxf(perf_window_worst_ms, delta * 1000.0)
     if delta > (1.0 / 30.0):
         perf_window_hitches += 1
+        perf_run_hitches += 1
     if perf_elapsed >= 1.0:
         perf_fps = roundi(float(perf_frames) / perf_elapsed)
         perf_worst_ms = perf_window_worst_ms
         perf_hitches = perf_window_hitches
+        if perf_run_elapsed <= 30.0:
+            perf_first_sum += perf_fps
+            perf_first_samples += 1
+        else:
+            perf_later_sum += perf_fps
+            perf_later_samples += 1
         perf_elapsed = 0.0
         perf_frames = 0
         perf_window_worst_ms = 0.0
@@ -510,6 +524,13 @@ func _touch_down(p: Vector2, id: int) -> void:
     # The top-right diagnostics panel cycles the controlled visual workload test.
     if p.x >= s.x - 233.0 and p.x <= s.x - 10.0 and p.y >= 88.0 and p.y <= 174.0:
         perf_mode = (perf_mode + 1) % PERF_MODES.size()
+        # Start a fresh comparison window whenever visual load changes.
+        perf_run_elapsed = 0.0
+        perf_run_hitches = 0
+        perf_first_sum = 0
+        perf_first_samples = 0
+        perf_later_sum = 0
+        perf_later_samples = 0
         perf_elapsed = 0.0
         perf_frames = 0
         perf_window_worst_ms = 0.0
@@ -748,13 +769,18 @@ func _draw_hud(s: Vector2) -> void:
     _draw_text("KILLS %d   DEATHS %d" % [kills, deaths], Vector2(17, 105), 15, C_TEXT)
     # Visible on the dev branch only. Leave the main branch UI untouched.
     var perf_color: Color = Color("8bd0a0") if perf_fps >= 55 else Color("e5b86d") if perf_fps >= 30 else Color("eb7a79")
-    var perf_box: Rect2 = Rect2(s.x - 233.0, 88.0, 223.0, 86.0)
+    var perf_box: Rect2 = Rect2(s.x - 233.0, 88.0, 223.0, 129.0)
     draw_rect(perf_box, Color("0a1119", 0.96))
     draw_rect(perf_box, Color("6d7e8b"), false, 1.0)
     _draw_text("DEV PERF  [TAP TO TEST]", perf_box.position + Vector2(10.0, 16.0), 12, C_GOLD)
     _draw_text("FPS %d   ENEMIES %d" % [perf_fps, enemies.size()], perf_box.position + Vector2(10.0, 35.0), 14, perf_color)
     _draw_text("SLOW %d   WORST %.0fms" % [perf_hitches, perf_worst_ms], perf_box.position + Vector2(10.0, 54.0), 12, C_TEXT)
     _draw_text("MODE: %s" % PERF_MODES[perf_mode], perf_box.position + Vector2(10.0, 73.0), 12, C_GOLD)
+    var first_avg: int = roundi(float(perf_first_sum) / float(maxi(1, perf_first_samples)))
+    var later_avg: int = roundi(float(perf_later_sum) / float(maxi(1, perf_later_samples)))
+    _draw_text("FIRST 30s: %d AVG FPS" % first_avg, perf_box.position + Vector2(10.0, 92.0), 12, C_TEXT)
+    _draw_text("AFTER 30s: %d AVG FPS" % later_avg, perf_box.position + Vector2(10.0, 109.0), 12, C_TEXT)
+    _draw_text("RUN %ds  TOTAL SLOW %d" % [int(perf_run_elapsed), perf_run_hitches], perf_box.position + Vector2(10.0, 125.0), 11, C_MUTED)
     if class_index == 0 and passive_timer > 0:
         _draw_text("BLOODRUSH ACTIVE", Vector2(17, 129), 15, C_RAGE)
     if respawn_notice > 0.0:
