@@ -380,7 +380,7 @@ func _auto_attack() -> void:
     if target_index < 0:
         return
     var target: Vector2 = enemies[target_index]["pos"]
-    var stationary: bool = move_direction.length_squared() < 0.01
+    var stationary: bool = move_direction.length_squared() < 0.01 and not auto_run_enabled
     var damage: float = 18.0 + float(level) * 2.0
     if stationary:
         damage *= 1.25
@@ -450,8 +450,9 @@ func _defeat_enemy(index: int) -> void:
 
 
 func _update_max_hp_on_level() -> void:
+    # Leveling adds maximum HP, but no longer magically heals every injury.
     max_hp += 9.0
-    hp = max_hp
+    hp = minf(max_hp, hp + 9.0)
 
 
 func _take_damage(amount: float, source: String = "MELEE") -> void:
