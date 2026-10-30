@@ -64,7 +64,12 @@ jobs:
           setting = "textures/vram_compression/import_etc2_astc=true"
           if setting not in config:
               config = config.replace("[rendering]", "[rendering]\n" + setting, 1)
-              project.write_text(config)
+          branch = os.environ.get("GITHUB_REF_NAME", "dev")
+          run = os.environ["GITHUB_RUN_NUMBER"]
+          sha = os.environ.get("GITHUB_SHA", "unknown")[:8]
+          label = "%s-%s-%s" % (branch, run, sha)
+          config = config.replace("[application]", "[application]\nconfig/build_label=\"" + label + '"' , 1)
+          project.write_text(config)
           PY
 
       - name: Import resources and check GDScript
@@ -73,6 +78,17 @@ jobs:
         run: |
           set -euo pipefail
           godot --headless --path . --editor --import --quit
+
+      - name: Headless gameplay smoke test
+        if: steps.source.outputs.ready == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          godot --headless --path . --quit-after 120 2>&1 | tee /tmp/godscar-smoke.log
+          if grep -E 'SCRIPT ERROR|Parse Error|Invalid call' /tmp/godscar-smoke.log; then
+            echo "::error::Godot gameplay reported a script failure."
+            exit 1
+          fi
 
       - name: Export debug APK
         if: steps.source.outputs.ready == 'true'
