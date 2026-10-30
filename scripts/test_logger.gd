@@ -38,6 +38,11 @@ var flush_total_us: int = 0
 var flush_peak_us: int = 0
 var flush_count: int = 0
 var last_spike_at: float = -1000.0
+var incoming_damage: float = 0.0
+var incoming_hits: int = 0
+var largest_hit: float = 0.0
+var avoided_attacks: int = 0
+var enemy_swings: int = 0
 # Rolling five-second windows, capped at 60 records (five minutes).
 var timeline: Array[String] = []
 var window_fps_sum: int = 0
@@ -90,6 +95,11 @@ func _clear() -> void:
     flush_peak_us = 0
     flush_count = 0
     last_spike_at = -1000.0
+    incoming_damage = 0.0
+    incoming_hits = 0
+    largest_hit = 0.0
+    avoided_attacks = 0
+    enemy_swings = 0
     timeline.clear()
     window_fps_sum = 0
     window_fps_samples = 0
@@ -125,6 +135,28 @@ func event(kind: String, detail: String = "") -> void:
     if events.size() > MAX_EVENTS:
         events.remove_at(0)
         discarded_events += 1
+
+
+func enemy_attack(kind: String, in_range: bool) -> void:
+    enemy_swings += 1
+    var key: String = kind + ("_IN_RANGE" if in_range else "_DODGED")
+    counts[key] = int(counts.get(key, 0)) + 1
+    if not in_range:
+        avoided_attacks += 1
+
+
+func player_damage(amount: float, kind: String, hp_left: float, hp_max: float) -> void:
+    incoming_hits += 1
+    incoming_damage += amount
+    largest_hit = maxf(largest_hit, amount)
+    counts["DAMAGE_FROM_" + kind] = int(counts.get("DAMAGE_FROM_" + kind, 0)) + 1
+    if incoming_hits == 1 or incoming_hits % 5 == 0 or hp_left < hp_max * 0.35:
+        event("TOOK_DAMAGE", "%.0f from %s, %.0f/%.0f HP (hits=%d)" % [amount, kind, hp_left, hp_max, incoming_hits])
+
+
+func player_evade(kind: String) -> void:
+    avoided_attacks += 1
+    counts["CLASS_EVADE_" + kind] = int(counts.get("CLASS_EVADE_" + kind, 0)) + 1
 
 
 func sample_processing(sim_us: int, sim_ticks: int, sim_worst_us: int, render_us: int, render_frames: int, render_worst_us: int) -> void:
@@ -231,6 +263,7 @@ func report(state: String) -> String:
     lines.append("FPS avg/min/max: %.1f / %d / %d" % [avg_fps, 0 if total_samples == 0 else fps_low, fps_high])
     lines.append("Worst frame: %.1f ms | Frames >33ms: %d" % [worst_ms, total_slow_frames])
     lines.append("Max enemies: %d" % peak_enemies)
+    lines.append("INCOMING COMBAT: attempts=%d; hits=%d; avoided=%d; damage=%.0f; largest_hit=%.0f" % [enemy_swings, incoming_hits, avoided_attacks, incoming_damage, largest_hit])
     lines.append("CPU callback time (not GPU): simulation avg=%.2fms peak=%.2fms (%d ticks); draw submit avg=%.2fms peak=%.2fms (%d draws)" % [float(sim_total_us) / float(maxi(1, sim_count)) / 1000.0, float(sim_peak_us) / 1000.0, sim_count, float(draw_total_us) / float(maxi(1, draw_count)) / 1000.0, float(draw_peak_us) / 1000.0, draw_count])
     lines.append("Log file saves: %d; avg=%.2fms peak=%.2fms" % [flush_count, float(flush_total_us) / float(maxi(1, flush_count)) / 1000.0, float(flush_peak_us) / 1000.0])
     lines.append("5-SECOND PERFORMANCE WINDOWS (recent):")
