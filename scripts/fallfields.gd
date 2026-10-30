@@ -663,7 +663,7 @@ func _draw() -> void:
 
 
 func _text(words: String, pos: Vector2, size: int = 16, tint: Color = TEXT, align: HorizontalAlignment = HORIZONTAL_ALIGNMENT_LEFT) -> void:
-    draw_string(font, pos, align, -1.0, size, tint)
+    draw_string(font, pos, words, align, -1.0, size, tint)
 
 
 func _bar(p: Vector2, size: Vector2, ratio: float, fill: Color) -> void:
