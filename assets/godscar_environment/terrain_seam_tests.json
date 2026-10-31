@@ -1,0 +1,68 @@
+[
+  {
+    "material": "blight_crimson",
+    "seamless": true,
+    "variants_interconnect": true,
+    "tiles": 4
+  },
+  {
+    "material": "cavern_rock",
+    "seamless": true,
+    "variants_interconnect": true,
+    "tiles": 4
+  },
+  {
+    "material": "crypt_grate_stone",
+    "seamless": true,
+    "variants_interconnect": true,
+    "tiles": 4
+  },
+  {
+    "material": "dark_ashstone",
+    "seamless": true,
+    "variants_interconnect": true,
+    "tiles": 4
+  },
+  {
+    "material": "farm_dirt",
+    "seamless": true,
+    "variants_interconnect": true,
+    "tiles": 4
+  },
+  {
+    "material": "meadow_grass",
+    "seamless": true,
+    "variants_interconnect": true,
+    "tiles": 4
+  },
+  {
+    "material": "moss_ruins",
+    "seamless": true,
+    "variants_interconnect": true,
+    "tiles": 4
+  },
+  {
+    "material": "old_road",
+    "seamless": true,
+    "variants_interconnect": true,
+    "tiles": 4
+  },
+  {
+    "material": "weathered_planks",
+    "seamless": true,
+    "variants_interconnect": true,
+    "tiles": 4
+  },
+  {
+    "material": "weathered_stone",
+    "seamless": true,
+    "variants_interconnect": true,
+    "tiles": 4
+  },
+  {
+    "material": "winter_frost",
+    "seamless": true,
+    "variants_interconnect": true,
+    "tiles": 4
+  }
+]

@@ -1,0 +1,590 @@
+[
+  {
+    "id": "chapel_ruined",
+    "page": 0,
+    "atlas": "atlases/environment_sprites_00.png",
+    "region_px": [
+      3,
+      3,
+      308,
+      205
+    ],
+    "category": "buildings"
+  },
+  {
+    "id": "cottage_thatched",
+    "page": 0,
+    "atlas": "atlases/environment_sprites_00.png",
+    "region_px": [
+      314,
+      3,
+      308,
+      171
+    ],
+    "category": "buildings"
+  },
+  {
+    "id": "crypt_blight_brazier",
+    "page": 0,
+    "atlas": "atlases/environment_sprites_00.png",
+    "region_px": [
+      625,
+      3,
+      162,
+      238
+    ],
+    "category": "crypt"
+  },
+  {
+    "id": "crypt_blood_shrine",
+    "page": 0,
+    "atlas": "atlases/environment_sprites_00.png",
+    "region_px": [
+      790,
+      3,
+      227,
+      238
+    ],
+    "category": "crypt"
+  },
+  {
+    "id": "crypt_candle_altar",
+    "page": 0,
+    "atlas": "atlases/environment_sprites_00.png",
+    "region_px": [
+      3,
+      244,
+      238,
+      188
+    ],
+    "category": "crypt"
+  },
+  {
+    "id": "crypt_grated_gate",
+    "page": 0,
+    "atlas": "atlases/environment_sprites_00.png",
+    "region_px": [
+      244,
+      244,
+      238,
+      194
+    ],
+    "category": "crypt"
+  },
+  {
+    "id": "crypt_rubble",
+    "page": 0,
+    "atlas": "atlases/environment_sprites_00.png",
+    "region_px": [
+      485,
+      244,
+      238,
+      134
+    ],
+    "category": "crypt"
+  },
+  {
+    "id": "crypt_sarcophagus",
+    "page": 0,
+    "atlas": "atlases/environment_sprites_00.png",
+    "region_px": [
+      726,
+      244,
+      238,
+      165
+    ],
+    "category": "crypt"
+  },
+  {
+    "id": "crypt_sarcophagus_broken",
+    "page": 0,
+    "atlas": "atlases/environment_sprites_00.png",
+    "region_px": [
+      3,
+      441,
+      238,
+      162
+    ],
+    "category": "crypt"
+  },
+  {
+    "id": "crypt_torture_table",
+    "page": 0,
+    "atlas": "atlases/environment_sprites_00.png",
+    "region_px": [
+      244,
+      441,
+      238,
+      180
+    ],
+    "category": "crypt"
+  },
+  {
+    "id": "crypt_treasure_chest",
+    "page": 0,
+    "atlas": "atlases/environment_sprites_00.png",
+    "region_px": [
+      485,
+      441,
+      238,
+      225
+    ],
+    "category": "crypt"
+  },
+  {
+    "id": "fence_broken",
+    "page": 0,
+    "atlas": "atlases/environment_sprites_00.png",
+    "region_px": [
+      726,
+      441,
+      210,
+      139
+    ],
+    "category": "fences"
+  },
+  {
+    "id": "fence_wood",
+    "page": 0,
+    "atlas": "atlases/environment_sprites_00.png",
+    "region_px": [
+      3,
+      669,
+      210,
+      122
+    ],
+    "category": "fences"
+  },
+  {
+    "id": "gate_wood",
+    "page": 0,
+    "atlas": "atlases/environment_sprites_00.png",
+    "region_px": [
+      216,
+      669,
+      210,
+      164
+    ],
+    "category": "fences"
+  },
+  {
+    "id": "bush_blighted",
+    "page": 0,
+    "atlas": "atlases/environment_sprites_00.png",
+    "region_px": [
+      429,
+      669,
+      153,
+      122
+    ],
+    "category": "foliage"
+  },
+  {
+    "id": "bush_green",
+    "page": 0,
+    "atlas": "atlases/environment_sprites_00.png",
+    "region_px": [
+      585,
+      669,
+      153,
+      118
+    ],
+    "category": "foliage"
+  },
+  {
+    "id": "grass_tall",
+    "page": 0,
+    "atlas": "atlases/environment_sprites_00.png",
+    "region_px": [
+      741,
+      669,
+      153,
+      150
+    ],
+    "category": "foliage"
+  },
+  {
+    "id": "wheat_clump",
+    "page": 0,
+    "atlas": "atlases/environment_sprites_00.png",
+    "region_px": [
+      3,
+      836,
+      153,
+      142
+    ],
+    "category": "foliage"
+  },
+  {
+    "id": "cart_broken",
+    "page": 0,
+    "atlas": "atlases/environment_sprites_00.png",
+    "region_px": [
+      159,
+      836,
+      198,
+      126
+    ],
+    "category": "props"
+  },
+  {
+    "id": "crates_barrels",
+    "page": 1,
+    "atlas": "atlases/environment_sprites_01.png",
+    "region_px": [
+      3,
+      3,
+      198,
+      189
+    ],
+    "category": "props"
+  },
+  {
+    "id": "sign_lantern",
+    "page": 1,
+    "atlas": "atlases/environment_sprites_01.png",
+    "region_px": [
+      204,
+      3,
+      156,
+      198
+    ],
+    "category": "props"
+  },
+  {
+    "id": "fallen_log",
+    "page": 1,
+    "atlas": "atlases/environment_sprites_01.png",
+    "region_px": [
+      363,
+      3,
+      180,
+      130
+    ],
+    "category": "rocks"
+  },
+  {
+    "id": "rock_cliff",
+    "page": 1,
+    "atlas": "atlases/environment_sprites_01.png",
+    "region_px": [
+      546,
+      3,
+      180,
+      117
+    ],
+    "category": "rocks"
+  },
+  {
+    "id": "tree_stump",
+    "page": 1,
+    "atlas": "atlases/environment_sprites_01.png",
+    "region_px": [
+      729,
+      3,
+      180,
+      129
+    ],
+    "category": "rocks"
+  },
+  {
+    "id": "ruin_iron_gate",
+    "page": 1,
+    "atlas": "atlases/environment_sprites_01.png",
+    "region_px": [
+      3,
+      204,
+      205,
+      248
+    ],
+    "category": "structures"
+  },
+  {
+    "id": "ruin_pillar_short",
+    "page": 1,
+    "atlas": "atlases/environment_sprites_01.png",
+    "region_px": [
+      211,
+      204,
+      217,
+      248
+    ],
+    "category": "structures"
+  },
+  {
+    "id": "ruin_pillar_tall",
+    "page": 1,
+    "atlas": "atlases/environment_sprites_01.png",
+    "region_px": [
+      431,
+      204,
+      126,
+      248
+    ],
+    "category": "structures"
+  },
+  {
+    "id": "ruin_stairs",
+    "page": 1,
+    "atlas": "atlases/environment_sprites_01.png",
+    "region_px": [
+      560,
+      204,
+      235,
+      248
+    ],
+    "category": "structures"
+  },
+  {
+    "id": "well_wood",
+    "page": 1,
+    "atlas": "atlases/environment_sprites_01.png",
+    "region_px": [
+      798,
+      204,
+      222,
+      248
+    ],
+    "category": "structures"
+  },
+  {
+    "id": "tree_blighted",
+    "page": 1,
+    "atlas": "atlases/environment_sprites_01.png",
+    "region_px": [
+      3,
+      455,
+      206,
+      233
+    ],
+    "category": "trees"
+  },
+  {
+    "id": "tree_dead",
+    "page": 1,
+    "atlas": "atlases/environment_sprites_01.png",
+    "region_px": [
+      212,
+      455,
+      196,
+      233
+    ],
+    "category": "trees"
+  },
+  {
+    "id": "tree_green",
+    "page": 1,
+    "atlas": "atlases/environment_sprites_01.png",
+    "region_px": [
+      411,
+      455,
+      207,
+      233
+    ],
+    "category": "trees"
+  },
+  {
+    "id": "ruin_wall_broken",
+    "page": 1,
+    "atlas": "atlases/environment_sprites_01.png",
+    "region_px": [
+      621,
+      455,
+      208,
+      187
+    ],
+    "category": "walls"
+  },
+  {
+    "id": "ruin_wall_corner",
+    "page": 1,
+    "atlas": "atlases/environment_sprites_01.png",
+    "region_px": [
+      3,
+      691,
+      200,
+      208
+    ],
+    "category": "walls"
+  },
+  {
+    "id": "ruin_wall_end",
+    "page": 1,
+    "atlas": "atlases/environment_sprites_01.png",
+    "region_px": [
+      206,
+      691,
+      202,
+      208
+    ],
+    "category": "walls"
+  },
+  {
+    "id": "ruin_wall_straight",
+    "page": 1,
+    "atlas": "atlases/environment_sprites_01.png",
+    "region_px": [
+      411,
+      691,
+      208,
+      171
+    ],
+    "category": "walls"
+  },
+  {
+    "id": "iron_spikes",
+    "page": 1,
+    "atlas": "atlases/environment_sprites_01.png",
+    "region_px": [
+      622,
+      691,
+      78,
+      68
+    ],
+    "category": "modular_small"
+  },
+  {
+    "id": "wood_barricade",
+    "page": 1,
+    "atlas": "atlases/environment_sprites_01.png",
+    "region_px": [
+      703,
+      691,
+      78,
+      72
+    ],
+    "category": "modular_small"
+  },
+  {
+    "id": "stone_wall_corner",
+    "page": 1,
+    "atlas": "atlases/environment_sprites_01.png",
+    "region_px": [
+      784,
+      691,
+      82,
+      81
+    ],
+    "category": "modular_small"
+  },
+  {
+    "id": "wood_palisade",
+    "page": 1,
+    "atlas": "atlases/environment_sprites_01.png",
+    "region_px": [
+      869,
+      691,
+      98,
+      74
+    ],
+    "category": "modular_small"
+  },
+  {
+    "id": "stone_wall_broken",
+    "page": 1,
+    "atlas": "atlases/environment_sprites_01.png",
+    "region_px": [
+      3,
+      902,
+      86,
+      86
+    ],
+    "category": "modular_small"
+  },
+  {
+    "id": "wood_gate",
+    "page": 1,
+    "atlas": "atlases/environment_sprites_01.png",
+    "region_px": [
+      92,
+      902,
+      91,
+      63
+    ],
+    "category": "modular_small"
+  },
+  {
+    "id": "stone_wall_low",
+    "page": 1,
+    "atlas": "atlases/environment_sprites_01.png",
+    "region_px": [
+      186,
+      902,
+      84,
+      62
+    ],
+    "category": "modular_small"
+  },
+  {
+    "id": "wood_fence_broken",
+    "page": 1,
+    "atlas": "atlases/environment_sprites_01.png",
+    "region_px": [
+      273,
+      902,
+      93,
+      65
+    ],
+    "category": "modular_small"
+  },
+  {
+    "id": "stone_pillar_short",
+    "page": 1,
+    "atlas": "atlases/environment_sprites_01.png",
+    "region_px": [
+      369,
+      902,
+      46,
+      65
+    ],
+    "category": "modular_small"
+  },
+  {
+    "id": "stone_pillar",
+    "page": 1,
+    "atlas": "atlases/environment_sprites_01.png",
+    "region_px": [
+      418,
+      902,
+      43,
+      93
+    ],
+    "category": "modular_small"
+  },
+  {
+    "id": "stone_arch",
+    "page": 1,
+    "atlas": "atlases/environment_sprites_01.png",
+    "region_px": [
+      464,
+      902,
+      88,
+      91
+    ],
+    "category": "modular_small"
+  },
+  {
+    "id": "stone_wall_straight",
+    "page": 1,
+    "atlas": "atlases/environment_sprites_01.png",
+    "region_px": [
+      555,
+      902,
+      95,
+      80
+    ],
+    "category": "modular_small"
+  },
+  {
+    "id": "wood_fence_straight",
+    "page": 1,
+    "atlas": "atlases/environment_sprites_01.png",
+    "region_px": [
+      653,
+      902,
+      80,
+      63
+    ],
+    "category": "modular_small"
+  }
+]
