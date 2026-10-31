@@ -567,22 +567,26 @@ func _dialogue_close() -> void:
 
 func _joy_visual() -> Vector2:
     var s: Vector2 = get_viewport_rect().size
-    return joy_origin if move_touch >= 0 else Vector2(85, s.y - 93)
+    # Right-side resting position complements the three left-hand spells.
+    # The gesture still starts anywhere in the lower half except button hitboxes.
+    return joy_origin if move_touch >= 0 else Vector2(s.x - 85, s.y - 93)
 
 
 func _run_button() -> Vector2:
     var s: Vector2 = get_viewport_rect().size
-    return Vector2(53, s.y - 307)
+    return Vector2(s.x - 56, s.y - 307)
 
 
 func _talk_button() -> Vector2:
     var s: Vector2 = get_viewport_rect().size
-    return Vector2(s.x - 72, s.y - 306)
+    return Vector2(s.x - 65, s.y - 410)
 
 
 func _spell_button(i: int) -> Vector2:
     var s: Vector2 = get_viewport_rect().size
-    return Vector2(s.x - 54, s.y - 204.0 + float(i) * 82.0)
+    # Left-side vertical combat cluster, above the bottom HUD and away
+    # from the right-hand movement area. Reserved space for future customization.
+    return Vector2(58.0, s.y - 496.0 + float(i) * 84.0)
 
 
 func _input(event: InputEvent) -> void:
@@ -862,7 +866,7 @@ func _draw_hud(s: Vector2) -> void:
     else:
         draw_arc(joystick, 46, 0, TAU, 44, Color("#718194", 0.35), 2.0)
         _text("MOVE", joystick + Vector2(-22, 4), 14, MUTED)
-    _text("DRAG ANYWHERE TO MOVE", Vector2(13, s.y - 11), 10, MUTED)
+    _text("DRAG BELOW CENTER TO MOVE", Vector2(s.x * 0.5, s.y - 11), 10, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
     var run: Vector2 = _run_button()
     draw_circle(run, 36, Color("#383323") if auto_run else Color("#252b32"))
     draw_arc(run, 36, 0, TAU, 40, GOLD if auto_run else Color("#728397"), 2.4)
@@ -913,7 +917,8 @@ func _draw_class_menu(s: Vector2) -> void:
         _text("WARRIOR" if i == 0 else "SORCERER", Vector2(48, y + 47), 26, TEXT)
         _wrap("Close combat / Cleave / Bulwark / Ruinbreaker" if i == 0 else "Ranged magic / Arc Bolt / Blink / Cataclysm", 48, y + 77, s.x - 90, 15, MUTED)
         _text("TAP TO BEGIN", Vector2(s.x - 159, y + s.y * 0.16 - 17), 14, GOLD)
-    _wrap("You fell from Veyra into a world without magic. Mira Voss found you beneath the wreckage.", 38, s.y * 0.78, s.x - 75, 18, TEXT)
+    _wrap("You fell from Veyra into a world without magic. Mira Voss found you beneath the wreckage.", 38, s.y * 0.76, s.x - 75, 18, TEXT)
+    _text("SPELLS LEFT  /  MOVEMENT RIGHT OR ANY LOWER AREA", Vector2(s.x * 0.5, s.y * 0.92), 12, GOLD, HORIZONTAL_ALIGNMENT_CENTER)
     _text("SOLO STORY INSTANCE - PROTOTYPE 0.4", Vector2(s.x * 0.5, s.y - 32), 12, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
 
 
