@@ -616,6 +616,11 @@ func _down(p: Vector2, index: int) -> void:
         _log_touch(p)
         return
     if class_select:
+        if p.y >= s.y * 0.305 and p.y < s.y * 0.355:
+            log.event("ART_GALLERY", "Review imported environment sprites")
+            log.save(_log_state())
+            get_tree().change_scene_to_file("res://assets/godscar_environment/godot_demo/gallery.tscn")
+            return
         if p.y > s.y * 0.36 and p.y < s.y * 0.53:
             _set_class(0)
             class_select = false
@@ -910,6 +915,10 @@ func _draw_class_menu(s: Vector2) -> void:
     _text("GODSCAR", Vector2(s.x * 0.5, s.y * 0.16), 42, GOLD, HORIZONTAL_ALIGNMENT_CENTER)
     _text("CHAPTER I   THE FALLFIELDS", Vector2(s.x * 0.5, s.y * 0.23), 18, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
     _text("TWO WORLDS. ONE WOUND.", Vector2(s.x * 0.5, s.y * 0.28), 15, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
+    var preview_rect := Rect2(24, s.y * 0.306, s.x - 48, s.y * 0.047)
+    draw_rect(preview_rect, Color("#2d2a32"))
+    draw_rect(preview_rect, GOLD, false, 2.0)
+    _text("ART GALLERY  /  FALLFIELDS + CRYPT", Vector2(s.x * 0.5, s.y * 0.338), 17, GOLD, HORIZONTAL_ALIGNMENT_CENTER)
     for i in range(2):
         var y: float = s.y * (0.36 if i == 0 else 0.53)
         var rect := Rect2(24, y, s.x - 48, s.y * 0.16)
