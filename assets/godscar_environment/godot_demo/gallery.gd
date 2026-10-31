@@ -12,6 +12,7 @@ var view_offset := Vector2(640, 510)
 var ground: Node2D
 var things: Node2D
 var cam: Camera2D
+var area_label: Label
 
 func _ready() -> void:
     ground = Node2D.new()
@@ -21,12 +22,17 @@ func _ready() -> void:
     add_child(things)
     cam=Camera2D.new()
     cam.enabled=true
-    cam.zoom=Vector2(0.65,0.65)
+    cam.zoom=Vector2(1.2,1.2)
+    cam.limit_left=0
+    cam.limit_top=0
+    cam.limit_right=1280
+    cam.limit_bottom=1024
     add_child(cam)
+    _create_overlay()
     _rebuild()
 
 func _tex(relative: String) -> Texture2D:
-    return load("res://" + relative)
+    return load("res://assets/godscar_environment/" + relative)
 
 func _add_sprite(relative: String, where: Vector2, scale_factor: float=1.0) -> void:
     var s := Sprite2D.new()
@@ -74,39 +80,67 @@ func _rebuild() -> void:
         _add_sprite("sprites/crypt/crypt_treasure_chest.png",Vector2(320,835),.92)
         _add_sprite("sprites/crypt/crypt_blood_shrine.png",Vector2(650,780),.85)
     cam.position = view_offset
+    if area_label != null:
+        area_label.text = "FALLFIELDS / FARMLAND" if mode == 0 else "CRYPT / GODWOUND"
     queue_redraw()
+
+func _create_overlay() -> void:
+    var overlay := CanvasLayer.new()
+    overlay.layer = 5
+    add_child(overlay)
+    var bar := ColorRect.new()
+    bar.color = Color(0.035, 0.05, 0.078, 0.96)
+    bar.position = Vector2.ZERO
+    bar.size = Vector2(540, 88)
+    overlay.add_child(bar)
+    var back := Button.new()
+    back.text = "BACK"
+    back.position = Vector2(12, 17)
+    back.size = Vector2(94, 52)
+    back.add_theme_font_size_override("font_size", 18)
+    back.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/fallfields.tscn"))
+    overlay.add_child(back)
+    area_label = Label.new()
+    area_label.position = Vector2(116, 15)
+    area_label.size = Vector2(250, 58)
+    area_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+    area_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+    area_label.add_theme_font_size_override("font_size", 18)
+    overlay.add_child(area_label)
+    var toggle := Button.new()
+    toggle.text = "SWITCH"
+    toggle.position = Vector2(372, 17)
+    toggle.size = Vector2(150, 52)
+    toggle.add_theme_font_size_override("font_size", 18)
+    toggle.pressed.connect(func(): mode = 1 - mode; _rebuild())
+    overlay.add_child(toggle)
+    var footer := Label.new()
+    footer.text = "DRAG TO INSPECT | ART REVIEW ONLY"
+    footer.position = Vector2(10, 90)
+    footer.size = Vector2(520, 32)
+    footer.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+    footer.add_theme_font_size_override("font_size", 14)
+    footer.add_theme_color_override("font_color", Color("#f1cf9d"))
+    overlay.add_child(footer)
+
+
+func _move_camera_by(delta: Vector2) -> void:
+    view_offset -= delta / cam.zoom.x
+    var world_half: Vector2 = get_viewport_rect().size * 0.5 / cam.zoom
+    view_offset.x = clampf(view_offset.x, world_half.x, MAP_SIZE.x - world_half.x)
+    view_offset.y = clampf(view_offset.y, world_half.y, MAP_SIZE.y - world_half.y)
+    cam.position = view_offset
+
 
 func _input(event: InputEvent) -> void:
     if event is InputEventScreenTouch:
         if event.pressed:
-            if event.position.y < 92:
-                mode = 1 - mode
-                _rebuild()
-            else:
-                hand_down=true
-                hand_pos=event.position
-        else: hand_down=false
+            hand_down = event.position.y > 124.0
+        else:
+            hand_down = false
     elif event is InputEventScreenDrag and hand_down:
-        view_offset -= event.relative / cam.zoom.x
-        view_offset.x=clampf(view_offset.x,200,1100)
-        view_offset.y=clampf(view_offset.y,200,900)
-        cam.position=view_offset
+        _move_camera_by(event.relative)
     elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
-        if event.pressed:
-            if event.position.y < 92:
-                mode=1-mode
-                _rebuild()
-            else:
-                hand_down=true
-                hand_pos=event.position
-        else: hand_down=false
+        hand_down = event.pressed and event.position.y > 124.0
     elif event is InputEventMouseMotion and hand_down:
-        view_offset -= event.relative / cam.zoom.x
-        view_offset.x=clampf(view_offset.x,200,1100)
-        view_offset.y=clampf(view_offset.y,200,900)
-        cam.position=view_offset
-
-func _draw() -> void:
-    # Minimal on-world caption; press near top to switch biome.
-    var title: String = "FALLFIELDS" if mode == 0 else "THE CRYPT"
-    draw_string(ThemeDB.fallback_font,Vector2(48,72),title + "  |  TAP TOP TO SWITCH",HORIZONTAL_ALIGNMENT_LEFT,-1,23,Color("f5ddba"))
+        _move_camera_by(event.relative)
