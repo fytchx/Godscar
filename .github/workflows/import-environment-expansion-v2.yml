@@ -1,0 +1,72 @@
+name: Import Godscar expansion v2 assets
+on:
+  push:
+    branches: [dev]
+    paths:
+      - 'art/Godscar_Expansion_v2_UPLOAD_TO_GITHUB.zip'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  unpack-review-assets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Verify 728 PNG checksums and safely import in-game art
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path, PurePosixPath
+          import zipfile, hashlib, json
+          archive=Path('art/Godscar_Expansion_v2_UPLOAD_TO_GITHUB.zip')
+          if not archive.is_file():
+              raise SystemExit('Upload Godscar_Expansion_v2_UPLOAD_TO_GITHUB.zip to art/ on dev.')
+          root='Godscar_Art_Expansion_v2/'
+          with zipfile.ZipFile(archive) as z:
+              if z.testzip() is not None: raise SystemExit('Invalid ZIP checksum')
+              manifest=json.loads(z.read(root+'asset_manifest.json'))
+              items=manifest['assets']
+              assert len(items)==728 and manifest['total_new_candidates']==728
+              for item in items:
+                  source=root+item['path']
+                  path=PurePosixPath(item['path'])
+                  if path.is_absolute() or '..' in path.parts or not item['path'].startswith('sprites/'):
+                      raise SystemExit('Unsafe asset path: '+item['path'])
+                  data=z.read(source)
+                  if hashlib.sha256(data).hexdigest()!=item['sha256']:
+                      raise SystemExit('SHA mismatch: '+item['id'])
+                  if len(data)>4_000_000: raise SystemExit('Oversize sprite: '+item['id'])
+                  dest=Path('assets/godscar_expansion')/Path(*path.parts)
+                  dest.parent.mkdir(parents=True,exist_ok=True)
+                  dest.write_bytes(data)
+              for name in ('asset_manifest.json','ASSET_INDEX.csv','QA_REPORT.md','README.md'):
+                  dest=Path('assets/godscar_expansion')/name
+                  dest.parent.mkdir(parents=True,exist_ok=True)
+                  dest.write_bytes(z.read(root+name))
+              install={
+                  'godot/environment_expansion_gallery.gd':'scripts/environment_expansion_gallery.gd',
+                  'godot/environment_expansion_gallery.tscn':'scenes/environment_expansion_gallery.tscn',
+                  'tools/build_atlases.py':'tools/build_godscar_expansion_atlases.py'
+              }
+              for origin,destination in install.items():
+                  path=Path(destination)
+                  path.parent.mkdir(parents=True,exist_ok=True)
+                  path.write_bytes(z.read(root+origin))
+              print('Validated + installed',len(items),'sprite PNGs and Godot art browser')
+          PY
+      - name: Build optional 2048px texture atlas pages
+        run: |
+          python3 -m pip install --disable-pip-version-check pillow
+          python3 tools/build_godscar_expansion_atlases.py assets/godscar_expansion
+      - name: Commit approved review library to dev
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add assets/godscar_expansion scripts/environment_expansion_gallery.gd scenes/environment_expansion_gallery.tscn tools/build_godscar_expansion_atlases.py
+          if git diff --cached --quiet; then
+            echo 'Expansion already imported.'
+          else
+            git commit -m 'art: import 728 Godscar expansion sprites, atlases and browser'
+            git push origin HEAD:dev
+          fi

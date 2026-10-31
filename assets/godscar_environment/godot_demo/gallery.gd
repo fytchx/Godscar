@@ -122,6 +122,15 @@ func _create_overlay() -> void:
     footer.add_theme_font_size_override("font_size", 14)
     footer.add_theme_color_override("font_color", Color("#f1cf9d"))
     overlay.add_child(footer)
+    var expansion := Button.new()
+    expansion.text = "EXPANDED ART LIBRARY / 728 SPRITES"
+    expansion.position = Vector2(65, 135)
+    expansion.size = Vector2(410, 56)
+    expansion.pressed.connect(func():
+        if ResourceLoader.exists("res://scenes/environment_expansion_gallery.tscn"):
+            get_tree().change_scene_to_file("res://scenes/environment_expansion_gallery.tscn")
+    )
+    overlay.add_child(expansion)
 
 
 func _move_camera_by(delta: Vector2) -> void:
