@@ -616,6 +616,11 @@ func _down(p: Vector2, index: int) -> void:
         _log_touch(p)
         return
     if class_select:
+        if p.y >= s.y * 0.715 and p.y < s.y * 0.805:
+            log.event("GODWOUND_ENTER", "Opening first procedural dungeon")
+            log.save(_log_state())
+            get_tree().change_scene_to_file("res://scenes/crypt_dungeon.tscn")
+            return
         if p.y >= s.y * 0.305 and p.y < s.y * 0.355:
             log.event("ART_GALLERY", "Review imported environment sprites")
             log.save(_log_state())
@@ -927,7 +932,11 @@ func _draw_class_menu(s: Vector2) -> void:
         _text("WARRIOR" if i == 0 else "SORCERER", Vector2(48, y + 47), 26, TEXT)
         _wrap("Close combat / Cleave / Bulwark / Ruinbreaker" if i == 0 else "Ranged magic / Arc Bolt / Blink / Cataclysm", 48, y + 77, s.x - 90, 15, MUTED)
         _text("TAP TO BEGIN", Vector2(s.x - 159, y + s.y * 0.16 - 17), 14, GOLD)
-    _wrap("You fell from Veyra into a world without magic. Mira Voss found you beneath the wreckage.", 38, s.y * 0.76, s.x - 75, 18, TEXT)
+    var dungeon_rect := Rect2(24, s.y * 0.716, s.x - 48, s.y * 0.086)
+    draw_rect(dungeon_rect, Color("#30252b"))
+    draw_rect(dungeon_rect, BLOOD, false, 3.0)
+    _text("THE HOLLOW CRYPT   /   PROCEDURAL DUNGEON", Vector2(s.x * 0.5, s.y * 0.765), 17, TEXT, HORIZONTAL_ALIGNMENT_CENTER)
+    _wrap("You fell from Veyra into a world without magic. Mira Voss found you beneath the wreckage.", 38, s.y * 0.845, s.x - 75, 16, TEXT)
     _text("SPELLS LEFT  /  MOVEMENT RIGHT OR ANY LOWER AREA", Vector2(s.x * 0.5, s.y * 0.92), 12, GOLD, HORIZONTAL_ALIGNMENT_CENTER)
     _text("SOLO STORY INSTANCE - PROTOTYPE 0.4", Vector2(s.x * 0.5, s.y - 32), 12, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
 
