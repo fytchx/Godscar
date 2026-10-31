@@ -91,6 +91,18 @@ jobs:
           fi
           grep -q 'GODSCAR_SLICE_SMOKE_OK' /tmp/godscar-smoke.log
 
+      - name: Headless Asset Judge smoke test
+        if: steps.source.outputs.ready == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          godot --headless --path . --scene res://scenes/asset_judge.tscn --quit-after 50 -- --judge-smoke 2>&1 | tee /tmp/godscar-judge-smoke.log
+          if grep -E 'SCRIPT ERROR|Parse Error|Invalid call|Assertion failed' /tmp/godscar-judge-smoke.log; then
+            echo "::error::Asset Judge smoke test failed."
+            exit 1
+          fi
+          grep -q 'GODSCAR_JUDGE_SMOKE_OK' /tmp/godscar-judge-smoke.log
+
       - name: Export debug APK
         if: steps.source.outputs.ready == 'true'
         shell: bash
