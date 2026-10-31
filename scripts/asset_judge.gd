@@ -52,6 +52,21 @@ func _ready() -> void:
     _refresh_category_options()
     _refresh_list()
     _show_current()
+    if "--judge-smoke" in OS.get_cmdline_user_args():
+        call_deferred("_judge_smoke_test")
+
+
+func _judge_smoke_test() -> void:
+    assert(assets.size() == 925, "Expected original 197 and new 728 sprites")
+    assert(not visible_assets.is_empty(), "Judge failed to populate sprite queue")
+    var key: String = str(visible_assets[cursor]["key"])
+    var old: String = str(decisions.get(key, ""))
+    _judge("B")
+    assert(str(decisions.get(key, "")) == "B", "Fix rating was not saved")
+    _undo()
+    assert(str(decisions.get(key, "")) == old, "Undo did not restore previous rating")
+    assert(_report_text().contains("v2 manifest="), "Copy report not generated")
+    print("GODSCAR_JUDGE_SMOKE_OK")
 
 
 func _load_manifests() -> void:
