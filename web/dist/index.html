@@ -1,0 +1,1644 @@
+<title>Godscar</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&family=Alegreya+Sans:wght@400;500;700&display=swap">
+<style>
+/* Layout: one phone column. A sticky combat ribbon on top (the fight never leaves the screen), panels in the middle, tab bar fixed at the bottom. Committed single dark look. */
+:root {
+  color-scheme: dark;
+  --bg: #121013;          /* slate night */
+  --surface: #1c181c;
+  --surface-2: #262026;
+  --line: #3a3239;
+  --fg: #e8e1da;
+  --muted: #a39a9b;
+  --ash: #777077;         /* Ash Steel */
+  --scar: #bc2238;        /* Scar Crimson */
+  --rift: #f04b58;        /* Rift Light */
+  --blight: #590b19;      /* Deep Blight */
+  --gold: #b89665;        /* Forged Gold */
+  --good: #7fb069;
+  --warn: #e0a33b;
+  --r-common: #b9b2ae; --r-magic: #79a8dc; --r-rare: #e3c46a; --r-godtouched: #f04b58;
+  --font-display: "IM Fell English SC", "Iowan Old Style", Georgia, serif;
+  --font-body: "Alegreya Sans", "Segoe UI", Roboto, system-ui, sans-serif;
+  --nav-h: 58px;
+}
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--fg); font: 15px/1.45 var(--font-body); -webkit-tap-highlight-color: transparent; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 30; background: var(--surface); }
+button, select, input, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 2px solid var(--rift); outline-offset: 2px; }
+.wrap { max-width: 520px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.num { font-variant-numeric: tabular-nums; }
+
+/* ---------- wordmark ---------- */
+.mark { font-family: var(--font-display); letter-spacing: 0.08em; color: #cfc6bd; text-shadow: 0 1px 0 #000, 0 0 1px #6e655f; white-space: nowrap; }
+.mark .o { position: relative; display: inline-block; }
+.mark .o::after { content: ""; position: absolute; left: 50%; top: -12%; bottom: -12%; width: 2px; transform: translateX(-50%) rotate(8deg); background: linear-gradient(var(--rift), var(--scar) 60%, var(--blight)); box-shadow: 0 0 6px var(--rift); border-radius: 1px; }
+
+/* ---------- ribbon ---------- */
+.ribbon { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: var(--surface); border-bottom: 1px solid var(--line); }
+.ribbon .wrap { padding-block: 8px 10px; display: grid; gap: 6px; }
+.rb-top { display: flex; align-items: baseline; gap: 10px; }
+.rb-top .mark { font-size: 20px; }
+.rb-top .who { color: var(--muted); font-size: 13px; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rb-top .gold { color: var(--gold); font-weight: 700; }
+.rb-hunt { display: flex; justify-content: space-between; gap: 8px; font-size: 13px; color: var(--muted); }
+.rb-hunt b { color: var(--fg); font-weight: 500; }
+.rb-hunt .rate { white-space: nowrap; }
+.bar { position: relative; height: 16px; background: #0b0a0b; border: 1px solid var(--line); border-radius: 3px; overflow: hidden; }
+.bar > i { position: absolute; inset: 0 auto 0 0; width: 0; transition: width .18s linear; }
+.bar > span { position: absolute; inset: 0; display: flex; align-items: center; justify-content: space-between; padding: 0 6px; font-size: 11px; line-height: 1; text-shadow: 0 1px 1px #000; }
+.bar.hp > i { background: linear-gradient(#a32034, #6f1222); }
+.bar.foe > i { background: linear-gradient(#6c6468, #423c40); }
+.bar.foe.burning > i { background: linear-gradient(#c4572c, #7a2c14); }
+.bar.xp { height: 4px; border: 0; background: #2a2329; }
+.bar.xp > i { background: var(--gold); }
+@media (prefers-reduced-motion: reduce) { .bar > i { transition: none; } }
+
+/* ---------- panels ---------- */
+main { padding-bottom: calc(var(--nav-h) + env(safe-area-inset-bottom, 0px) + 16px); }
+main .wrap { padding-block: 14px; display: grid; gap: 14px; }
+h2 { font-family: var(--font-display); font-weight: 400; font-size: 22px; letter-spacing: .03em; margin: 0; text-wrap: balance; }
+h3 { font-size: 12px; text-transform: uppercase; letter-spacing: .12em; color: var(--muted); margin: 0; font-weight: 700; }
+.sub { color: var(--muted); font-size: 13px; margin: 2px 0 0; }
+.row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.spacer { flex: 1; }
+.btn { background: var(--surface-2); border: 1px solid var(--line); border-radius: 6px; padding: 7px 12px; min-height: 36px; }
+.btn:hover { border-color: var(--ash); }
+.btn.primary { background: var(--blight); border-color: var(--scar); }
+.btn.primary:hover { border-color: var(--rift); }
+.btn:disabled { opacity: .45; cursor: default; }
+.btn.small { padding: 4px 9px; min-height: 30px; font-size: 13px; }
+.chip { display: inline-block; font-size: 12px; padding: 1px 7px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); white-space: nowrap; }
+.chip.good { color: var(--good); border-color: color-mix(in srgb, var(--good) 45%, transparent); }
+.chip.bad { color: var(--rift); border-color: color-mix(in srgb, var(--rift) 45%, transparent); }
+.chip.warn { color: var(--warn); border-color: color-mix(in srgb, var(--warn) 45%, transparent); }
+
+/* monster cards */
+.mons { display: grid; gap: 10px; }
+.mon { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 12px; display: grid; gap: 8px; }
+.mon.on { border-color: var(--scar); box-shadow: inset 3px 0 0 var(--scar); }
+.mon .nm { font-family: var(--font-display); font-size: 18px; }
+.mon .note { color: var(--muted); font-size: 13px; margin: 0; }
+.stepper { display: inline-flex; align-items: center; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+.stepper button { background: var(--surface-2); border: 0; width: 34px; height: 32px; font-size: 18px; }
+.stepper button:disabled { opacity: .35; }
+.stepper span { min-width: 56px; text-align: center; font-size: 14px; }
+.scout { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; font-size: 12px; color: var(--muted); }
+.scout b { display: block; color: var(--fg); font-size: 14px; font-weight: 500; }
+.toggle { display: flex; align-items: center; gap: 10px; }
+.toggle input { width: 20px; height: 20px; accent-color: var(--scar); }
+
+.log { background: #0d0c0d; border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; font-size: 13px; max-height: 260px; overflow: auto; display: grid; gap: 2px; }
+.log div { color: var(--muted); }
+.log .k-skill { color: #cbb9a8; }
+.log .k-death { color: var(--rift); }
+.log .k-level, .log .k-sys { color: var(--gold); }
+.log .k-loot\:magic { color: var(--r-magic); } .log .k-loot\:rare { color: var(--r-rare); } .log .k-loot\:godtouched { color: var(--r-godtouched); } .log .k-loot\:common { color: var(--r-common); }
+
+/* items */
+.items { display: grid; gap: 8px; }
+.item { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; display: grid; gap: 6px; }
+.item.godtouched { border-color: color-mix(in srgb, var(--rift) 55%, var(--line)); }
+.item .head { display: flex; gap: 8px; align-items: baseline; justify-content: space-between; cursor: pointer; background: none; border: 0; padding: 0; text-align: left; width: 100%; }
+.item .nm { font-weight: 700; min-width: 0; }
+.item .meta { color: var(--muted); font-size: 12px; }
+.c-common { color: var(--r-common); } .c-magic { color: var(--r-magic); } .c-rare { color: var(--r-rare); } .c-godtouched { color: var(--r-godtouched); }
+.affs { margin: 0; padding: 0; list-style: none; font-size: 13px; display: grid; gap: 1px; }
+.affs .base { color: var(--muted); }
+.affs .sp { color: var(--rift); margin-top: 3px; }
+.affs .sp b { font-weight: 700; }
+.cmp { font-size: 12px; color: var(--muted); border-top: 1px dashed var(--line); padding-top: 6px; }
+.slotlabel { font-size: 11px; text-transform: uppercase; letter-spacing: .12em; color: var(--muted); }
+.empty { color: var(--muted); font-style: italic; }
+
+.stats { display: grid; grid-template-columns: 1fr auto; gap: 4px 14px; font-size: 14px; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 12px; }
+.stats dt { color: var(--muted); } .stats dd { margin: 0; text-align: right; }
+textarea { width: 100%; box-sizing: border-box; min-height: 90px; background: #0d0c0d; border: 1px solid var(--line); border-radius: 6px; padding: 8px; font-size: 12px; }
+select { background: var(--surface-2); border: 1px solid var(--line); border-radius: 6px; padding: 6px 8px; min-height: 36px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 12px; display: grid; gap: 8px; }
+
+/* nav */
+nav.tabs { position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; background: var(--surface); border-top: 1px solid var(--line); padding-bottom: env(safe-area-inset-bottom, 0px); }
+nav.tabs .wrap { display: grid; grid-template-columns: repeat(5, 1fr); height: var(--nav-h); }
+nav.tabs button { background: none; border: 0; color: var(--muted); font-family: var(--font-display); font-size: 15px; padding: 0 2px; letter-spacing: .05em; border-top: 2px solid transparent; }
+nav.tabs button[aria-selected="true"] { color: var(--fg); border-top-color: var(--scar); }
+nav.tabs button .badge { font-family: var(--font-body); font-size: 11px; color: var(--gold); margin-left: 3px; }
+
+/* overlays */
+.overlay { position: fixed; inset: 0; z-index: 40; background: rgba(8, 6, 8, .82); display: flex; align-items: flex-end; justify-content: center; padding: env(safe-area-inset-top, 0px) 0 env(safe-area-inset-bottom, 0px); }
+.sheet { background: var(--surface); border: 1px solid var(--line); border-radius: 12px 12px 0 0; width: 100%; max-width: 520px; max-height: 88%; overflow: auto; box-sizing: border-box; padding: 18px max(16px, env(safe-area-inset-left, 0px)) 18px max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 12px; }
+.sumgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.sumgrid div { background: var(--surface-2); border-radius: 6px; padding: 8px; font-size: 12px; color: var(--muted); }
+.sumgrid b { display: block; font-size: 18px; color: var(--fg); font-weight: 500; }
+
+/* start screen */
+.start { min-height: 100%; display: grid; align-content: center; gap: 18px; padding-block: 32px; }
+.start .mark { font-size: 44px; text-align: center; }
+.start .tag { text-align: center; color: var(--muted); font-family: var(--font-display); font-size: 17px; margin-top: -8px; }
+.classes { display: grid; gap: 10px; }
+.cls { text-align: left; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 14px; display: grid; gap: 4px; }
+.cls:hover { border-color: var(--scar); }
+.cls .nm { font-family: var(--font-display); font-size: 22px; }
+.cls p { margin: 0; color: var(--muted); font-size: 14px; }
+.fine { color: var(--muted); font-size: 12px; text-align: center; }
+
+/* v2 additions */
+.bar.hp > i.shield { background: linear-gradient(rgba(140, 170, 230, .55), rgba(90, 120, 190, .45)); z-index: 1; }
+.cds { display: flex; gap: 4px; }
+.cd { position: relative; flex: 1; min-width: 0; height: 18px; background: #0b0a0b; border: 1px solid var(--line); border-radius: 3px; overflow: hidden; }
+.cd i { position: absolute; inset: 0 auto 0 0; background: color-mix(in srgb, var(--scar) 55%, #000); }
+.cd.util i { background: color-mix(in srgb, var(--r-magic) 45%, #000); }
+.cd b { position: relative; display: block; font-size: 10px; font-weight: 500; line-height: 16px; padding: 0 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-shadow: 0 1px 1px #000; }
+.notice { background: color-mix(in srgb, var(--blight) 40%, var(--surface)); border: 1px solid var(--scar); border-radius: 8px; padding: 10px 12px; display: grid; gap: 8px; }
+.notice p { margin: 2px 0 0; font-size: 14px; color: #d9cfc8; }
+.seg { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+.seg button { background: var(--surface); border: 0; padding: 8px; min-height: 38px; color: var(--muted); font-family: var(--font-display); font-size: 16px; }
+.seg button[aria-selected="true"] { background: var(--blight); color: var(--fg); }
+.mon.boss { border-style: dashed; }
+.result { border-left: 3px solid var(--line); }
+.result.win { border-left-color: var(--good); } .result.loss { border-left-color: var(--rift); }
+.slot { display: grid; gap: 4px; padding-block: 6px; border-top: 1px dashed var(--line); }
+.slot:first-of-type { border-top: 0; }
+.slot .sub { margin: 0; }
+.slot select { max-width: 100%; }
+.specs { display: grid; gap: 8px; }
+.spec { text-align: left; background: var(--surface-2); border: 1px solid var(--line); border-radius: 6px; padding: 10px; display: grid; gap: 2px; }
+.spec:hover:not(:disabled) { border-color: var(--scar); }
+.spec:disabled { opacity: .5; }
+.spec span { color: var(--muted); font-size: 13px; }
+.pas { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding-block: 4px; }
+.pas .btn { min-width: 40px; }
+.mats { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+.mats div { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 6px; font-size: 11px; color: var(--muted); text-align: center; }
+.mats b { display: block; font-size: 16px; color: var(--fg); font-weight: 500; }
+.e-ember { color: #e8834a !important; } .e-ash { color: #c9bfb5 !important; } .e-rift { color: #a98be0 !important; }
+.frow { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding-block: 2px; }
+.frow span { min-width: 0; }
+.affs .pm, .pmline { color: var(--gold); }
+.affs .spl { color: var(--r-magic); }
+.chip.pmc { color: var(--gold); border-color: color-mix(in srgb, var(--gold) 50%, transparent); }
+.chip.splc { color: var(--r-magic); border-color: color-mix(in srgb, var(--r-magic) 50%, transparent); }
+.spells li { padding-block: 1px; }
+</style>
+
+<div id="app"></div>
+
+<script>
+// ===== GODSCAR SIM CORE (v2) =====
+// One deterministic event simulation used for live play, offline catch-up, build projections and boss fights.
+// Combat state is advanced to a wall-clock time; the UI only ever *views* it.
+'use strict';
+
+// ---------- RNG (mulberry32, state stored in save) ----------
+function rand(r) {
+  let t = (r.s = (r.s + 0x6D2B79F5) >>> 0);
+  t = Math.imul(t ^ (t >>> 15), t | 1);
+  t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+  return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+}
+const rr = (r, a, b) => a + (b - a) * rand(r);
+const pick = (r, arr) => arr[Math.floor(rand(r) * arr.length)];
+
+function fmt(v, d = 0) {
+  const a = Math.abs(v);
+  if (a >= 1e9) return (v / 1e9).toFixed(1) + 'B';
+  if (a >= 1e6) return (v / 1e6).toFixed(1) + 'M';
+  if (a >= 10000) return (v / 1000).toFixed(1) + 'k';
+  return d ? (Math.round(v * 10 ** d) / 10 ** d).toFixed(d) : String(Math.round(v));
+}
+
+// ---------- CLASSES ----------
+// primary: the ability that never stops. conv = share of damage turned to fire. hits = strikes per cast.
+const CLASSES = {
+  warrior: {
+    name: 'Warrior', life: 130, lifePer: 15, armor: 4, armorPer: 0.7, regen: 1.2, fireRes: 0, crit: 0,
+    primary: { name: 'Cleave', hits: 1, mult: 1, conv: 0, text: 'Swings your weapon at the foe, forever.' },
+    spell: 'sunder', startWeapon: 'sword',
+    blurb: 'Heavy armor and a deep life pool. Cleave never stops; Sunder smashes through plate.',
+    specs: [
+      { name: 'Berserker', text: '+20% attack speed, 15% more damage, 15% less armor.', mods: { atkSpd: 20, dmgMore: 0.15, armorMore: -0.15 } },
+      { name: 'Juggernaut', text: '25% more life and 25% more armor.', mods: { lifeMore: 0.25, armorMore: 0.25 } },
+      { name: 'Warlord', text: '60% more retaliation and 50% more life regeneration.', mods: { thornsMore: 0.6, regenMore: 0.5 } }
+    ]
+  },
+  paladin: {
+    name: 'Paladin', life: 120, lifePer: 14, armor: 3, armorPer: 0.6, regen: 2, fireRes: 10, crit: 0,
+    primary: { name: 'Smite', hits: 1, mult: 1, conv: 0.4, text: 'Strikes with 40% of its damage turned to holy fire.' },
+    spell: 'consecrate', startWeapon: 'sword',
+    blurb: 'Steady and self-healing. Smite burns with holy fire; Consecrate damages and mends.',
+    specs: [
+      { name: 'Templar', text: '20% more armor, +15% fire resistance, 10% more life.', mods: { armorMore: 0.2, fireRes: 15, lifeMore: 0.1 } },
+      { name: 'Inquisitor', text: '+8% critical chance and +40% critical damage.', mods: { critChance: 8, critMulti: 40 } },
+      { name: 'Martyr', text: 'Double life on hit and 15% more life, 5% less damage.', mods: { lifeOnHitMore: 1, lifeMore: 0.15, dmgMore: -0.05 } }
+    ]
+  },
+  sorcerer: {
+    name: 'Sorcerer', life: 90, lifePer: 10, armor: 1, armorPer: 0.25, regen: 1.6, fireRes: 15, crit: 0,
+    primary: { name: 'Firebolt', hits: 1, mult: 1, conv: 1, text: 'Hurls fire. All of its damage is fire, whatever you wield.' },
+    spell: 'ignite', startWeapon: 'staff',
+    blurb: 'Fragile, all fire. Firebolt never stops; Ignite leaves foes burning.',
+    specs: [
+      { name: 'Stormcaller', text: '+25% attack speed.', mods: { atkSpd: 25 } },
+      { name: 'Pyromancer', text: '60% more burn and bleed damage.', mods: { dotMore: 0.6 } },
+      { name: 'Arcanist', text: '35% more spell damage and 15% faster spell cooldowns.', mods: { spellMore: 0.35, cdr: 15 } }
+    ]
+  },
+  hunter: {
+    name: 'Hunter', life: 105, lifePer: 12, armor: 2, armorPer: 0.4, regen: 1.4, fireRes: 0, crit: 3,
+    primary: { name: 'Quickshot', hits: 1, mult: 1, conv: 0, text: 'Looses arrows at range without pause.' },
+    spell: 'hawk', startWeapon: 'bow',
+    blurb: 'Precise, with a companion. Quickshot never stops; Hawk Talon summons a hunting hawk.',
+    specs: [
+      { name: 'Deadeye', text: '+10% critical chance and +30% critical damage.', mods: { critChance: 10, critMulti: 30 } },
+      { name: 'Beastmaster', text: 'Your companion deals 80% more damage.', mods: { companionMore: 0.8 } },
+      { name: 'Trapper', text: '40% more burn and bleed damage, hits ignore 30% of armor.', mods: { dotMore: 0.4, armorPen: 0.3 } }
+    ]
+  },
+  rogue: {
+    name: 'Rogue', life: 95, lifePer: 11, armor: 1.5, armorPer: 0.35, regen: 1.3, fireRes: 0, crit: 5,
+    primary: { name: 'Twin Strike', hits: 2, mult: 0.55, conv: 0, text: 'Strikes twice for 55% each. Twice the on-hit effects.' },
+    spell: 'eviscerate', startWeapon: 'dagger',
+    blurb: 'Fast and lethal. Twin Strike never stops; Eviscerate always lands a critical blow.',
+    specs: [
+      { name: 'Assassin', text: '+60% critical damage and +5% critical chance.', mods: { critMulti: 60, critChance: 5 } },
+      { name: 'Shadow', text: '15% chance to dodge attacks.', mods: { dodge: 15 } },
+      { name: 'Trickster', text: '+15% attack speed and 50% more life on hit.', mods: { atkSpd: 15, lifeOnHitMore: 0.5 } }
+    ]
+  }
+};
+const CLASS_KEYS = ['warrior', 'paladin', 'sorcerer', 'hunter', 'rogue'];
+const SPEC_LEVEL = 10;
+
+// ---------- SPELLS ----------
+// kind: off (offensive, fires on cooldown) | util (fires when its condition is met). el: essence needed to inscribe.
+const SPELLS = {
+  // class spells
+  sunder:     { name: 'Sunder', kind: 'off', cls: 'warrior', cd: 6, text: '250% physical hit that ignores armor.' },
+  consecrate: { name: 'Consecrate', kind: 'off', cls: 'paladin', cd: 7, text: '160% fire hit, and heals you for 8% of your life.' },
+  ignite:     { name: 'Ignite', kind: 'off', cls: 'sorcerer', cd: 5, text: '120% fire hit that burns for 80% per second over 4s.' },
+  hawk:       { name: 'Hawk Talon', kind: 'off', cls: 'hunter', cd: 9, text: 'A hawk hunts with you for 9s, striking for 40% every second.' },
+  eviscerate: { name: 'Eviscerate', kind: 'off', cls: 'rogue', cd: 6, text: '220% hit that is always critical.' },
+  // found or inscribed
+  cinderburst:{ name: 'Cinderburst', kind: 'off', el: 'ember', cd: 6, text: '200% fire hit that burns for 60% per second over 3s.' },
+  emberrain:  { name: 'Ember Rain', kind: 'off', el: 'ember', cd: 10, text: '380% fire damage in one downpour.' },
+  scarlance:  { name: 'Scar Lance', kind: 'off', el: 'ash', cd: 7, text: '280% physical hit that ignores armor.' },
+  rend:       { name: 'Rend', kind: 'off', el: 'ash', cd: 8, text: 'Bleeds the foe for 55% per second over 6s, ignoring armor.' },
+  riftbolt:   { name: 'Riftbolt', kind: 'off', el: 'rift', cd: 4, text: '130% rift damage. Ignores armor, resistance and evasion.' },
+  voidmaw:    { name: 'Void Maw', kind: 'off', el: 'rift', cd: 14, text: '420% rift damage. Ignores armor, resistance and evasion.' },
+  barrier:    { name: 'Rift Barrier', kind: 'util', el: 'rift', cd: 15, text: 'A shield that absorbs damage equal to 25% of your life.', cond: 'hp50' },
+  mend:       { name: 'Mend', kind: 'util', el: 'ember', cd: 12, text: 'Heal 30% of your life.', cond: 'hp50' },
+  warcry:     { name: 'War Cry', kind: 'util', el: 'ash', cd: 16, text: '30% more damage for 6s.', cond: 'foeHigh' },
+  ashward:    { name: 'Ash Ward', kind: 'util', el: 'ash', cd: 18, text: '50% more armor and +25% fire resistance for 6s.', cond: 'always' }
+};
+const FOUND_SPELLS = ['cinderburst', 'emberrain', 'scarlance', 'rend', 'riftbolt', 'voidmaw', 'barrier', 'mend', 'warcry', 'ashward'];
+const CONDS = {
+  always: 'Whenever ready',
+  hp70: 'Life below 70%',
+  hp50: 'Life below 50%',
+  hp30: 'Life below 30%',
+  foeHigh: 'Foe above 70% life'
+};
+const BAR_OFF = 3, BAR_UTIL = 2;
+const CLASS_SPELL_LEVEL = 3;
+
+// ---------- PRIMARY ABILITY MODS (from items) ----------
+const PMODS = {
+  split:    { name: 'Splitting', text: 'Your primary strikes again for 40%.' },
+  searing:  { name: 'Searing', text: 'Your primary burns for 25% of its hit per second over 3s.' },
+  heavy:    { name: 'Crushing', text: 'Your primary is 35% slower but hits 75% harder.' },
+  rending:  { name: 'Rending', text: 'Your primary ignores 50% of armor.' },
+  siphon:   { name: 'Siphoning', text: 'Your primary heals you for 4% of the damage it deals.' },
+  momentum: { name: 'Momentum', text: 'Each primary hit on the same foe deals 10% more, up to 5 stacks.' }
+};
+
+// ---------- PASSIVES ----------
+const PASSIVES = {
+  might:     { name: 'Might', text: '+2% damage' },
+  vitality:  { name: 'Vitality', text: '+3% life' },
+  swiftness: { name: 'Swiftness', text: '+1.5% attack speed' },
+  precision: { name: 'Precision', text: '+0.6% crit chance, +3% crit damage' },
+  bulwark:   { name: 'Bulwark', text: '+3% armor, +0.5% fire resistance' },
+  sorcery:   { name: 'Sorcery', text: '+3% spell, burn and bleed damage' }
+};
+const PASSIVE_KEYS = Object.keys(PASSIVES);
+
+// ---------- ITEMS ----------
+const SLOTS = ['weapon', 'helm', 'chest', 'gloves', 'boots', 'ring', 'amulet'];
+const SLOT_NAMES = { weapon: 'Weapon', helm: 'Helm', chest: 'Chest', gloves: 'Gloves', boots: 'Boots', ring: 'Ring', amulet: 'Amulet' };
+const WEAPONS = {
+  sword:    { name: 'Sword',    type: 'phys', mult: 1.0,  interval: 1.3 },
+  greataxe: { name: 'Greataxe', type: 'phys', mult: 1.8,  interval: 2.1 },
+  dagger:   { name: 'Dagger',   type: 'phys', mult: 0.62, interval: 0.85 },
+  bow:      { name: 'Bow',      type: 'phys', mult: 1.25, interval: 1.55 },
+  staff:    { name: 'Staff',    type: 'fire', mult: 1.05, interval: 1.4 },
+  wand:     { name: 'Wand',     type: 'fire', mult: 0.58, interval: 0.8 }
+};
+const ARMOR_BASE = { helm: { armor: 3 }, chest: { armor: 6, life: 10 }, gloves: { armor: 2 }, boots: { armor: 2 } };
+const gearG = ilvl => Math.pow(1.105, ilvl - 1);
+const monG = lvl => Math.pow(1.155, lvl - 1);
+
+const AFFIXES = {
+  physFlat:  { label: v => `+${fmt(v)} physical damage to attacks`, slots: ['weapon', 'gloves', 'ring'], roll: (r, g) => rr(r, 1.5, 3) * g },
+  fireFlat:  { label: v => `+${fmt(v)} fire damage to attacks`, slots: ['weapon', 'gloves', 'ring', 'amulet'], roll: (r, g) => rr(r, 1.5, 3) * g },
+  dmgPct:    { label: v => `+${fmt(v)}% damage`, slots: ['weapon', 'ring', 'amulet'], pct: 1, roll: r => rr(r, 8, 20) },
+  atkSpd:    { label: v => `+${fmt(v)}% attack speed`, slots: ['weapon', 'gloves', 'ring'], pct: 1, roll: r => rr(r, 5, 14) },
+  critChance:{ label: v => `+${fmt(v)}% critical chance`, slots: ['weapon', 'helm', 'ring', 'amulet'], pct: 1, roll: r => rr(r, 3, 8) },
+  critMulti: { label: v => `+${fmt(v)}% critical damage`, slots: ['weapon', 'gloves', 'amulet'], pct: 1, roll: r => rr(r, 15, 40) },
+  life:      { label: v => `+${fmt(v)} life`, slots: ['helm', 'chest', 'boots', 'ring', 'amulet'], roll: (r, g) => rr(r, 10, 20) * g },
+  armor:     { label: v => `+${fmt(v)} armor`, slots: ['helm', 'chest', 'gloves', 'boots'], roll: (r, g) => rr(r, 2, 4) * g },
+  regen:     { label: v => `+${fmt(v, 1)} life per second`, slots: ['helm', 'chest', 'boots', 'amulet'], roll: (r, g) => rr(r, 0.6, 1.2) * g },
+  lifeOnHit: { label: v => `+${fmt(v, 1)} life on hit`, slots: ['weapon', 'gloves', 'ring'], roll: (r, g) => rr(r, 0.8, 1.8) * g },
+  thorns:    { label: v => `+${fmt(v)} retaliation damage`, slots: ['helm', 'chest', 'boots', 'amulet'], roll: (r, g) => rr(r, 2, 4) * g },
+  fireRes:   { label: v => `+${fmt(v)}% fire resistance`, slots: ['helm', 'chest', 'boots', 'ring', 'amulet'], pct: 1, roll: r => rr(r, 8, 18) },
+  spellPct:  { label: v => `+${fmt(v)}% spell damage`, slots: ['weapon', 'helm', 'amulet', 'ring'], pct: 1, roll: r => rr(r, 10, 25) },
+  cdr:       { label: v => `${fmt(v)}% faster spell cooldowns`, slots: ['helm', 'amulet'], pct: 1, roll: r => rr(r, 4, 9) },
+  goldFind:  { label: v => `+${fmt(v)}% gold found`, slots: ['helm', 'boots', 'ring', 'amulet'], pct: 1, roll: r => rr(r, 10, 30) }
+};
+
+const SPECIALS = {
+  emberheart: { name: 'Ember Heart', text: 'All your physical damage is converted to fire.' },
+  bulwark:    { name: 'Bulwark of Caldris', text: 'Gain retaliation damage equal to 60% of your armor.' },
+  echo:       { name: 'Wound-Echo', text: 'Your offensive spells strike twice.' },
+  tithe:      { name: 'Bloodtithe', text: 'Life on hit is tripled. 25% less maximum life.' },
+  kindling:   { name: 'Scar Kindling', text: 'Every hit burns the target for 40% of its damage per second over 3s.' },
+  gravebound: { name: 'Gravebound', text: 'Retaliation can critically strike, and heals you for 30% of the damage it deals.' }
+};
+
+const RARITIES = [
+  { key: 'common', name: 'Common', affixes: [0, 0] },
+  { key: 'magic', name: 'Magic', affixes: [1, 2] },
+  { key: 'rare', name: 'Rare', affixes: [3, 4] },
+  { key: 'godtouched', name: 'Godtouched', affixes: [3, 3] }
+];
+const RARITY_RANK = { common: 0, magic: 1, rare: 2, godtouched: 3 };
+
+// ---------- ZONES & MONSTERS ----------
+const ZONES = {
+  fallfields: { name: 'The Fallfields', minLevel: 1, weights: [52, 34, 12, 2], ilvlBonus: 0, reward: 1, tough: 1, spellChance: 0,
+    text: 'Blighted farmland where the wound first bled into Caldris.' },
+  hollow: { name: 'The Ashen Hollow', minLevel: 20, weights: [30, 42, 23, 5], ilvlBonus: 4, reward: 1.9, tough: 1.7, spellChance: 0.18,
+    text: 'A crater of ash below the Godwound. Stronger items, element essences, and rare items that grant spells.' }
+};
+const ZONE_KEYS = ['fallfields', 'hollow'];
+const HOLLOW_UNLOCK = 20; // reach this level on any Fallfields monster
+
+const MONSTERS = {
+  husk:   { zone: 'fallfields', name: 'Blighted Husk', hp: 75, dmg: 7, interval: 2.0, dmgType: 'phys', armor: 0, fireRes: 0, regenPct: 0.035, evade: 0, xp: 1.0, gold: 1.0,
+            note: 'Regenerates 3.5% of its life every second. Low damage never finishes it.' },
+  swarm:  { zone: 'fallfields', name: 'Carrion Swarm', hp: 30, dmg: 2.4, interval: 0.5, dmgType: 'phys', armor: 0, fireRes: 0, regenPct: 0, evade: 0, xp: 0.5, gold: 0.5,
+            note: 'Many tiny bites. Armor shrugs them off; retaliation punishes every one.' },
+  knight: { zone: 'fallfields', name: 'Grave Knight', hp: 90, dmg: 12, interval: 2.0, dmgType: 'phys', armor: 7, fireRes: 0, regenPct: 0, evade: 0, xp: 1.45, gold: 1.5,
+            note: 'Plate armor subtracts from every physical hit. Big hits or fire get through.' },
+  wisp:   { zone: 'fallfields', name: 'Hollow Wisp', hp: 42, dmg: 8, interval: 1.3, dmgType: 'fire', fireRes: 60, armor: 0, regenPct: 0, evade: 0, xp: 0.85, gold: 0.9,
+            note: 'Burns through armor and resists 60% of fire. Needs fire resistance and physical damage.' },
+  zealot: { zone: 'hollow', name: 'Ashbound Zealot', hp: 85, dmg: 10, interval: 1.6, dmgType: 'fire', armor: 5, fireRes: 30, regenPct: 0, evade: 0, xp: 1.4, gold: 1.4, essence: 'ember',
+            note: 'Armored, fire-wielding, resists 30% of fire. Drops Ember Essence.' },
+  hound:  { zone: 'hollow', name: 'Blight Hound', hp: 40, dmg: 4, interval: 0.7, dmgType: 'phys', armor: 0, fireRes: 0, regenPct: 0.02, evade: 0, xp: 0.5, gold: 0.5, essence: 'ash',
+            note: 'Fast pack hunter that regenerates. Drops Ash Essence.' },
+  shade:  { zone: 'hollow', name: 'Rift Shade', hp: 50, dmg: 9, interval: 1.2, dmgType: 'phys', armor: 0, fireRes: 0, regenPct: 0, evade: 35, xp: 1.0, gold: 1.0, essence: 'rift',
+            note: 'Evades 35% of hits. Burns, bleeds, companions and rift damage still land. Drops Rift Essence.' },
+  colossus:{ zone: 'hollow', name: 'Cinder Colossus', hp: 170, dmg: 22, interval: 3.0, dmgType: 'phys', armor: 10, fireRes: 40, regenPct: 0, evade: 0, xp: 2.6, gold: 2.8, essence: 'any',
+            note: 'Huge, slow, crushing blows behind heavy armor. Drops any essence, more often.' }
+};
+const MONSTER_KEYS = Object.keys(MONSTERS);
+const BOSSES = {
+  bellkeeper: { zone: 'fallfields', name: 'The Hollow Bellkeeper', hp: 75 * 40, dmg: 17, interval: 2.2, dmgType: 'phys', armor: 4, fireRes: 20, regenPct: 0, evade: 0, xp: 12, gold: 15, minLevel: 3,
+                note: 'Tolls the dead bell of the Fallfields. A long fight against heavy blows.' },
+  woundwarden:{ zone: 'hollow', name: 'The Woundwarden', hp: 85 * 32, dmg: 15, interval: 1.8, dmgType: 'fire', armor: 8, fireRes: 35, regenPct: 0.005, evade: 10, xp: 18, gold: 22, minLevel: 20,
+                note: 'Guardian of the crater. Armored, fire-wielding, slowly mends.' }
+};
+const BOSS_KEYS = Object.keys(BOSSES);
+const mdef = key => MONSTERS[key] || BOSSES[key];
+const ESSENCES = { ember: 'Ember Essence', ash: 'Ash Essence', rift: 'Rift Essence' };
+
+const RESPAWN = 0.6, RECOVERY = 12, PULSE = 1, DROP_CHANCE = 0.2, BAG_CAP = 30, OFFLINE_CAP = 24 * 3600, UNLOCK_KILLS = 30;
+const SIGIL_KILLS = 150, SIGIL_CAP = 5, BOSS_TIME = 150;
+const xpToNext = lvl => Math.round(70 * Math.pow(1.19, lvl - 1) + 40 * lvl);
+
+// ---------- ITEM GENERATION ----------
+let itemSeq = 0;
+function newId(r) { return 'i' + Math.floor(rand(r) * 1e9).toString(36) + (itemSeq++).toString(36); }
+function rollRarity(r, weights) {
+  let x = rand(r) * weights.reduce((a, b) => a + b, 0);
+  for (let i = 0; i < RARITIES.length; i++) { if ((x -= weights[i]) < 0) return RARITIES[i]; }
+  return RARITIES[0];
+}
+function rollAffix(r, it, exclude) {
+  const pool = Object.keys(AFFIXES).filter(k => AFFIXES[k].slots.includes(it.slot) && !exclude.includes(k));
+  if (!pool.length) return null;
+  const k = pick(r, pool);
+  let v = AFFIXES[k].roll(r, gearG(it.ilvl));
+  if (AFFIXES[k].pct) v *= 1 + it.ilvl * 0.01;
+  return [k, v];
+}
+function makeItem(r, slot, ilvl, opts = {}) {
+  const zone = ZONES[opts.zone || 'fallfields'];
+  const ra = opts.rarity ? RARITIES.find(x => x.key === opts.rarity) : rollRarity(r, zone.weights);
+  const g = gearG(ilvl);
+  const it = { id: newId(r), slot, ilvl, rarity: ra.key, plus: 0, affixes: [], locked: false, shardsIn: 0 };
+  if (slot === 'weapon') {
+    it.base = opts.base || pick(r, Object.keys(WEAPONS));
+    it.dmg = 7 * g * rr(r, 0.92, 1.08);
+  } else if (ARMOR_BASE[slot]) {
+    it.armor = ARMOR_BASE[slot].armor * g * rr(r, 0.9, 1.1);
+    if (ARMOR_BASE[slot].life) it.life = ARMOR_BASE[slot].life * g;
+  }
+  const n = Math.round(rr(r, ra.affixes[0], ra.affixes[1]));
+  for (let i = 0; i < n; i++) { const a = rollAffix(r, it, it.affixes.map(x => x[0])); if (a) it.affixes.push(a); }
+  if (ra.key === 'godtouched') it.special = pick(r, Object.keys(SPECIALS));
+  if (RARITY_RANK[ra.key] >= 1 && ilvl >= 3 && rand(r) < 0.12) it.pmod = pick(r, Object.keys(PMODS));
+  const sc = ra.key === 'godtouched' ? Math.max(zone.spellChance, 0) * 2.8 : ra.key === 'rare' ? zone.spellChance : 0;
+  if (sc && rand(r) < sc) it.spell = pick(r, FOUND_SPELLS);
+  it.name = itemName(it);
+  return it;
+}
+const PREFIX = ['Ashen', 'Blighted', 'Scarbound', 'Hollow', 'Vigil', 'Riftworn', 'Gravecut', 'Emberlit', 'Oathbroken', 'Fallfield'];
+const NOUNS = {
+  helm: ['Helm', 'Visor', 'Hood', 'Crown'], chest: ['Hauberk', 'Robe', 'Cuirass', 'Mantle'],
+  gloves: ['Gauntlets', 'Grips', 'Wraps'], boots: ['Greaves', 'Treads', 'Boots'], ring: ['Ring', 'Band', 'Signet'], amulet: ['Amulet', 'Talisman', 'Relic']
+};
+function itemName(it) {
+  let h = 0; for (const c of it.id) h = (h * 31 + c.charCodeAt(0)) >>> 0;
+  const noun = it.slot === 'weapon' ? WEAPONS[it.base].name : NOUNS[it.slot][h % NOUNS[it.slot].length];
+  if (it.rarity === 'common') return noun;
+  if (it.special) return SPECIALS[it.special].name + ' ' + noun;
+  if (it.spell) return noun + ' of ' + SPELLS[it.spell].name;
+  if (it.pmod) return PMODS[it.pmod].name + ' ' + noun;
+  return PREFIX[(h >>> 4) % PREFIX.length] + ' ' + noun;
+}
+
+const plusMult = it => 1 + 0.1 * (it.plus || 0);
+const upgradeCost = it => Math.ceil(3 * Math.pow(1.45, it.plus || 0) * (1 + RARITY_RANK[it.rarity] * 0.3));
+const salvageValue = it => Math.round(4 * Math.pow(1.12, it.ilvl) * (1 + RARITY_RANK[it.rarity] * 1.5) * (1 + (it.plus || 0) * 0.5));
+const salvageShards = it => Math.floor((it.shardsIn || 0) / 2) + (RARITY_RANK[it.rarity] >= 2 ? 1 : 0);
+const reforgeCost = it => Math.round(25 * Math.pow(1.12, it.ilvl) * (1 + RARITY_RANK[it.rarity]));
+const inscribeCost = it => ({ essence: 3, gold: Math.round(60 * Math.pow(1.1, it.ilvl)) });
+const respecCost = lvl => Math.round(40 * Math.pow(1.12, lvl));
+
+// ---------- STATS ----------
+function computeStats(hero, equip) {
+  const C = CLASSES[hero.cls], lvl = hero.level, P = hero.passives || {};
+  const spec = hero.spec != null ? C.specs[hero.spec].mods : {};
+  const s = {
+    life: C.life + C.lifePer * (lvl - 1), armor: C.armor + C.armorPer * (lvl - 1), regen: C.regen * (1 + 0.06 * (lvl - 1)),
+    fireRes: C.fireRes, lifeOnHit: 0, thorns: 0, critChance: 5 + C.crit, critMulti: 150, atkSpd: 0, dmgPct: 0, goldFind: 0,
+    physFlat: 0, fireFlat: 0, spellPct: 0, cdr: 0, dodge: 0, armorPen: 0, specials: {}, pmods: {}, itemSpells: []
+  };
+  let wType = 'phys', wDmg = 3, interval = 1.5;
+  for (const slot of SLOTS) {
+    const it = equip[slot]; if (!it) continue;
+    const m = plusMult(it);
+    if (slot === 'weapon') { const W = WEAPONS[it.base]; wType = W.type; wDmg = it.dmg * W.mult * m; interval = W.interval; }
+    if (it.armor) s.armor += it.armor * m;
+    if (it.life) s.life += it.life * m;
+    for (const [k, v] of it.affixes) s[k] += AFFIXES[k].pct ? v : v * m;
+    if (it.special) s.specials[it.special] = true;
+    if (it.pmod) s.pmods[it.pmod] = true;
+    if (it.spell && !s.itemSpells.includes(it.spell)) s.itemSpells.push(it.spell);
+  }
+  // spec + passives
+  s.atkSpd += (spec.atkSpd || 0) + 1.5 * (P.swiftness || 0);
+  s.critChance += (spec.critChance || 0) + 0.6 * (P.precision || 0);
+  s.critMulti += (spec.critMulti || 0) + 3 * (P.precision || 0);
+  s.fireRes += (spec.fireRes || 0) + 0.5 * (P.bulwark || 0);
+  s.dodge += spec.dodge || 0;
+  s.armorPen += spec.armorPen || 0;
+  s.cdr += spec.cdr || 0;
+  s.life *= (1 + (spec.lifeMore || 0)) * (1 + 0.03 * (P.vitality || 0));
+  s.armor *= (1 + (spec.armorMore || 0)) * (1 + 0.03 * (P.bulwark || 0));
+  s.regen *= 1 + (spec.regenMore || 0);
+  s.lifeOnHit *= 1 + (spec.lifeOnHitMore || 0);
+  const levelMult = 1 + 0.03 * (lvl - 1);
+  const mult = levelMult * (1 + s.dmgPct / 100) * (1 + (spec.dmgMore || 0)) * (1 + 0.02 * (P.might || 0));
+  s.phys = ((wType === 'phys' ? wDmg : 0) + s.physFlat) * mult;
+  s.fire = ((wType === 'fire' ? wDmg : 0) + s.fireFlat) * mult;
+  if (s.specials.emberheart) { s.fire += s.phys; s.phys = 0; }
+  if (s.specials.tithe) { s.lifeOnHit *= 3; s.life *= 0.75; }
+  if (s.specials.bulwark) s.thorns += 0.6 * s.armor;
+  s.thorns *= levelMult * (1 + (spec.thornsMore || 0));
+  s.spellMore = (1 + s.spellPct / 100) * (1 + (spec.spellMore || 0)) * (1 + 0.03 * (P.sorcery || 0));
+  s.dotMore = (1 + (spec.dotMore || 0)) * (1 + 0.03 * (P.sorcery || 0));
+  s.companionMore = 1 + (spec.companionMore || 0);
+  s.interval = interval / (1 + s.atkSpd / 100) * (s.pmods.heavy ? 1.35 : 1);
+  s.fireRes = Math.min(75, s.fireRes);
+  s.critChance = Math.min(75, s.critChance);
+  s.dodge = Math.min(50, s.dodge);
+  s.cdr = Math.min(40, s.cdr);
+  s.wType = wType;
+  s.life = Math.round(s.life);
+  s.primary = C.primary;
+  return s;
+}
+
+// Spells the character can put on the bar right now.
+function availableSpells(g) {
+  const out = [];
+  if (g.hero.level >= CLASS_SPELL_LEVEL) out.push(CLASSES[g.hero.cls].spell);
+  for (const k of g.stats.itemSpells) if (!out.includes(k)) out.push(k);
+  return out;
+}
+// Recompute everything derived from build state, and keep the bar valid.
+function refresh(g) {
+  g.stats = computeStats(g.hero, g.equip);
+  const av = availableSpells(g);
+  const bar = g.bar;
+  bar.off = bar.off.map(k => (k && av.includes(k) && SPELLS[k].kind === 'off') ? k : null);
+  bar.util = bar.util.map(u => (u && av.includes(u.k) && SPELLS[u.k].kind === 'util') ? u : null);
+  // auto-slot newly available spells into empty slots (once)
+  g.slotted = g.slotted || {};
+  for (const k of av) {
+    if (g.slotted[k] || bar.off.includes(k) || bar.util.some(u => u && u.k === k)) { g.slotted[k] = true; continue; }
+    if (SPELLS[k].kind === 'off') { const i = bar.off.indexOf(null); if (i >= 0) { bar.off[i] = k; g.slotted[k] = true; } }
+    else { const i = bar.util.indexOf(null); if (i >= 0) { bar.util[i] = { k, cond: SPELLS[k].cond }; g.slotted[k] = true; } }
+  }
+  for (const k of Object.keys(g.slotted)) if (!av.includes(k)) delete g.slotted[k];
+  g.cast = [...bar.off.filter(Boolean).map(k => ({ k, cond: null })), ...bar.util.filter(Boolean).map(u => ({ k: u.k, cond: u.cond }))];
+}
+
+// ---------- COMBAT ----------
+function spawnMonster(key, level) {
+  const M = mdef(key), gr = monG(level), tf = ZONES[M.zone].tough;
+  return { key, level, hp: M.hp * gr * tf, max: M.hp * gr * tf, dmg: M.dmg * gr * tf, armor: M.armor * gr * tf, interval: M.interval,
+    fireRes: M.fireRes, regenPct: M.regenPct, evade: M.evade || 0, burnDps: 0, burnUntil: 0, bleedDps: 0, bleedUntil: 0, next: 0, stacks: 0 };
+}
+const afterArmor = (hit, armor) => Math.max(hit * 0.25, hit - armor);
+function newFight(t) { return { hp: null, mon: null, pNext: t, pulseNext: t + PULSE, respawnAt: t, deadUntil: 0, cd: {}, shield: 0, buffs: {} }; }
+
+function condMet(cond, g) {
+  const f = g.fight, S = g.stats, hp = f.hp / S.life;
+  if (cond === 'hp70') return hp < 0.7;
+  if (cond === 'hp50') return hp < 0.5;
+  if (cond === 'hp30') return hp < 0.3;
+  if (cond === 'foeHigh') return f.mon && f.mon.hp / f.mon.max > 0.7;
+  return true;
+}
+
+function advance(g, tEnd, out, log) {
+  if (!g.stats || !g.cast) refresh(g);
+  const f = g.fight, r = g.rng;
+  if (f.hp == null) f.hp = g.stats.life;
+  f.cd = f.cd || {}; f.buffs = f.buffs || {};
+  let guard = 0;
+  while (++guard < 5e6) {
+    const S = g.stats;
+    let tn = Infinity, ev = '', sp = null;
+    if (f.deadUntil > g.t) { tn = f.deadUntil; ev = 'revive'; }
+    else if (!f.mon) { tn = f.respawnAt; ev = 'spawn'; }
+    else {
+      tn = f.pNext; ev = 'patk';
+      if (f.mon.next < tn) { tn = f.mon.next; ev = 'matk'; }
+      if (f.pulseNext < tn) { tn = f.pulseNext; ev = 'pulse'; }
+      for (const c of g.cast) { const ready = f.cd[c.k] || 0; if (ready < tn) { tn = ready; ev = 'spell'; sp = c; } }
+    }
+    if (tn > tEnd) { g.t = tEnd; break; }
+    g.t = Math.max(g.t, tn);
+    if (ev === 'revive') {
+      f.hp = S.life; f.respawnAt = g.t; f.deadUntil = 0; f.shield = 0; f.buffs = {};
+      log && log('You rise again.', 'sys');
+    } else if (ev === 'spawn') {
+      const tg = g.target;
+      f.mon = spawnMonster(tg.key, tg.level);
+      f.mon.next = g.t + f.mon.interval * 0.7;
+      f.pNext = Math.max(f.pNext, g.t + 0.15);
+      for (const c of g.cast) if ((f.cd[c.k] || 0) < g.t) f.cd[c.k] = g.t + 0.3;
+      f.pulseNext = g.t + PULSE;
+    } else if (ev === 'patk') {
+      primaryAttack(g, out, log);
+      f.pNext = g.t + S.interval;
+    } else if (ev === 'spell') {
+      castSpell(g, sp, out, log);
+    } else if (ev === 'matk') {
+      monsterAttack(g, out, log);
+    } else if (ev === 'pulse') {
+      pulse(g, out, log);
+    }
+  }
+}
+
+// One damage instance against the current foe. type: weapon | phys | fire | rift
+function strike(g, o, out, log) {
+  const S = g.stats, f = g.fight, m = f.mon, r = g.rng;
+  if (!m) return 0;
+  if (o.evadable !== false && m.evade && rand(r) * 100 < m.evade) { return 0; }
+  const crit = o.forceCrit || rand(r) * 100 < S.critChance;
+  const v = rr(r, 0.85, 1.15) * o.mult * (crit ? S.critMulti / 100 : 1) * (f.buffs.warcry > g.t ? 1.3 : 1);
+  let ph = S.phys * v, fi = S.fire * v;
+  if (o.conv) { fi += ph * o.conv; ph *= 1 - o.conv; }
+  if (o.type === 'phys') { ph += fi; fi = 0; } else if (o.type === 'fire') { fi += ph; ph = 0; }
+  const raw = ph + fi;
+  let dealt;
+  if (o.type === 'rift') dealt = raw;
+  else {
+    const pen = Math.min(0.9, S.armorPen + (o.pen || 0));
+    ph = o.ignoreArmor || ph <= 0 ? ph : afterArmor(ph, m.armor * (1 - pen));
+    fi = fi * (1 - m.fireRes / 100);
+    dealt = ph + fi;
+  }
+  if (o.primary && S.pmods.momentum) dealt *= 1 + 0.1 * m.stacks;
+  m.hp -= dealt; out.dmgDealt += dealt;
+  if (o.onHit !== false && S.lifeOnHit) f.hp = Math.min(S.life, f.hp + S.lifeOnHit);
+  if (o.primary && S.pmods.siphon) f.hp = Math.min(S.life, f.hp + dealt * 0.04);
+  if (o.burn) applyBurn(g, raw * o.burn * S.dotMore, o.burnDur || 3);
+  if (o.primary && S.pmods.searing) applyBurn(g, raw * 0.25 * S.dotMore, 3);
+  if (S.specials.kindling && o.onHit !== false) applyBurn(g, raw * 0.4 * S.dotMore, 3);
+  if (o.bleed) { m.bleedDps = Math.max(m.bleedUntil > g.t ? m.bleedDps : 0, raw * o.bleed * S.dotMore); m.bleedUntil = g.t + o.bleedDur; }
+  if (o.label && log) log(`${o.label}${crit ? ' (crit)' : ''} for ${fmt(dealt)}`, 'skill');
+  return dealt;
+}
+function applyBurn(g, dps, dur) {
+  const m = g.fight.mon; if (!m) return;
+  m.burnDps = Math.max(m.burnUntil > g.t ? m.burnDps : 0, dps);
+  m.burnUntil = Math.max(m.burnUntil, g.t + dur);
+}
+
+function primaryAttack(g, out, log) {
+  const S = g.stats, P = S.primary, f = g.fight;
+  const base = P.mult * (S.pmods.heavy ? 1.75 : 1);
+  for (let i = 0; i < P.hits && f.mon; i++) strike(g, { mult: base, conv: P.conv, primary: true, pen: S.pmods.rending ? 0.5 : 0 }, out);
+  if (S.pmods.split && f.mon) strike(g, { mult: base * 0.4, conv: P.conv, primary: true, pen: S.pmods.rending ? 0.5 : 0 }, out);
+  if (f.mon) { if (S.pmods.momentum) f.mon.stacks = Math.min(5, f.mon.stacks + 1); if (f.mon.hp <= 0) killMonster(g, out, log); }
+}
+
+function castSpell(g, c, out, log) {
+  const S = g.stats, f = g.fight, sp = SPELLS[c.k];
+  if (c.cond && !condMet(c.cond, g)) { f.cd[c.k] = g.t + 0.5; return; }
+  f.cd[c.k] = g.t + sp.cd * (1 - S.cdr / 100);
+  const times = sp.kind === 'off' && S.specials.echo ? 2 : 1;
+  const sm = S.spellMore, conv = S.primary.conv;
+  for (let i = 0; i < times; i++) {
+    if (!f.mon) break;
+    switch (c.k) {
+      case 'sunder': strike(g, { mult: 2.5 * sm, conv, ignoreArmor: true, label: 'Sunder' }, out, log); break;
+      case 'consecrate': strike(g, { mult: 1.6 * sm, type: 'fire', label: 'Consecrate' }, out, log); f.hp = Math.min(S.life, f.hp + S.life * 0.08); break;
+      case 'ignite': strike(g, { mult: 1.2 * sm, conv: 1, burn: 0.8, burnDur: 4, label: 'Ignite' }, out, log); break;
+      case 'hawk': f.buffs.hawk = g.t + 9; log && i === 0 && log('Hawk Talon: a hawk joins the hunt.', 'skill'); break;
+      case 'eviscerate': strike(g, { mult: 2.2 * sm, forceCrit: true, label: 'Eviscerate' }, out, log); break;
+      case 'cinderburst': strike(g, { mult: 2.0 * sm, type: 'fire', burn: 0.6, burnDur: 3, label: 'Cinderburst' }, out, log); break;
+      case 'emberrain': strike(g, { mult: 3.8 * sm, type: 'fire', label: 'Ember Rain', onHit: false }, out, log); break;
+      case 'scarlance': strike(g, { mult: 2.8 * sm, type: 'phys', ignoreArmor: true, label: 'Scar Lance' }, out, log); break;
+      case 'rend': strike(g, { mult: 0.3 * sm, type: 'phys', bleed: 0.55 / 0.3, bleedDur: 6, label: 'Rend' }, out, log); break;
+      case 'riftbolt': strike(g, { mult: 1.3 * sm, type: 'rift', evadable: false, label: 'Riftbolt' }, out, log); break;
+      case 'voidmaw': strike(g, { mult: 4.2 * sm, type: 'rift', evadable: false, label: 'Void Maw', onHit: false }, out, log); break;
+      case 'barrier': f.shield = Math.max(f.shield, S.life * 0.25); log && log('Rift Barrier raised.', 'skill'); break;
+      case 'mend': f.hp = Math.min(S.life, f.hp + S.life * 0.3); log && log('Mend.', 'skill'); break;
+      case 'warcry': f.buffs.warcry = g.t + 6; log && log('War Cry!', 'skill'); break;
+      case 'ashward': f.buffs.ashward = g.t + 6; break;
+    }
+  }
+  if (f.mon && f.mon.hp <= 0) killMonster(g, out, log);
+}
+
+function monsterAttack(g, out, log) {
+  const S = g.stats, f = g.fight, m = f.mon, r = g.rng, M = mdef(m.key);
+  m.next = g.t + m.interval;
+  if (S.dodge && rand(r) * 100 < S.dodge) return;
+  const ward = f.buffs.ashward > g.t;
+  let d = m.dmg * rr(r, 0.85, 1.15);
+  d = M.dmgType === 'phys' ? afterArmor(d, S.armor * (ward ? 1.5 : 1)) : d * (1 - Math.min(85, S.fireRes + (ward ? 25 : 0)) / 100);
+  if (f.shield > 0) { const a = Math.min(f.shield, d); f.shield -= a; d -= a; }
+  f.hp -= d; out.dmgTaken += d;
+  if (S.thorns > 0) {
+    let th = S.thorns;
+    if (S.specials.gravebound && rand(r) * 100 < S.critChance) th *= S.critMulti / 100;
+    th = afterArmor(th, m.armor);
+    m.hp -= th; out.dmgDealt += th;
+    if (S.specials.gravebound) f.hp = Math.min(S.life, f.hp + th * 0.3);
+  }
+  if (f.hp <= 0) { die(g, out, log); return; }
+  if (m.hp <= 0) killMonster(g, out, log);
+}
+
+function pulse(g, out, log) {
+  const S = g.stats, f = g.fight, m = f.mon;
+  f.pulseNext = g.t + PULSE;
+  f.hp = Math.min(S.life, f.hp + S.regen * PULSE);
+  if (m.burnUntil > g.t - PULSE + 1e-9) { const b = m.burnDps * PULSE * (1 - m.fireRes / 100); m.hp -= b; out.dmgDealt += b; }
+  if (m.bleedUntil > g.t - PULSE + 1e-9) { const b = m.bleedDps * PULSE; m.hp -= b; out.dmgDealt += b; }
+  if (f.buffs.hawk > g.t) strike(g, { mult: 0.4 * S.companionMore * S.spellMore, onHit: false }, out);
+  if (m.hp > 0 && m.regenPct) m.hp = Math.min(m.max, m.hp + m.max * m.regenPct * PULSE);
+  if (f.mon && f.mon.hp <= 0) killMonster(g, out, log);
+}
+
+function die(g, out, log) {
+  const f = g.fight;
+  f.hp = 0; f.mon = null; f.deadUntil = g.t + RECOVERY; f.shield = 0;
+  out.deaths++; g.life.deaths++;
+  if (g.boss) return;
+  log && log(`Slain by the ${mdef(g.target.key).name}. Recovering for ${RECOVERY}s.`, 'death');
+  g.recentDeaths = (g.recentDeaths || []).filter(t => g.t - t < 300);
+  g.recentDeaths.push(g.t);
+  g.streak = 0;
+  const minL = ZONES[mdef(g.target.key).zone].minLevel;
+  if (g.autoPush && g.recentDeaths.length >= 2 && g.target.level > minL) {
+    g.target.level--; g.recentDeaths = [];
+    log && log(`Auto-push: dropping to level ${g.target.level}.`, 'sys');
+  }
+}
+
+function notice(g, key) { g.seen = g.seen || {}; if (g.seen[key]) return; g.seen[key] = true; (g.notices = g.notices || []).push(key); }
+
+function killMonster(g, out, log) {
+  const f = g.fight, m = f.mon; if (!m) return;
+  const M = mdef(m.key), S = g.stats, r = g.rng, Z = ZONES[M.zone];
+  f.mon = null; f.respawnAt = g.t + RESPAWN;
+  out.kills++;
+  if (g.boss) return; // boss sims resolve rewards separately
+  const gap = g.hero.level - m.level - 12;
+  const xp = Math.round(8 * Math.pow(1.12, m.level - 1) * M.xp * Z.reward * (gap > 0 ? Math.max(0.05, 1 - gap * 0.12) : 1));
+  const gold = Math.round(3 * Math.pow(1.12, m.level - 1) * M.gold * Z.reward * rr(r, 0.8, 1.2) * (1 + S.goldFind / 100));
+  out.xp += xp; out.gold += gold;
+  g.life.kills++; g.gold += gold;
+  const kk = m.key + ':' + m.level;
+  g.kills[kk] = (g.kills[kk] || 0) + 1;
+  if (out.killTimes) out.killTimes.push(g.t);
+  // materials
+  if (rand(r) < (M.zone === 'hollow' ? 0.45 : 0.3)) { const n = M.zone === 'hollow' ? 1 + (rand(r) < 0.4 ? 1 : 0) : 1; g.mats.shards += n; out.shards += n; notice(g, 'shards'); }
+  if (M.essence) {
+    const ch = M.essence === 'any' ? 0.12 : 0.05;
+    if (rand(r) < ch) { const e = M.essence === 'any' ? pick(r, Object.keys(ESSENCES)) : M.essence; g.mats[e]++; out.ess[e] = (out.ess[e] || 0) + 1; notice(g, 'essence'); }
+  }
+  g.sigilProg = (g.sigilProg || 0) + 1;
+  if (g.sigilProg >= SIGIL_KILLS) { g.sigilProg = 0; if (g.sigils < SIGIL_CAP) { g.sigils++; out.sigils++; notice(g, 'boss'); log && log('A Boss Sigil formed.', 'level'); } }
+  // unlocks
+  const un = g.unlocked;
+  if (m.level === un[m.key] && g.kills[kk] >= UNLOCK_KILLS) {
+    un[m.key]++;
+    log && log(`${M.name} level ${un[m.key]} unlocked.`, 'sys');
+    if (M.zone === 'fallfields' && un[m.key] >= HOLLOW_UNLOCK && !g.zones.hollow) { g.zones.hollow = true; notice(g, 'hollow'); log && log('The Ashen Hollow has opened.', 'level'); }
+  }
+  g.streak = (g.streak || 0) + 1;
+  if (g.autoPush && g.streak >= 25 && g.target.level < un[g.target.key]) {
+    g.target.level++; g.streak = 0;
+    log && log(`Auto-push: moving up to level ${g.target.level}.`, 'sys');
+  }
+  gainXp(g, xp, out, log);
+  if (rand(r) < DROP_CHANCE) receiveItem(g, makeItem(r, pick(r, SLOTS), m.level + Z.ilvlBonus, { zone: M.zone }), out, log);
+}
+
+function gainXp(g, xp, out, log) {
+  g.hero.xp += xp;
+  while (g.hero.xp >= xpToNext(g.hero.level)) {
+    g.hero.xp -= xpToNext(g.hero.level); g.hero.level++; out.levels++;
+    g.hero.points = (g.hero.points || 0) + 1;
+    const oldLife = g.stats.life;
+    refresh(g);
+    g.fight.hp += g.stats.life - oldLife;
+    log && log(`Level ${g.hero.level}.`, 'level');
+    notice(g, 'passives');
+    if (g.hero.level >= CLASS_SPELL_LEVEL) notice(g, 'bar');
+    if (g.hero.level >= SPEC_LEVEL) notice(g, 'spec');
+  }
+}
+
+function receiveItem(g, it, out, log) {
+  if (it.pmod) notice(g, 'pmod');
+  if (it.spell) notice(g, 'spellitem');
+  const keep = RARITY_RANK[it.rarity] >= RARITY_RANK[g.filter] || it.special || it.spell || (it.pmod && g.keepPmods !== false);
+  if (!keep || g.bag.length >= BAG_CAP) {
+    const v = salvageValue(it);
+    g.gold += v; out.salvaged++; out.salvageGold += v;
+    if (!keep) return;
+    log && log(`Bag full. Salvaged ${it.name} for ${v} gold.`, 'sys');
+    if (RARITY_RANK[it.rarity] >= 2 || it.spell || it.pmod) out.notable.push(it);
+    return;
+  }
+  g.bag.push(it); out.items++;
+  if (RARITY_RANK[it.rarity] >= 2 || it.spell || it.pmod) out.notable.push(it);
+  log && log(`Found ${it.name} (${it.rarity}, ilvl ${it.ilvl}).`, 'loot:' + it.rarity);
+}
+
+function emptyOut() {
+  return { kills: 0, xp: 0, gold: 0, deaths: 0, levels: 0, items: 0, salvaged: 0, salvageGold: 0, notable: [], dmgDealt: 0, dmgTaken: 0, shards: 0, ess: {}, sigils: 0 };
+}
+
+// ---------- NEW GAME / MIGRATION ----------
+function blankState(cls, now, seed) {
+  return {
+    v: 2, created: now, t: now, rng: { s: (seed >>> 0) || 1 },
+    hero: { cls, level: 1, xp: 0, spec: null, points: 0, passives: {} },
+    equip: {}, bag: [], gold: 0, mats: { shards: 0, ember: 0, ash: 0, rift: 0 }, filter: 'magic', keepPmods: true,
+    zones: { fallfields: true, hollow: false }, target: { key: 'husk', level: 1 },
+    unlocked: Object.fromEntries(MONSTER_KEYS.map(k => [k, ZONES[MONSTERS[k].zone].minLevel])),
+    bossUnlocked: Object.fromEntries(BOSS_KEYS.map(k => [k, BOSSES[k].minLevel])),
+    bar: { off: [null, null, null], util: [null, null] }, slotted: {},
+    sigils: 0, sigilProg: 0, lastBoss: null,
+    kills: {}, autoPush: true, streak: 0, recentDeaths: [], seen: {}, notices: [],
+    life: { kills: 0, deaths: 0, offlineSec: 0, bosses: 0 }
+  };
+}
+function newGame(cls, now, seed) {
+  const g = blankState(cls, now, seed);
+  const w = makeItem(g.rng, 'weapon', 1, { rarity: 'common', base: CLASSES[cls].startWeapon });
+  w.name = 'Rusted ' + WEAPONS[w.base].name;
+  g.equip.weapon = w;
+  g.fight = newFight(now);
+  notice(g, 'start');
+  refresh(g);
+  return g;
+}
+function migrate(o) {
+  if (o.v === 2) return o;
+  if (o.v !== 1) throw new Error('Unknown save version');
+  const g = blankState(o.hero.cls, o.t, o.rng.s);
+  g.created = o.created; g.rng = o.rng;
+  g.hero.level = o.hero.level; g.hero.xp = o.hero.xp; g.hero.points = Math.max(0, o.hero.level - 1);
+  g.equip = o.equip; g.bag = o.bag; g.gold = o.gold; g.filter = o.filter; g.target = o.target;
+  for (const k in o.unlocked) g.unlocked[k] = o.unlocked[k];
+  g.kills = o.kills || {}; g.autoPush = o.autoPush; g.life = Object.assign(g.life, o.life);
+  g.fight = newFight(o.t);
+  g.seen = { start: true }; g.notices = ['upgraded'];
+  if (Math.max(...['husk', 'swarm', 'knight', 'wisp'].map(k => g.unlocked[k])) >= HOLLOW_UNLOCK) g.zones.hollow = true;
+  return g;
+}
+
+// ---------- PROJECTION ----------
+// Simulate `secs` of farming with a cloned build and a fixed seed so two builds face identical luck.
+function cloneBuild(g, opts) {
+  const c = blankState(g.hero.cls, 0, opts.seed || 987654321);
+  c.hero = JSON.parse(JSON.stringify(g.hero));
+  if (opts.hero) Object.assign(c.hero, opts.hero);
+  c.equip = { ...g.equip, ...(opts.equip || {}) };
+  for (const k in c.equip) if (c.equip[k] === null) delete c.equip[k];
+  c.bar = JSON.parse(JSON.stringify(opts.bar || g.bar));
+  c.slotted = Object.assign({}, g.slotted, opts.autoslot ? {} : Object.fromEntries((availableSpellsFor(c)).map(k => [k, true])));
+  c.target = opts.target || { ...g.target };
+  c.filter = 'godtouched'; c.autoPush = false;
+  for (const k of MONSTER_KEYS) c.unlocked[k] = 9999;
+  c.fight = newFight(0);
+  c.noLevel = true;
+  refresh(c);
+  return c;
+}
+function availableSpellsFor(c) { c.stats = computeStats(c.hero, c.equip); return availableSpells(c); }
+function project(g, opts) {
+  const secs = opts.secs || 240;
+  const c = cloneBuild(g, Object.assign({ autoslot: true }, opts));
+  const out = emptyOut();
+  c.hero.xp = -1e15; // projections never level up
+  advance(c, secs, out);
+  const min = secs / 60;
+  return { kpm: out.kills / min, gpm: out.gold / min, xpm: out.xp / min, deaths: out.deaths, dps: out.dmgDealt / secs };
+}
+
+// ---------- BOSSES (snapshot fights; ordinary farming never stops) ----------
+function fightBoss(g, key, level) {
+  const seed = Math.floor(rand(g.rng) * 4294967296);
+  const c = cloneBuild(g, { seed, target: { key, level }, autoslot: false });
+  c.boss = true;
+  const out = emptyOut();
+  const lines = [];
+  const log = (t, k) => { if (lines.length < 400) lines.push({ t: c.t, text: t, kind: k }); };
+  let t = 0;
+  while (t < BOSS_TIME) { t += 1; advance(c, t, out, log); if (out.kills || out.deaths) break; }
+  const bossMax = spawnMonster(key, level).max;
+  const left = out.kills ? 0 : (c.fight.mon ? Math.max(0, c.fight.mon.hp) : bossMax);
+  return { key, level, win: out.kills > 0, died: out.deaths > 0, time: Math.min(t, BOSS_TIME), pct: 1 - left / bossMax, lines };
+}
+function bossRewards(g, res, out) {
+  const B = BOSSES[res.key], r = g.rng, L = res.level, Z = ZONES[B.zone];
+  const items = [];
+  const n = 1 + (rand(r) < 0.35 ? 1 : 0);
+  for (let i = 0; i < n; i++) {
+    const rar = rand(r) < 0.18 ? 'godtouched' : 'rare';
+    items.push(makeItem(r, pick(r, SLOTS), L + Z.ilvlBonus + 2, { zone: B.zone, rarity: rar }));
+  }
+  const gold = Math.round(3 * Math.pow(1.12, L - 1) * B.gold);
+  const shards = 4 + Math.floor(rand(r) * 4);
+  g.gold += gold; g.mats.shards += shards;
+  const ess = {};
+  if (B.zone === 'hollow') for (const e of Object.keys(ESSENCES)) { const k = 1 + Math.floor(rand(r) * 2); g.mats[e] += k; ess[e] = k; }
+  const xp = Math.round(8 * Math.pow(1.12, L - 1) * B.xp);
+  gainXp(g, xp, out, null);
+  for (const it of items) receiveItem(g, it, out, null);
+  if (L === g.bossUnlocked[res.key]) g.bossUnlocked[res.key] += 2;
+  g.life.bosses = (g.life.bosses || 0) + 1;
+  return { items, gold, shards, ess, xp };
+}
+
+// ---------- OFFLINE / CATCH-UP ----------
+function catchUp(g, now, log) {
+  const out = emptyOut();
+  let elapsed = now - g.t;
+  if (elapsed <= 0) return { out, elapsed: 0, capped: 0 };
+  let capped = 0;
+  if (elapsed > OFFLINE_CAP) {
+    capped = elapsed - OFFLINE_CAP;
+    const shift = now - OFFLINE_CAP - g.t;
+    shiftFight(g, shift);
+    elapsed = OFFLINE_CAP;
+  }
+  advance(g, now, out, log);
+  return { out, elapsed, capped };
+}
+// Move all timers forward together when time beyond the offline cap is discarded.
+function shiftFight(g, d) {
+  const f = g.fight;
+  g.t += d; f.pNext += d; f.pulseNext += d; f.respawnAt += d;
+  if (f.deadUntil) f.deadUntil += d;
+  for (const k in f.cd) f.cd[k] += d;
+  for (const k in f.buffs) f.buffs[k] += d;
+  if (f.mon) { f.mon.next += d; f.mon.burnUntil += d; f.mon.bleedUntil += d; }
+}
+
+if (typeof module !== 'undefined') module.exports = {
+  rand, CLASSES, CLASS_KEYS, SPELLS, FOUND_SPELLS, CONDS, PMODS, PASSIVES, PASSIVE_KEYS, SLOTS, SLOT_NAMES, WEAPONS, AFFIXES, SPECIALS,
+  RARITIES, RARITY_RANK, ZONES, ZONE_KEYS, MONSTERS, MONSTER_KEYS, BOSSES, BOSS_KEYS, ESSENCES, mdef,
+  makeItem, computeStats, refresh, availableSpells, advance, emptyOut, newGame, migrate, project, fightBoss, bossRewards, catchUp,
+  xpToNext, upgradeCost, salvageValue, salvageShards, reforgeCost, inscribeCost, respecCost, rollAffix, fmt,
+  BAG_CAP, OFFLINE_CAP, SPEC_LEVEL, CLASS_SPELL_LEVEL, SIGIL_KILLS, SIGIL_CAP, HOLLOW_UNLOCK
+};
+
+</script>
+<script>
+(function () {
+'use strict';
+const LS_KEY = 'godscar.save.v1', LOCK_KEY = 'godscar.lock';
+const TAB_ID = Math.random().toString(36).slice(2);
+const nowS = () => Date.now() / 1000;
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const app = document.getElementById('app');
+
+let g = null;            // game state (the only source of truth)
+let sess = null;         // this-visit counters
+let logBuf = [];
+let tab = 'fight';
+let passive = false;     // another tab is running the game
+let expanded = null;     // expanded bag item id
+let scout = null;
+let uiLvl = {};          // per-monster level picked on the Fight tab
+let uiZone = null;
+let bossLvl = {};
+let bossResult = null;   // last boss fight {res, rewards}
+let showBossLog = false;
+let confirm = null;      // pending inline confirmation key
+let lastSaveJson = '';
+const proj = new Map();
+const cloud = { db: null, uid: null, status: 'connecting…', savedT: 0, busy: false };
+let summary = null;
+let lastStructure = '';
+
+const TABS = [['fight', 'Fight'], ['gear', 'Gear'], ['bag', 'Bag'], ['build', 'Build'], ['forge', 'Forge']];
+const NOTICES = {
+  start: ['The fight never stops', 'Your primary ability attacks on its own, forever. Everything else you do in Godscar happens while it fights.', null],
+  passives: ['Passive points', 'Every level gives a passive point. Spend it on the Build tab.', 'build'],
+  shards: ['Scar Shards', 'Kills drop Scar Shards. Spend them on the Gear tab to upgrade what you wear.', 'gear'],
+  bar: ['Your class spell awakens', 'It sits in your autocast bar on the Build tab and fires on its own. The bar holds 3 offensive and 2 utility spells.', 'build'],
+  pmod: ['An item that changes your primary', 'Some items change how your primary ability works, not just its numbers. Look for the gold line in your bag.', 'bag'],
+  boss: ['A Boss Sigil formed', 'Bosses fight a snapshot of your current build in a separate encounter. Your farming keeps going the whole time.', 'fight'],
+  spec: ['Choose a specialization', 'You can now pick one of your class\'s three specializations on the Build tab.', 'build'],
+  hollow: ['The Ashen Hollow is open', 'Tougher monsters, stronger items, element essences, and rare items that grant spells. Switch zones on the Fight tab.', 'fight'],
+  essence: ['Element essence', 'Ember, Ash and Rift essences let you inscribe a spell of your choice onto a rare item at the Forge.', 'forge'],
+  spellitem: ['An item that grants a spell', 'Equip it and the spell joins your autocast bar.', 'bag'],
+  upgraded: ['Godscar has grown', 'Your character came through the update. New: three more classes, the autocast bar, specializations, passives, a second zone, bosses and the Forge. Your earned levels came with passive points.', 'build']
+};
+
+// ---------- storage ----------
+function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+function lsSet(k, v) { try { localStorage.setItem(k, v); return true; } catch (e) { return false; } }
+function lsDel(k) { try { localStorage.removeItem(k); } catch (e) {} }
+function serialize() { const o = Object.assign({}, g); delete o.stats; delete o.cast; return JSON.stringify(o); }
+function hydrate(str) {
+  let o = typeof str === 'string' ? JSON.parse(str) : JSON.parse(JSON.stringify(str));
+  if (!o || !o.hero || !CLASSES[o.hero.cls]) throw new Error('Not a Godscar save');
+  o = migrate(o);
+  refresh(o);
+  return o;
+}
+function saveLocal() {
+  if (!g || passive || !ownsLock()) return;
+  const j = serialize();
+  if (j !== lastSaveJson) { lsSet(LS_KEY, j); lastSaveJson = j; }
+}
+
+// ---------- single running tab ----------
+function readLock() { try { return JSON.parse(lsGet(LOCK_KEY) || 'null'); } catch (e) { return null; } }
+function ownsLock() { const l = readLock(); return !l || l.id === TAB_ID || Date.now() - l.ts > 5000; }
+function heartbeat() {
+  const l = readLock();
+  if (l && l.id !== TAB_ID && Date.now() - l.ts < 5000) { if (!passive) { passive = true; render(); } return; }
+  lsSet(LOCK_KEY, JSON.stringify({ id: TAB_ID, ts: Date.now() }));
+  if (passive) {
+    passive = false;
+    const s = lsGet(LS_KEY);
+    if (s) { try { g = hydrate(s); } catch (e) {} }
+    resume(true);
+  }
+}
+function takeOver() { lsSet(LOCK_KEY, JSON.stringify({ id: TAB_ID, ts: Date.now() })); passive = true; heartbeat(); }
+
+function log(text, kind) { logBuf.push({ t: g.t, text, kind: kind || '' }); if (logBuf.length > 60) logBuf.splice(0, logBuf.length - 60); }
+function newSess() { const o = emptyOut(); o.killTimes = []; o.start = nowS(); return o; }
+
+function resume(showSummary) {
+  if (!g) return;
+  const t = nowS(), gap = t - g.t;
+  if (gap > 45) {
+    const lvl0 = g.hero.level;
+    const res = catchUp(g, t, null);
+    g.life.offlineSec = (g.life.offlineSec || 0) + res.elapsed;
+    if (showSummary && res.out.kills + res.out.deaths > 0) summary = { ...res, lvl0, lvl1: g.hero.level };
+    log(`Caught up ${dur(res.elapsed)} of fighting.`, 'sys');
+    proj.clear();
+  } else if (gap > 0) advance(g, t, sess, log);
+  saveLocal();
+  render();
+}
+function dur(s) {
+  s = Math.round(s);
+  const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60);
+  if (h) return `${h}h ${m}m`;
+  if (m) return `${m}m ${s % 60}s`;
+  return `${s}s`;
+}
+
+// Apply a player change at the current moment. The fight is advanced first, so the change takes effect from now on.
+function act(fn) {
+  if (!g || passive) return;
+  const t = nowS();
+  if (t - g.t > 45) resume(true); else advance(g, t, sess, log);
+  fn();
+  refresh(g);
+  if (g.fight.hp != null) g.fight.hp = Math.min(g.fight.hp, g.stats.life);
+  proj.clear(); scout = null;
+  saveLocal();
+  render();
+}
+
+function tick() {
+  if (!g || passive) return;
+  const t = nowS();
+  if (t - g.t > 45) { resume(true); return; }
+  advance(g, t, sess, log);
+  const kt = sess.killTimes; while (kt.length && kt[0] < t - 120) kt.shift();
+  renderRibbon();
+  const structure = [g.bag.length, g.hero.level, g.hero.points, JSON.stringify(g.unlocked), g.target.level, g.sigils, g.zones.hollow,
+    g.mats.shards, g.mats.ember, g.mats.ash, g.mats.rift, (g.notices || []).length].join(',');
+  if (structure !== lastStructure) {
+    lastStructure = structure;
+    const ae = document.activeElement;
+    if (!(ae && (ae.tagName === 'TEXTAREA' || ae.tagName === 'SELECT'))) renderPanel();
+    renderNav();
+  }
+  if (tab === 'fight') renderLog();
+}
+
+// ---------- projections ----------
+function buildSig() { return SLOTS.map(s => g.equip[s] ? g.equip[s].id + '.' + g.equip[s].plus : '-').join('|') + '@' + g.hero.level + JSON.stringify(g.hero.passives) + g.hero.spec + JSON.stringify(g.bar); }
+function baseProj() {
+  const k = 'base|' + buildSig() + '|' + g.target.key + g.target.level;
+  if (!proj.has(k)) proj.set(k, project(g, { secs: 240 }));
+  return proj.get(k);
+}
+function itemProj(it) {
+  const k = it.id + '|' + buildSig() + '|' + g.target.key + g.target.level;
+  if (!proj.has(k)) proj.set(k, project(g, { secs: 240, equip: { [it.slot]: it } }));
+  return proj.get(k);
+}
+function verdict(it) {
+  const b = baseProj(), a = itemProj(it);
+  const metric = b.xpm > 0 ? (a.xpm - b.xpm) / b.xpm : (a.dps - b.dps) / Math.max(b.dps, 1e-9);
+  const pct = Math.round(metric * 100);
+  const chips = [];
+  if (a.deaths > b.deaths) chips.push(`<span class="chip bad">dies more</span>`);
+  else if (a.deaths < b.deaths) chips.push(`<span class="chip good">dies less</span>`);
+  if (pct >= 2) chips.push(`<span class="chip good">+${pct}% XP/min</span>`);
+  else if (pct <= -2) chips.push(`<span class="chip">${pct}% XP/min</span>`);
+  else chips.push(`<span class="chip">about even</span>`);
+  return { pct, better: pct >= 2 && a.deaths <= b.deaths, html: chips.join(' ') };
+}
+
+// ---------- rendering ----------
+function render() {
+  if (!g) { renderStart(); return; }
+  if (!document.getElementById('ribbon')) {
+    app.innerHTML = `
+      <header class="ribbon" id="ribbon"><div class="wrap">
+        <div class="rb-top"><span class="mark">G<span class="o">O</span>DSCAR</span><span class="who" id="rb-who"></span><span class="gold num" id="rb-gold"></span></div>
+        <div class="rb-hunt"><span id="rb-hunt"></span><span class="rate num" id="rb-rate"></span></div>
+        <div class="bar hp" aria-label="Your life"><i id="rb-hpbar"></i><i class="shield" id="rb-shield"></i><span><span id="rb-you">You</span><span class="num" id="rb-hp"></span></span></div>
+        <div class="bar foe" id="rb-foebar-wrap" aria-label="Enemy life"><i id="rb-foebar"></i><span><span id="rb-foe-n"></span><span class="num" id="rb-foe"></span></span></div>
+        <div class="cds" id="rb-cds"></div>
+        <div class="bar xp" aria-label="Experience"><i id="rb-xp"></i></div>
+      </div></header>
+      <main id="main"><div class="wrap" id="panel"></div></main>
+      <nav class="tabs" id="nav"><div class="wrap" role="tablist"></div></nav>
+      <div id="overlay"></div>`;
+  }
+  renderRibbon(); renderNav(); renderPanel(); renderOverlay();
+}
+
+function renderStart() {
+  app.innerHTML = `<div class="wrap start">
+    <div class="mark">G<span class="o">O</span>DSCAR</div>
+    <div class="tag">Two worlds. One wound.</div>
+    <p class="sub" style="text-align:center">The fight never stops. Choose who walks into the Fallfields; everything else happens while they kill.</p>
+    <div class="classes">
+      ${CLASS_KEYS.map(k => { const c = CLASSES[k]; return `<button class="cls" data-act="start" data-cls="${k}"><span class="nm">${c.name}</span><p>${esc(c.blurb)}</p></button>`; }).join('')}
+    </div>
+    <p class="fine">Prototype. Your save stays in this browser and, when you're signed in, in a private cloud save only you can read.</p>
+  </div>`;
+}
+
+function setW(id, frac) { const el = document.getElementById(id); if (el) el.style.width = Math.max(0, Math.min(1, frac)) * 100 + '%'; }
+function setT(id, txt) { const el = document.getElementById(id); if (el && el.textContent !== txt) el.textContent = txt; }
+
+function renderRibbon() {
+  if (!g || !document.getElementById('ribbon')) return;
+  const S = g.stats, f = g.fight, M = mdef(g.target.key);
+  setT('rb-who', `${CLASSES[g.hero.cls].name}${g.hero.spec != null ? ' · ' + CLASSES[g.hero.cls].specs[g.hero.spec].name : ''} · Lv ${g.hero.level}`);
+  setT('rb-gold', fmt(g.gold) + ' gold');
+  const hunt = document.getElementById('rb-hunt');
+  const huntHtml = `<b>${esc(M.name)}</b> · Lv ${g.target.level}${g.autoPush ? ' · auto' : ''}`;
+  if (hunt.innerHTML !== huntHtml) hunt.innerHTML = huntHtml;
+  const span = Math.min(120, Math.max(10, nowS() - sess.start));
+  setT('rb-rate', passive ? 'paused here' : `${(sess.killTimes.length / span * 60).toFixed(1)} kills/min`);
+  const hp = f.hp == null ? S.life : Math.max(0, f.hp);
+  setW('rb-hpbar', hp / S.life);
+  setW('rb-shield', (f.shield || 0) / S.life);
+  setT('rb-hp', `${fmt(hp)} / ${fmt(S.life)}${f.shield > 1 ? ' +' + fmt(f.shield) : ''}`);
+  setT('rb-you', S.primary.name);
+  const wrap = document.getElementById('rb-foebar-wrap');
+  if (f.deadUntil > g.t) {
+    setW('rb-foebar', 0); setT('rb-foe-n', 'Recovering'); setT('rb-foe', `${Math.ceil(f.deadUntil - g.t)}s`); wrap.classList.remove('burning');
+  } else if (!f.mon) {
+    setW('rb-foebar', 0); setT('rb-foe-n', 'Next foe…'); setT('rb-foe', '');
+  } else {
+    setW('rb-foebar', f.mon.hp / f.mon.max); setT('rb-foe-n', mdef(f.mon.key).name); setT('rb-foe', `${fmt(Math.max(0, f.mon.hp))} / ${fmt(f.mon.max)}`);
+    wrap.classList.toggle('burning', f.mon.burnUntil > g.t || f.mon.bleedUntil > g.t);
+  }
+  setW('rb-xp', g.hero.xp / xpToNext(g.hero.level));
+  // autocast bar: one pip per slotted spell, filling as its cooldown recovers
+  const cds = document.getElementById('rb-cds');
+  const sig = g.cast.map(c => c.k).join(',');
+  if (cds.dataset.sig !== sig) {
+    cds.dataset.sig = sig;
+    cds.innerHTML = g.cast.length ? g.cast.map(c => `<span class="cd ${SPELLS[c.k].kind}" title="${esc(SPELLS[c.k].name)}"><i></i><b>${esc(SPELLS[c.k].name)}</b></span>`).join('') : '';
+    cds.hidden = !g.cast.length;
+  }
+  const pips = cds.querySelectorAll('.cd i');
+  g.cast.forEach((c, i) => {
+    const ready = f.cd[c.k] || 0, cd = SPELLS[c.k].cd * (1 - S.cdr / 100);
+    const frac = ready <= g.t ? 1 : 1 - (ready - g.t) / cd;
+    if (pips[i]) pips[i].style.width = Math.max(0, Math.min(1, frac)) * 100 + '%';
+  });
+}
+
+function renderNav() {
+  const el = document.querySelector('#nav .wrap'); if (!el) return;
+  const ups = tab === 'bag' ? 0 : countUpgrades();
+  const dot = { bag: ups ? `<span class="badge num">${ups}↑</span>` : '', build: g.hero.points || (g.hero.level >= SPEC_LEVEL && g.hero.spec == null) ? '<span class="badge">•</span>' : '' };
+  el.innerHTML = TABS.map(([k, n]) => `<button role="tab" aria-selected="${tab === k}" data-act="tab" data-tab="${k}">${n}${dot[k] || ''}</button>`).join('');
+}
+function countUpgrades() { let n = 0; for (const it of g.bag) { try { if (verdict(it).better) n++; } catch (e) {} } return n; }
+
+function noticesHtml() {
+  const list = (g.notices || []).filter(k => NOTICES[k]).slice(0, 2);
+  return list.map(k => {
+    const [h, p, to] = NOTICES[k];
+    return `<div class="notice"><div><b>${esc(h)}</b><p>${esc(p)}</p></div><div class="row">${to && to !== tab ? `<button class="btn small" data-act="notice-go" data-k="${k}" data-to="${to}">Show me</button>` : ''}<button class="btn small" data-act="notice-x" data-k="${k}">Got it</button></div></div>`;
+  }).join('');
+}
+
+function renderPanel() {
+  const p = document.getElementById('panel'); if (!p) return;
+  if (passive) {
+    p.innerHTML = `<div class="card"><h2>Running in another tab</h2><p class="sub">Godscar is already fighting in another tab or window. Only one place runs the fight at a time, so progress is never counted twice.</p><div><button class="btn primary" data-act="takeover">Play here instead</button></div></div>`;
+    return;
+  }
+  const body = tab === 'fight' ? fightPanel() : tab === 'gear' ? gearPanel() : tab === 'bag' ? bagPanel() : tab === 'build' ? buildPanel() : forgePanel();
+  p.innerHTML = noticesHtml() + body;
+  if (tab === 'fight') renderLog(true);
+}
+
+// ----- Fight -----
+function fightPanel() {
+  const cur = g.target;
+  const zone = uiZone || mdef(cur.key).zone;
+  const zones = ZONE_KEYS.filter(z => g.zones[z]);
+  const Z = ZONES[zone];
+  const cards = MONSTER_KEYS.filter(k => MONSTERS[k].zone === zone).map(k => {
+    const M = MONSTERS[k], un = g.unlocked[k], minL = Z.minLevel;
+    const lv = k === cur.key ? cur.level : Math.max(minL, Math.min(uiLvl[k] || un, un));
+    const kills = (g.kills || {})[k + ':' + un] || 0;
+    const sc = scout && scout.res[k + ':' + lv];
+    return `<section class="mon ${k === cur.key ? 'on' : ''}">
+      <div class="row"><span class="nm">${esc(M.name)}</span><span class="spacer"></span>
+        <span class="stepper"><button data-act="lvl" data-k="${k}" data-d="-1" ${lv <= minL ? 'disabled' : ''} aria-label="Lower level">−</button><span class="num">Lv ${lv}</span><button data-act="lvl" data-k="${k}" data-d="1" ${lv >= un ? 'disabled' : ''} aria-label="Higher level">+</button></span>
+      </div>
+      <p class="note">${esc(M.note)}</p>
+      ${sc ? `<div class="scout num"><div><b>${sc.kpm.toFixed(1)}</b>kills/min</div><div><b>${fmt(sc.xpm)}</b>XP/min</div><div><b>${fmt(sc.gpm)}</b>gold/min</div><div><b class="${sc.deaths ? 'c-godtouched' : ''}">${sc.deaths}</b>deaths/4m</div></div>` : ''}
+      <div class="row"><span class="sub num">Unlocked to Lv ${un} · next in ${Math.max(0, 30 - kills)} kills</span><span class="spacer"></span>
+        ${k === cur.key ? '<span class="chip warn">Hunting</span>' : `<button class="btn small" data-act="hunt" data-k="${k}" data-l="${lv}">Hunt here</button>`}</div>
+    </section>`;
+  }).join('');
+  const nextZone = !g.zones.hollow ? `<p class="sub">The Ashen Hollow opens when any Fallfields monster reaches level ${HOLLOW_UNLOCK}.</p>` : '';
+  return `<div><h2>${esc(Z.name)}</h2><p class="sub">${esc(Z.text)} Target changes apply from the next foe; the fight never pauses.</p></div>
+    ${zones.length > 1 ? `<div class="seg" role="tablist">${zones.map(z => `<button data-act="zone" data-z="${z}" aria-selected="${z === zone}">${esc(ZONES[z].name.replace('The ', ''))}</button>`).join('')}</div>` : ''}
+    <div class="row"><button class="btn" data-act="scout">Scout this zone</button>
+      <label class="toggle"><input type="checkbox" id="autopush" data-act="autopush" ${g.autoPush ? 'checked' : ''}> Auto-push levels</label></div>
+    <div class="mons">${cards}</div>${nextZone}
+    ${bossSection()}
+    <h3>Combat log</h3><div class="log" id="log" aria-live="off"></div>`;
+}
+
+function bossSection() {
+  const avail = BOSS_KEYS.filter(k => g.zones[BOSSES[k].zone]);
+  const res = bossResult;
+  const rows = avail.map(k => {
+    const B = BOSSES[k], un = g.bossUnlocked[k];
+    const lv = Math.max(B.minLevel, Math.min(bossLvl[k] || un, un));
+    return `<section class="mon boss"><div class="row"><span class="nm">${esc(B.name)}</span><span class="spacer"></span>
+      <span class="stepper"><button data-act="blvl" data-k="${k}" data-d="-2" ${lv <= B.minLevel ? 'disabled' : ''} aria-label="Lower level">−</button><span class="num">Lv ${lv}</span><button data-act="blvl" data-k="${k}" data-d="2" ${lv >= un ? 'disabled' : ''} aria-label="Higher level">+</button></span></div>
+      <p class="note">${esc(B.note)} Beat the highest level to unlock the next.</p>
+      <div class="row"><span class="sub">Guaranteed rare or Godtouched drop${B.zone === 'hollow' ? ', plus essences' : ''}.</span><span class="spacer"></span>
+      <button class="btn small primary" data-act="boss" data-k="${k}" data-l="${lv}" ${g.sigils < 1 ? 'disabled' : ''}>Fight · 1 sigil</button></div></section>`;
+  }).join('');
+  let result = '';
+  if (res) {
+    const r = res.res, rw = res.rewards;
+    result = `<div class="card result ${r.win ? 'win' : 'loss'}"><b>${r.win ? 'Victory' : r.died ? 'Defeated' : 'Out of time'}</b> against ${esc(BOSSES[r.key].name)}, level ${r.level}, after ${Math.round(r.time)}s. ${r.win ? '' : `You dealt ${Math.round(r.pct * 100)}% of its life.`}
+      ${rw ? `<div class="sub">${fmt(rw.gold)} gold · ${rw.shards} shards · ${fmt(rw.xp)} XP${Object.entries(rw.ess).map(([e, n]) => ` · ${n} ${ESSENCES[e]}`).join('')}</div><div class="items">${rw.items.map(it => `<div class="item ${it.rarity}">${title(it)}<span class="meta num">${SLOT_NAMES[it.slot]} · ilvl ${it.ilvl}</span></div>`).join('')}</div>` : ''}
+      <div><button class="btn small" data-act="bosslog">${showBossLog ? 'Hide' : 'Show'} fight log</button></div>
+      ${showBossLog ? `<div class="log">${r.lines.slice(-40).reverse().map(l => `<div class="k-${esc(l.kind)}">${Math.round(l.t)}s · ${esc(l.text)}</div>`).join('') || '<div>No spells cast.</div>'}</div>` : ''}</div>`;
+  }
+  return `<div><h3>Bosses</h3><p class="sub num">${g.sigils}/${SIGIL_CAP} sigils · next in ${SIGIL_KILLS - (g.sigilProg || 0)} kills. A boss fights a snapshot of your build; your farming keeps going.</p></div>
+    ${result}<div class="mons">${rows}</div>`;
+}
+
+function renderLog(force) {
+  const el = document.getElementById('log'); if (!el) return;
+  const last = logBuf.length ? logBuf[logBuf.length - 1] : null;
+  const key = logBuf.length + ':' + (last ? last.t : 0);
+  if (!force && el.dataset.k === key) return;
+  el.dataset.k = key;
+  el.innerHTML = logBuf.slice().reverse().slice(0, 40).map(l => `<div class="k-${esc(l.kind)}">${esc(l.text)}</div>`).join('') || '<div>The first foe approaches.</div>';
+}
+
+// ----- items -----
+function itemLines(it) {
+  const m = 1 + 0.1 * (it.plus || 0);
+  const lines = [];
+  if (it.slot === 'weapon') {
+    const W = WEAPONS[it.base];
+    lines.push(`<li class="base">${fmt(it.dmg * W.mult * m)} ${W.type === 'fire' ? 'fire' : 'physical'} damage · ${(1 / W.interval).toFixed(2)} attacks/s</li>`);
+  }
+  if (it.armor) lines.push(`<li class="base">${fmt(it.armor * m)} armor${it.life ? ' · ' + fmt(it.life * m) + ' life' : ''}</li>`);
+  for (const [k, v] of it.affixes) lines.push(`<li>${esc(AFFIXES[k].label(AFFIXES[k].pct ? v : v * m))}</li>`);
+  if (it.pmod) lines.push(`<li class="pm">${esc(PMODS[it.pmod].text)}</li>`);
+  if (it.spell) lines.push(`<li class="spl">Grants <b>${esc(SPELLS[it.spell].name)}</b>: ${esc(SPELLS[it.spell].text)}</li>`);
+  if (it.special) lines.push(`<li class="sp"><b>${esc(SPECIALS[it.special].name).toUpperCase()}</b> · ${esc(SPECIALS[it.special].text)}</li>`);
+  return `<ul class="affs">${lines.join('')}</ul>`;
+}
+const title = it => `<span class="nm c-${it.rarity}">${esc(it.name)}${it.plus ? ' +' + it.plus : ''}</span>`;
+const tags = it => (it.pmod ? '<span class="chip pmc">alters primary</span> ' : '') + (it.spell ? `<span class="chip splc">${esc(SPELLS[it.spell].name)}</span> ` : '');
+
+function gearPanel() {
+  const rows = SLOTS.map(slot => {
+    const it = g.equip[slot];
+    if (!it) return `<section class="item"><div class="slotlabel">${SLOT_NAMES[slot]}</div><div class="empty">Empty</div></section>`;
+    const cost = upgradeCost(it);
+    return `<section class="item ${it.rarity}"><div class="row"><span class="slotlabel">${SLOT_NAMES[slot]}</span><span class="spacer"></span><span class="meta num">ilvl ${it.ilvl}</span></div>
+      ${title(it)}${itemLines(it)}
+      <div class="row"><span class="sub num">${it.plus >= 10 ? 'Fully upgraded' : `Upgrade to +${it.plus + 1}: ${cost} Scar Shards`}</span><span class="spacer"></span>
+      <button class="btn small" data-act="upgrade" data-id="${it.id}" ${it.plus >= 10 || g.mats.shards < cost ? 'disabled' : ''}>Upgrade</button></div></section>`;
+  }).join('');
+  return `<div><h2>Equipped</h2><p class="sub num">${g.mats.shards} Scar Shards. Each upgrade adds 10% to the item's base values. Salvaging an upgraded item returns half its shards.</p></div><div class="items">${rows}</div>`;
+}
+
+function bagPanel() {
+  const opts = [['common', 'Keep everything'], ['magic', 'Keep Magic and better'], ['rare', 'Keep Rare and better'], ['godtouched', 'Keep Godtouched only']];
+  const items = g.bag.slice().sort((a, b) => RARITY_RANK[b.rarity] - RARITY_RANK[a.rarity] || b.ilvl - a.ilvl);
+  const salv = g.bag.filter(i => !i.locked);
+  const salvGold = salv.reduce((s, i) => s + salvageValue(i), 0);
+  const list = items.map(it => {
+    const v = verdict(it), open = expanded === it.id, cur = g.equip[it.slot];
+    return `<section class="item ${it.rarity}">
+      <button class="head" data-act="expand" data-id="${it.id}" aria-expanded="${open}">${title(it)}<span class="meta num">${SLOT_NAMES[it.slot]} · ilvl ${it.ilvl}${it.locked ? ' · locked' : ''}</span></button>
+      <div class="row">${tags(it)}${v.html}</div>
+      ${open ? `${itemLines(it)}
+        <div class="cmp">${cur ? `Replaces ${title(cur)}${itemLines(cur)}` : 'Slot is empty.'}</div>
+        <div class="row"><button class="btn primary small" data-act="equip" data-id="${it.id}">Equip</button>
+          <button class="btn small" data-act="lock" data-id="${it.id}">${it.locked ? 'Unlock' : 'Lock'}</button><span class="spacer"></span>
+          <button class="btn small" data-act="salvage" data-id="${it.id}" ${it.locked ? 'disabled' : ''}>Salvage · ${fmt(salvageValue(it))}g${salvageShards(it) ? ' · ' + salvageShards(it) + ' shards' : ''}</button></div>` : ''}
+    </section>`;
+  }).join('');
+  return `<div><h2>Bag <span class="sub num">${g.bag.length}/${BAG_CAP}</span></h2><p class="sub">Each verdict comes from simulating 4 minutes against your current target with that item equipped. Items that don't fit are salvaged automatically, never lost. Items that grant spells or alter your primary are always kept.</p></div>
+    <div class="row"><label for="filter" class="sub">Loot filter</label><select id="filter" data-act="filter">${opts.map(([k, n]) => `<option value="${k}" ${g.filter === k ? 'selected' : ''}>${n}</option>`).join('')}</select>
+      <span class="spacer"></span>
+      ${confirm === 'salvall' ? `<button class="btn small primary" data-act="salvall-yes">Salvage ${salv.length} for ${fmt(salvGold)}g</button><button class="btn small" data-act="cancel">Cancel</button>`
+        : `<button class="btn small" data-act="salvall" ${salv.length ? '' : 'disabled'}>Salvage unlocked</button>`}</div>
+    <div class="items">${list || '<p class="empty">Nothing yet. Drops land here while you fight.</p>'}</div>`;
+}
+
+// ----- Build -----
+function buildPanel() {
+  const S = g.stats, C = CLASSES[g.hero.cls], av = availableSpells(g);
+  const offAv = av.filter(k => SPELLS[k].kind === 'off'), utilAv = av.filter(k => SPELLS[k].kind === 'util');
+  const offRows = g.bar.off.map((k, i) => {
+    const used = g.bar.off.filter((x, j) => x && j !== i);
+    return `<div class="slot"><label class="slotlabel" for="off${i}">Offensive ${i + 1}</label>
+      <select id="off${i}" data-act="baroff" data-i="${i}"><option value="">Empty</option>${offAv.filter(x => !used.includes(x)).map(x => `<option value="${x}" ${x === k ? 'selected' : ''}>${esc(SPELLS[x].name)}</option>`).join('')}</select>
+      ${k ? `<p class="sub">${esc(SPELLS[k].text)} Every ${fmt(SPELLS[k].cd * (1 - S.cdr / 100), 1)}s.</p>` : ''}</div>`;
+  }).join('');
+  const utilRows = g.bar.util.map((u, i) => {
+    const used = g.bar.util.filter((x, j) => x && j !== i).map(x => x.k);
+    return `<div class="slot"><label class="slotlabel" for="util${i}">Utility ${i + 1}</label>
+      <div class="row"><select id="util${i}" data-act="barutil" data-i="${i}"><option value="">Empty</option>${utilAv.filter(x => !used.includes(x)).map(x => `<option value="${x}" ${u && x === u.k ? 'selected' : ''}>${esc(SPELLS[x].name)}</option>`).join('')}</select>
+      ${u ? `<select id="cond${i}" data-act="barcond" data-i="${i}" aria-label="When to cast">${Object.entries(CONDS).map(([c, n]) => `<option value="${c}" ${u.cond === c ? 'selected' : ''}>${n}</option>`).join('')}</select>` : ''}</div>
+      ${u ? `<p class="sub">${esc(SPELLS[u.k].text)} Cooldown ${fmt(SPELLS[u.k].cd * (1 - S.cdr / 100), 1)}s.</p>` : ''}</div>`;
+  }).join('');
+  const barNote = !av.length ? `<p class="sub">Your class spell, ${esc(SPELLS[C.spell].name)}, awakens at level ${CLASS_SPELL_LEVEL}. Rare items from the Ashen Hollow grant more spells.</p>` : '';
+
+  let spec;
+  if (g.hero.level < SPEC_LEVEL) spec = `<p class="sub">Unlocks at level ${SPEC_LEVEL}.</p>${C.specs.map(s => `<p class="sub" style="margin:0"><b>${esc(s.name)}</b> · ${esc(s.text)}</p>`).join('')}`;
+  else if (g.hero.spec == null || confirm === 'respec') {
+    const cost = g.hero.spec == null ? 0 : respecCost(g.hero.level);
+    spec = `${cost ? `<p class="sub">Changing costs ${fmt(cost)} gold.</p>` : '<p class="sub">Your first choice is free.</p>'}<div class="specs">${C.specs.map((s, i) => `<button class="spec" data-act="spec" data-i="${i}" ${g.hero.spec === i || g.gold < cost ? 'disabled' : ''}><b>${esc(s.name)}</b><span>${esc(s.text)}</span></button>`).join('')}</div>${g.hero.spec != null ? '<button class="btn small" data-act="cancel">Keep current</button>' : ''}`;
+  } else {
+    const s = C.specs[g.hero.spec];
+    spec = `<p style="margin:0"><b>${esc(s.name)}</b> · <span class="sub">${esc(s.text)}</span></p><div><button class="btn small" data-act="respec">Change specialization</button></div>`;
+  }
+  const P = g.hero.passives || {};
+  const spent = PASSIVE_KEYS.reduce((a, k) => a + (P[k] || 0), 0);
+  const pas = PASSIVE_KEYS.map(k => `<div class="pas"><div><b>${PASSIVES[k].name}</b> <span class="num">${P[k] || 0}</span><span class="sub"> · ${PASSIVES[k].text} each</span></div><button class="btn small" data-act="pas" data-k="${k}" ${g.hero.points ? '' : 'disabled'} aria-label="Add a point to ${PASSIVES[k].name}">+</button></div>`).join('');
+
+  const aps = 1 / S.interval;
+  const rows = [
+    ['Life', fmt(S.life)], ['Armor', fmt(S.armor)], ['Life per second', fmt(S.regen, 1)], ['Fire resistance', fmt(S.fireRes) + '%'],
+    ['Physical per hit', fmt(S.phys)], ['Fire per hit', fmt(S.fire)], ['Attacks per second', aps.toFixed(2)],
+    ['Critical chance', fmt(S.critChance) + '%'], ['Critical damage', fmt(S.critMulti) + '%'], ['Life on hit', fmt(S.lifeOnHit, 1)],
+    ['Retaliation', fmt(S.thorns)], ['Spell damage', '×' + S.spellMore.toFixed(2)], ['Burn and bleed', '×' + S.dotMore.toFixed(2)],
+    ['Spell cooldowns', '−' + fmt(S.cdr) + '%'], ['Dodge', fmt(S.dodge) + '%'], ['Gold found', '+' + fmt(S.goldFind) + '%']
+  ];
+  const pm = Object.keys(S.pmods), sp = Object.keys(S.specials);
+  return `<div><h2>${C.name}, level ${g.hero.level}</h2><p class="sub num">${fmt(g.hero.xp)} / ${fmt(xpToNext(g.hero.level))} XP · ${fmt(g.life.kills)} kills · ${fmt(g.life.deaths)} deaths · ${g.life.bosses || 0} bosses · ${dur(g.life.offlineSec || 0)} fought while away</p></div>
+    <div class="card"><h3>Primary · never stops</h3><p style="margin:0"><b>${esc(C.primary.name)}</b> · <span class="sub">${esc(C.primary.text)}</span></p>
+      ${pm.map(k => `<p class="sub pmline" style="margin:0"><b>${esc(PMODS[k].name)}</b> · ${esc(PMODS[k].text)}</p>`).join('') || '<p class="sub" style="margin:0">Items with a gold line change how it works.</p>'}
+      ${sp.map(k => `<p class="sub c-godtouched" style="margin:0"><b>${esc(SPECIALS[k].name)}</b> · ${esc(SPECIALS[k].text)}</p>`).join('')}</div>
+    <div class="card"><h3>Autocast bar</h3>${barNote}${av.length ? offRows + utilRows : ''}</div>
+    <div class="card"><h3>Specialization</h3>${spec}</div>
+    <div class="card"><div class="row"><h3>Passives</h3><span class="spacer"></span><span class="sub num">${g.hero.points || 0} to spend</span>${spent ? '<button class="btn small" data-act="pasreset">Reset</button>' : ''}</div>${pas}</div>
+    <dl class="stats num">${rows.map(([a, b]) => `<dt>${a}</dt><dd>${b}</dd>`).join('')}</dl>
+    <div class="card"><h3>Save</h3>
+      <p class="sub" style="margin:0">Saved in this browser every few seconds. Cloud save: ${esc(cloud.status)}</p>
+      <div class="row"><button class="btn small" data-act="export">Copy save code</button><button class="btn small" data-act="import">Load save code</button></div>
+      <textarea id="savebox" aria-label="Save code" placeholder="Paste a save code here, then press Load save code."></textarea>
+      <p class="sub" id="savemsg" style="margin:0"></p>
+    </div>
+    <div class="card"><h3>Start over</h3><p class="sub" style="margin:0">Deletes this character everywhere it is saved.</p>
+      <div class="row">${confirm === 'reset' ? `<button class="btn small primary" data-act="reset-yes">Delete character</button><button class="btn small" data-act="cancel">Keep playing</button>` : `<button class="btn small" data-act="reset">Start over</button>`}</div></div>`;
+}
+
+// ----- Forge -----
+function forgePanel() {
+  const M = g.mats;
+  const mats = `<div class="mats num"><div><b>${M.shards}</b>Scar Shards</div><div><b class="e-ember">${M.ember}</b>Ember</div><div><b class="e-ash">${M.ash}</b>Ash</div><div><b class="e-rift">${M.rift}</b>Rift</div><div><b>${fmt(g.gold)}</b>Gold</div></div>`;
+  const equipped = SLOTS.map(s => g.equip[s]).filter(Boolean);
+  const reforge = equipped.filter(it => it.affixes.length).map(it => {
+    const c = reforgeCost(it);
+    return `<section class="item ${it.rarity}">${title(it)}<ul class="affs">${it.affixes.map(([k, v], i) => `<li class="frow"><span>${esc(AFFIXES[k].label(AFFIXES[k].pct ? v : v * (1 + 0.1 * it.plus)))}</span><button class="btn small" data-act="reforge" data-id="${it.id}" data-i="${i}" ${g.gold < c ? 'disabled' : ''}>Reforge · ${fmt(c)}g</button></li>`).join('')}</ul></section>`;
+  }).join('') || '<p class="empty">Equip items with stats to reforge them.</p>';
+  const eligible = equipped.filter(it => RARITY_RANK[it.rarity] >= 2 && !it.spell);
+  const inscribe = eligible.map(it => {
+    const c = inscribeCost(it);
+    return `<section class="item ${it.rarity}">${title(it)}<div class="row"><select id="ins-${it.id}" aria-label="Spell to inscribe">${FOUND_SPELLS.map(k => { const el = SPELLS[k].el; return `<option value="${k}" ${M[el] < c.essence ? 'disabled' : ''}>${esc(SPELLS[k].name)} · ${c.essence} ${el}</option>`; }).join('')}</select>
+      <button class="btn small primary" data-act="inscribe" data-id="${it.id}" ${g.gold < c.gold ? 'disabled' : ''}>Inscribe · ${fmt(c.gold)}g</button></div></section>`;
+  }).join('') || '<p class="empty">Equip a Rare or Godtouched item that doesn\'t already grant a spell.</p>';
+  return `<div><h2>The Forge</h2><p class="sub">Shape what you already wear. Everything here happens while you keep fighting.</p></div>${mats}
+    <div class="card"><h3>Inscribe a spell</h3><p class="sub" style="margin:0">Bind a spell of your choice to an equipped Rare or Godtouched item. Costs ${3} essence of the spell's element, from the Ashen Hollow.</p>
+      <ul class="affs spells">${FOUND_SPELLS.map(k => `<li><b class="e-${SPELLS[k].el}">${esc(SPELLS[k].name)}</b> <span class="sub">(${SPELLS[k].kind === 'off' ? 'offensive' : 'utility'}, ${SPELLS[k].el})</span> · ${esc(SPELLS[k].text)}</li>`).join('')}</ul>
+      <div class="items">${inscribe}</div></div>
+    <div class="card"><h3>Reforge</h3><p class="sub" style="margin:0">Replace one stat with a new random stat for that slot, rolled at the item's level.</p><div class="items">${reforge}</div></div>`;
+}
+
+function renderOverlay() {
+  const el = document.getElementById('overlay'); if (!el) return;
+  if (!summary) { el.innerHTML = ''; return; }
+  const o = summary.out;
+  el.innerHTML = `<div class="overlay" data-act="close-sum"><div class="sheet" role="dialog" aria-label="While you were away">
+    <h2>While you were away</h2>
+    <p class="sub" style="margin:0">Your ${CLASSES[g.hero.cls].name.toLowerCase()} fought for ${dur(summary.elapsed)}${summary.capped ? ` (the 24 hour cap kept ${dur(summary.capped)} out)` : ''}.</p>
+    <div class="sumgrid num">
+      <div><b>${fmt(o.kills)}</b>kills</div><div><b>${fmt(o.xp)}</b>XP${summary.lvl1 > summary.lvl0 ? ` · Lv ${summary.lvl0}→${summary.lvl1}` : ''}</div><div><b>${fmt(o.gold)}</b>gold</div>
+      <div><b>${o.items}</b>items kept</div><div><b>${o.shards}</b>shards</div><div><b class="${o.deaths ? 'c-godtouched' : ''}">${o.deaths}</b>deaths</div>
+      ${Object.keys(o.ess).length ? Object.entries(o.ess).map(([e, n]) => `<div><b class="e-${e}">${n}</b>${e}</div>`).join('') : ''}${o.sigils ? `<div><b>${o.sigils}</b>sigils</div>` : ''}
+    </div>
+    ${o.notable.length ? `<h3>Notable drops</h3><div class="items">${o.notable.slice(-6).reverse().map(it => `<div class="item ${it.rarity}">${title(it)}<div class="row">${tags(it)}<span class="meta num">${SLOT_NAMES[it.slot]} · ilvl ${it.ilvl}</span></div></div>`).join('')}</div>` : ''}
+    <button class="btn primary" data-act="close-sum">Back to it</button>
+  </div></div>`;
+}
+
+// ---------- events ----------
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-act]'); if (!b) return;
+  const a = b.dataset.act;
+  if (b.tagName === 'SELECT' || (b.tagName === 'INPUT' && b.type === 'checkbox')) return;
+  if (a === 'close-sum') { if (e.target !== b && b.classList.contains('overlay')) return; summary = null; renderOverlay(); return; }
+  if (a === 'start') {
+    g = newGame(b.dataset.cls, nowS(), (Math.random() * 4294967296) >>> 0);
+    sess = newSess(); logBuf = []; log('You arrive in the Fallfields. Something moves in the blighted wheat.', 'sys');
+    lsSet(LOCK_KEY, JSON.stringify({ id: TAB_ID, ts: Date.now() }));
+    saveLocal(); app.innerHTML = ''; tab = 'fight'; render(); cloudSave(true); return;
+  }
+  if (a === 'takeover') { takeOver(); return; }
+  if (a === 'tab') { tab = b.dataset.tab; confirm = null; renderNav(); renderPanel(); window.scrollTo(0, 0); return; }
+  if (a === 'notice-x') { g.notices = g.notices.filter(k => k !== b.dataset.k); saveLocal(); renderPanel(); return; }
+  if (a === 'notice-go') { g.notices = g.notices.filter(k => k !== b.dataset.k); tab = b.dataset.to; saveLocal(); renderNav(); renderPanel(); window.scrollTo(0, 0); return; }
+  if (a === 'zone') { uiZone = b.dataset.z; scout = null; renderPanel(); return; }
+  if (a === 'lvl') {
+    const k = b.dataset.k, d = +b.dataset.d, minL = ZONES[MONSTERS[k].zone].minLevel;
+    if (k === g.target.key) act(() => { g.target.level = Math.max(minL, Math.min(g.unlocked[k], g.target.level + d)); g.streak = 0; });
+    else { uiLvl[k] = Math.max(minL, Math.min(g.unlocked[k], (uiLvl[k] || g.unlocked[k]) + d)); renderPanel(); }
+    return;
+  }
+  if (a === 'hunt') { const k = b.dataset.k, l = +b.dataset.l; act(() => { g.target = { key: k, level: l }; g.streak = 0; log(`Now hunting ${MONSTERS[k].name}, level ${l}.`, 'sys'); }); return; }
+  if (a === 'scout') {
+    const zone = uiZone || mdef(g.target.key).zone, res = {};
+    for (const k of MONSTER_KEYS.filter(k => MONSTERS[k].zone === zone)) {
+      const minL = ZONES[zone].minLevel;
+      const lv = k === g.target.key ? g.target.level : Math.max(minL, Math.min(uiLvl[k] || g.unlocked[k], g.unlocked[k]));
+      res[k + ':' + lv] = project(g, { target: { key: k, level: lv }, secs: 240 });
+    }
+    scout = { res }; renderPanel(); return;
+  }
+  if (a === 'blvl') { const k = b.dataset.k, B = BOSSES[k]; bossLvl[k] = Math.max(B.minLevel, Math.min(g.bossUnlocked[k], (bossLvl[k] || g.bossUnlocked[k]) + +b.dataset.d)); renderPanel(); return; }
+  if (a === 'boss') {
+    const k = b.dataset.k, l = +b.dataset.l;
+    act(() => {
+      if (g.sigils < 1) return;
+      g.sigils--;
+      const res = fightBoss(g, k, l);
+      let rewards = null;
+      if (res.win) { const out = emptyOut(); rewards = bossRewards(g, res, out); log(`Defeated ${BOSSES[k].name} (level ${l}).`, 'level'); }
+      else log(`${BOSSES[k].name} (level ${l}) held. You dealt ${Math.round(res.pct * 100)}% of its life.`, 'death');
+      bossResult = { res, rewards }; showBossLog = false;
+      if (res.win && g.bossUnlocked[k] > l) bossLvl[k] = g.bossUnlocked[k];
+    });
+    return;
+  }
+  if (a === 'bosslog') { showBossLog = !showBossLog; renderPanel(); return; }
+  if (a === 'expand') { expanded = expanded === b.dataset.id ? null : b.dataset.id; renderPanel(); return; }
+  if (a === 'equip') {
+    const id = b.dataset.id;
+    act(() => {
+      const i = g.bag.findIndex(x => x.id === id); if (i < 0) return;
+      const it = g.bag.splice(i, 1)[0], old = g.equip[it.slot];
+      g.equip[it.slot] = it; if (old) g.bag.push(old);
+      log(`Equipped ${it.name}.`, 'sys'); expanded = null;
+    });
+    return;
+  }
+  if (a === 'lock') { const it = g.bag.find(x => x.id === b.dataset.id); if (it) { it.locked = !it.locked; saveLocal(); renderPanel(); } return; }
+  if (a === 'salvage') {
+    act(() => { const i = g.bag.findIndex(x => x.id === b.dataset.id); if (i < 0 || g.bag[i].locked) return; g.gold += salvageValue(g.bag[i]); g.mats.shards += salvageShards(g.bag[i]); g.bag.splice(i, 1); expanded = null; });
+    return;
+  }
+  if (a === 'salvall') { confirm = 'salvall'; renderPanel(); return; }
+  if (a === 'salvall-yes') { confirm = null; act(() => { g.bag = g.bag.filter(it => { if (it.locked) return true; g.gold += salvageValue(it); g.mats.shards += salvageShards(it); return false; }); }); return; }
+  if (a === 'cancel') { confirm = null; renderPanel(); return; }
+  if (a === 'upgrade') {
+    act(() => { const it = SLOTS.map(s => g.equip[s]).find(x => x && x.id === b.dataset.id); if (!it || it.plus >= 10) return; const c = upgradeCost(it); if (g.mats.shards < c) return; g.mats.shards -= c; it.shardsIn = (it.shardsIn || 0) + c; it.plus++; });
+    return;
+  }
+  if (a === 'spec') {
+    const i = +b.dataset.i;
+    act(() => { const cost = g.hero.spec == null ? 0 : respecCost(g.hero.level); if (g.gold < cost) return; g.gold -= cost; g.hero.spec = i; confirm = null; g.notices = (g.notices || []).filter(k => k !== 'spec'); log(`Specialized as ${CLASSES[g.hero.cls].specs[i].name}.`, 'level'); });
+    return;
+  }
+  if (a === 'respec') { confirm = 'respec'; renderPanel(); return; }
+  if (a === 'pas') { const k = b.dataset.k; act(() => { if (!g.hero.points) return; g.hero.points--; g.hero.passives[k] = (g.hero.passives[k] || 0) + 1; }); return; }
+  if (a === 'pasreset') { act(() => { const n = PASSIVE_KEYS.reduce((s, k) => s + (g.hero.passives[k] || 0), 0); g.hero.passives = {}; g.hero.points = (g.hero.points || 0) + n; }); return; }
+  if (a === 'reforge') {
+    const id = b.dataset.id, i = +b.dataset.i;
+    act(() => {
+      const it = SLOTS.map(s => g.equip[s]).find(x => x && x.id === id); if (!it) return;
+      const c = reforgeCost(it); if (g.gold < c) return;
+      const na = rollAffix(g.rng, it, it.affixes.map(x => x[0])); if (!na) return;
+      g.gold -= c; it.affixes[i] = na;
+      log(`Reforged ${it.name}: ${AFFIXES[na[0]].label(AFFIXES[na[0]].pct ? na[1] : na[1] * (1 + 0.1 * it.plus))}.`, 'sys');
+    });
+    return;
+  }
+  if (a === 'inscribe') {
+    const id = b.dataset.id, sel = document.getElementById('ins-' + id), k = sel && sel.value;
+    act(() => {
+      const it = SLOTS.map(s => g.equip[s]).find(x => x && x.id === id); if (!it || !k || it.spell) return;
+      const c = inscribeCost(it), el = SPELLS[k].el;
+      if (g.gold < c.gold || g.mats[el] < c.essence) return;
+      g.gold -= c.gold; g.mats[el] -= c.essence; it.spell = k;
+      log(`Inscribed ${SPELLS[k].name} onto ${it.name}.`, 'level');
+    });
+    return;
+  }
+  if (a === 'export') {
+    const box = document.getElementById('savebox'); const code = btoa(unescape(encodeURIComponent(serialize())));
+    box.value = code; box.select();
+    const msg = document.getElementById('savemsg');
+    (navigator.clipboard ? navigator.clipboard.writeText(code) : Promise.reject()).then(() => { msg.textContent = 'Copied. Keep it somewhere safe.'; }, () => { msg.textContent = 'Selected. Copy it from the box.'; });
+    return;
+  }
+  if (a === 'import') {
+    const box = document.getElementById('savebox'), msg = document.getElementById('savemsg');
+    try {
+      g = hydrate(decodeURIComponent(escape(atob(box.value.trim()))));
+      sess = newSess(); logBuf = []; proj.clear(); scout = null;
+      resume(true); cloudSave(true);
+      document.getElementById('savemsg').textContent = 'Save loaded.';
+    } catch (err) { msg.textContent = 'That code isn\'t a Godscar save. Copy the whole code and try again.'; }
+    return;
+  }
+  if (a === 'reset') { confirm = 'reset'; renderPanel(); return; }
+  if (a === 'reset-yes') {
+    confirm = null; g = null; lsDel(LS_KEY); lastSaveJson = ''; bossResult = null; uiZone = null;
+    if (cloud.db && cloud.uid) cloud.db.doc(`data/users/${cloud.uid}/save`).delete().catch(() => {});
+    summary = null; render(); return;
+  }
+});
+document.addEventListener('change', e => {
+  const b = e.target.closest('[data-act]'); if (!b) return;
+  const a = b.dataset.act, i = +b.dataset.i;
+  if (a === 'filter') act(() => { g.filter = b.value; });
+  if (a === 'autopush') act(() => { g.autoPush = b.checked; g.streak = 0; });
+  if (a === 'baroff') act(() => { g.bar.off[i] = b.value || null; });
+  if (a === 'barutil') act(() => { g.bar.util[i] = b.value ? { k: b.value, cond: SPELLS[b.value].cond } : null; });
+  if (a === 'barcond') act(() => { if (g.bar.util[i]) g.bar.util[i].cond = b.value; });
+});
+
+// ---------- cloud save (private per account) ----------
+async function cloudInit() {
+  try {
+    if (!window.claude || !window.claude.use) { cloud.status = 'not available here.'; return; }
+    const [db, user] = await Promise.all([window.claude.use('db'), window.claude.use('user')]);
+    const uid = user ? await user.id() : null;
+    if (!db || !uid) { cloud.status = 'sign in to claude.ai to sync across devices.'; refreshBuild(); return; }
+    cloud.db = db; cloud.uid = uid;
+    const ref = db.doc(`data/users/${uid}/save`);
+    const snap = await Promise.race([ref.get(), new Promise(r => setTimeout(() => r('timeout'), 10000))]);
+    if (snap === 'timeout') { cloud.status = 'can\'t reach the cloud right now; saving locally.'; refreshBuild(); return; }
+    if (snap.exists) {
+      const d = snap.data();
+      if (d && d.save && (!g || d.t > g.t + 5)) {
+        try {
+          const had = !!g;
+          g = hydrate(d.save); sess = sess || newSess(); proj.clear(); scout = null;
+          if (!had) app.innerHTML = '';
+          log('Loaded your cloud save.', 'sys');
+          lsSet(LOCK_KEY, JSON.stringify({ id: TAB_ID, ts: Date.now() }));
+          resume(true);
+        } catch (e) {}
+      }
+      cloud.savedT = d ? d.t : 0;
+    }
+    cloud.status = 'on.';
+    refreshBuild();
+    if (g) cloudSave(true);
+  } catch (e) { cloud.status = 'unavailable; saving locally.'; refreshBuild(); }
+}
+async function cloudSave(force) {
+  if (!cloud.db || !g || passive || cloud.busy) return;
+  if (!force && g.t - cloud.savedT < 60) return;
+  cloud.busy = true;
+  try {
+    const t = g.t;
+    await cloud.db.doc(`data/users/${cloud.uid}/save`).set({ t, save: serialize() });
+    cloud.savedT = t; cloud.status = 'on, last synced ' + new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }) + '.';
+  } catch (e) {
+    cloud.status = e && e.code === 'quota_exceeded' ? 'cloud storage is full; saving locally.' : 'last sync failed; will retry.';
+  }
+  cloud.busy = false;
+  refreshBuild();
+}
+function refreshBuild() { const ae = document.activeElement; if (g && tab === 'build' && !confirm && !(ae && (ae.tagName === 'TEXTAREA' || ae.tagName === 'SELECT'))) renderPanel(); }
+
+// ---------- boot ----------
+function boot(hotData) {
+  sess = newSess();
+  const s = hotData && hotData.save ? hotData.save : null;
+  const local = lsGet(LS_KEY);
+  let a = null, b = null;
+  try { a = s ? hydrate(s) : null; } catch (e) {}
+  try { b = local ? hydrate(local) : null; } catch (e) {}
+  g = a && b ? (a.t >= b.t ? a : b) : (a || b);
+  if (hotData && hotData.tab && TABS.some(t => t[0] === hotData.tab)) tab = hotData.tab;
+  if (g) log('Welcome back to the Fallfields.', 'sys');
+  heartbeat();
+  if (g && !passive) resume(true); else render();
+  setInterval(tick, 250);
+  setInterval(heartbeat, 1000);
+  setInterval(() => { saveLocal(); cloudSave(false); }, 5000);
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) { saveLocal(); cloudSave(true); } else { heartbeat(); if (!passive) resume(true); }
+  });
+  window.addEventListener('pagehide', saveLocal);
+  setTimeout(cloudInit, 0);
+}
+try { window.claude?.hot?.snapshot?.(() => ({ save: g && !passive ? serialize() : null, tab })); } catch (e) {}
+if (window.claude?.hot?.ready) window.claude.hot.ready(boot); else boot(window.claude?.hot?.data ?? {});
+})();
+
+</script>
