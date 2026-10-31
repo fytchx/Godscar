@@ -115,6 +115,18 @@ jobs:
           fi
           grep -q 'GODSCAR_CURATION_SMOKE_OK' /tmp/godscar-curation-smoke.log
 
+      - name: Headless procedural Hollow Crypt smoke test
+        if: steps.source.outputs.ready == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          godot --headless --path . --scene res://scenes/crypt_dungeon.tscn --quit-after 75 -- --crypt-smoke 2>&1 | tee /tmp/godscar-crypt-smoke.log
+          if grep -E 'SCRIPT ERROR|Parse Error|Invalid call|Assertion failed|ERROR:' /tmp/godscar-crypt-smoke.log; then
+            echo "::error::Procedural crypt reported runtime issues."
+            exit 1
+          fi
+          grep -q 'GODSCAR_CRYPT_SMOKE_OK' /tmp/godscar-crypt-smoke.log
+
       - name: Export debug APK
         if: steps.source.outputs.ready == 'true'
         shell: bash
