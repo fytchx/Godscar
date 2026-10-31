@@ -4,6 +4,8 @@ on:
     branches: [dev]
     paths:
       - 'art/import/Godscar_Environment_Asset_Pack_v1.zip'
+      - 'art/Godscar_Environment_Asset_Pack_v1.zip'
+      - '.github/workflows/import-environment-pack.yml'
   workflow_dispatch:
 permissions:
   contents: write
@@ -19,9 +21,11 @@ jobs:
           python3 - <<'PY'
           from pathlib import Path, PurePosixPath
           import zipfile, hashlib, json
-          archive=Path('art/import/Godscar_Environment_Asset_Pack_v1.zip')
+          archive=Path('art/Godscar_Environment_Asset_Pack_v1.zip')
           if not archive.is_file():
-              raise SystemExit('Please upload Godscar_Environment_Asset_Pack_v1.zip to art/import/ on dev.')
+              archive=Path('art/import/Godscar_Environment_Asset_Pack_v1.zip')
+          if not archive.is_file():
+              raise SystemExit('No Godscar_Environment_Asset_Pack_v1.zip found in art/ or art/import/ on dev.')
           h=hashlib.sha256(archive.read_bytes()).hexdigest()
           out=Path('assets/godscar_environment')
           root='Godscar_Environment_Asset_Pack_v1/'
@@ -43,12 +47,18 @@ jobs:
                   target.parent.mkdir(exist_ok=True,parents=True)
                   target.write_bytes(z.read(info))
                   count+=1
-          # Preserve the original ZIP in art/import/; assets/godscar_environment is the usable output.
-          (out/'SOURCE_ARCHIVE_SHA256.txt').write_text(h+'  art/import/Godscar_Environment_Asset_Pack_v1.zip\n')
+          # Preserve source artwork in the original ZIP under art/, not in the Android export.
+          (out/'SOURCE_ARCHIVE_SHA256.txt').write_text(h+'  '+str(archive)+'\\n')
           manifest=json.loads((out/'asset_manifest.json').read_text())
           assert manifest['total_assets'] == 197
           assert count >= 200
-          print('Imported',count,'files from Godscar pack; SHA256',h)
+          required_files=manifest.get('assets', [])
+          assert len(required_files) == 197, 'Expected exactly 197 entries in asset manifest'
+          for item in required_files:
+              path=out/item['path']
+              assert path.is_file(), 'Missing extracted asset: '+item['path']
+              assert hashlib.sha256(path.read_bytes()).hexdigest() == item['sha256'], 'Checksum mismatch: '+item['path']
+          print('Imported',count,'files and verified',len(required_files),'asset SHA256 hashes; source SHA256',h)
           PY
       - name: Commit unpacked assets on dev
         run: |
