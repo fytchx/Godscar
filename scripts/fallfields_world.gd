@@ -35,12 +35,9 @@ func _draw() -> void:
     # The old Caldris road is our navigable landmark, not an automated route.
     _path(PackedVector2Array([Vector2(95, 1050), Vector2(640, 1040), Vector2(1080, 990), Vector2(1550, 960), Vector2(1910, 930), Vector2(2280, 790)]), 125.0, Color("#544c40"))
     _path(PackedVector2Array([Vector2(95, 1050), Vector2(640, 1040), Vector2(1080, 990), Vector2(1550, 960), Vector2(1910, 930), Vector2(2280, 790)]), 100.0, Color("#67604d"))
-    # Agricultural furrows and wheat rows.
-    for i in range(215):
-        var px: float = random.randf_range(400.0, 1350.0)
-        var py: float = random.randf_range(200.0, 1480.0)
-        if absf(py - (1040.0 - (px - 600.0) * 0.08)) > 125.0:
-            _wheat(Vector2(px, py), random.randf_range(0.8, 1.3))
+    # Retired the stick-and-circle wheat placeholders.
+    # Crop artwork will return as an actual pixel-art atlas after the
+    # portrait art pipeline is established.
     for i in range(44):
         var px: float = random.randf_range(50.0, 2580.0)
         var py: float = random.randf_range(90.0, 1550.0)
