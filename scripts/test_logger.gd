@@ -53,6 +53,7 @@ var window_enemies: int = 0
 var window_frame_worst_ms: float = 0.0
 var window_sim_peak_us: int = 0
 var window_draw_peak_us: int = 0
+var window_context: String = ""
 
 
 func begin() -> void:
@@ -109,6 +110,7 @@ func _clear() -> void:
     window_frame_worst_ms = 0.0
     window_sim_peak_us = 0
     window_draw_peak_us = 0
+    window_context = ""
 
 
 func start_new(state: String) -> void:
@@ -172,7 +174,7 @@ func sample_processing(sim_us: int, sim_ticks: int, sim_worst_us: int, render_us
     window_draw_peak_us = maxi(window_draw_peak_us, render_worst_us)
 
 
-func sample(fps: int, slow_frames: int, frame_ms: float, enemy_count: int, mode: String) -> void:
+func sample(fps: int, slow_frames: int, frame_ms: float, enemy_count: int, mode: String, context: String = "") -> void:
     total_samples += 1
     fps_sum += fps
     fps_low = mini(fps_low, fps)
@@ -180,6 +182,7 @@ func sample(fps: int, slow_frames: int, frame_ms: float, enemy_count: int, mode:
     worst_ms = maxf(worst_ms, frame_ms)
     total_slow_frames += slow_frames
     peak_enemies = maxi(peak_enemies, enemy_count)
+    window_context = context
     window_fps_sum += fps
     window_fps_samples += 1
     window_fps_low = mini(window_fps_low, fps)
@@ -187,10 +190,10 @@ func sample(fps: int, slow_frames: int, frame_ms: float, enemy_count: int, mode:
     window_enemies = maxi(window_enemies, enemy_count)
     window_frame_worst_ms = maxf(window_frame_worst_ms, frame_ms)
     if frame_ms >= 80.0 and elapsed - last_spike_at >= 5.0:
-        event("FRAME_SPIKE", "%.1f ms; enemies=%d; sim peak=%.1fms; draw submit peak=%.1fms" % [frame_ms, enemy_count, float(recent_sim_peak_us) / 1000.0, float(recent_draw_peak_us) / 1000.0])
+        event("FRAME_SPIKE", "%.1f ms; enemies=%d; sim peak=%.1fms; draw submit peak=%.1fms; %s" % [frame_ms, enemy_count, float(recent_sim_peak_us) / 1000.0, float(recent_draw_peak_us) / 1000.0, context])
         last_spike_at = elapsed
     if window_fps_samples >= 5:
-        timeline.append("%ds: avg=%.1f min=%d slow=%d worst=%.1fms enemies<=%d sim=%.1fms draw_submit=%.1fms" % [int(elapsed), float(window_fps_sum) / float(window_fps_samples), window_fps_low, window_slow, window_frame_worst_ms, window_enemies, float(window_sim_peak_us) / 1000.0, float(window_draw_peak_us) / 1000.0])
+        timeline.append("%ds: avg=%.1f min=%d slow=%d worst=%.1fms enemies<=%d sim=%.1fms draw_submit=%.1fms %s" % [int(elapsed), float(window_fps_sum) / float(window_fps_samples), window_fps_low, window_slow, window_frame_worst_ms, window_enemies, float(window_sim_peak_us) / 1000.0, float(window_draw_peak_us) / 1000.0, window_context])
         if timeline.size() > 60:
             timeline.remove_at(0)
         window_fps_sum = 0
@@ -201,6 +204,7 @@ func sample(fps: int, slow_frames: int, frame_ms: float, enemy_count: int, mode:
         window_frame_worst_ms = 0.0
         window_sim_peak_us = 0
         window_draw_peak_us = 0
+        window_context = ""
 
     var row: Dictionary = by_mode.get(mode, {"samples": 0, "sum_fps": 0, "min_fps": 999, "max_enemies": 0, "slow": 0})
     row["samples"] = int(row["samples"]) + 1
@@ -213,7 +217,7 @@ func sample(fps: int, slow_frames: int, frame_ms: float, enemy_count: int, mode:
     if fps < 25:
         slow_streak += 1
         if slow_streak >= 3 and not low_fps_warning_active:
-            event("PERF_DIP", "under 25 FPS for 3+ seconds; enemies=%d; mode=%s; sim peak=%.1fms; draw submit peak=%.1fms" % [enemy_count, mode, float(recent_sim_peak_us) / 1000.0, float(recent_draw_peak_us) / 1000.0])
+            event("PERF_DIP", "under 25 FPS for 3+ seconds; enemies=%d; mode=%s; sim peak=%.1fms; draw submit peak=%.1fms; %s" % [enemy_count, mode, float(recent_sim_peak_us) / 1000.0, float(recent_draw_peak_us) / 1000.0, context])
             low_fps_warning_active = true
     else:
         slow_streak = 0
