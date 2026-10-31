@@ -170,8 +170,14 @@ func _set_class(value: int) -> void:
     _move_camera()
 
 
+func _perf_context() -> String:
+    var motion: String = "auto" if auto_run else ("joystick" if move_vector.length_squared() > 0.01 else "idle")
+    var zone: String = "west" if hero.x < WORLD_W * 0.33 else ("center" if hero.x < WORLD_W * 0.66 else "east")
+    return "quest=%d motion=%s zone=%s x=%d y=%d" % [quest_stage, motion, zone, int(hero.x), int(hero.y)]
+
+
 func _log_state() -> String:
-    return "zone=FALLFIELDS instance=SOLO class=%s level=%d quest=%d kills=%d deaths=%d HP=%.0f/%.0f resource=%.0f enemies=%d autorun=%s" % [str(CLASSES[class_id]["name"]), level, quest_stage, kills, deaths, hp, max_hp, energy, enemies.size(), str(auto_run)]
+    return "zone=FALLFIELDS instance=SOLO class=%s level=%d quest=%d kills=%d deaths=%d HP=%.0f/%.0f resource=%.0f enemies=%d autorun=%s %s" % [str(CLASSES[class_id]["name"]), level, quest_stage, kills, deaths, hp, max_hp, energy, enemies.size(), str(auto_run), _perf_context()]
 
 
 func _notification(what: int) -> void:
@@ -192,7 +198,7 @@ func _process(delta: float) -> void:
         perf_fps = roundi(float(perf_frames) / perf_elapsed)
         if not class_select and not dialogue and not log_open:
             log.sample_processing(sim_us, sim_count, sim_peak, draw_us, draw_count, draw_peak)
-            log.sample(perf_fps, perf_hitches, perf_worst, enemies.size(), "FALLFIELDS FULL")
+            log.sample(perf_fps, perf_hitches, perf_worst, enemies.size(), "FALLFIELDS FULL", _perf_context())
         sim_us = 0
         sim_count = 0
         sim_peak = 0
