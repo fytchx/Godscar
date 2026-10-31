@@ -20,7 +20,7 @@ const CLASSES = [
 ]
 
 var layout = GEN.new()
-var world: Node2D
+var world = WORLD.new()
 var log = LOG.new()
 var font: Font
 var rng := RandomNumberGenerator.new()
@@ -72,7 +72,6 @@ var log_status: String = ""
 
 func _ready() -> void:
     font = ThemeDB.fallback_font
-    world = WORLD.new()
     world.name = "CachedGodscarCrypt"
     world.show_behind_parent = true
     add_child(world)
