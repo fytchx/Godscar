@@ -254,7 +254,8 @@ func _move_camera() -> void:
     if terrain == null:
         return
     var size: Vector2 = get_viewport_rect().size
-    terrain.position = _hero_screen() - hero
+    # Keep retained terrain aligned to virtual pixels to avoid subpixel shimmer.
+    terrain.position = (_hero_screen() - hero).round()
 
 
 func _hero_screen() -> Vector2:
@@ -263,7 +264,7 @@ func _hero_screen() -> Vector2:
 
 
 func _screen(p: Vector2) -> Vector2:
-    return p - hero + _hero_screen()
+    return (p - hero + _hero_screen()).round()
 
 
 func _npc_near() -> int:
