@@ -1,0 +1,73 @@
+name: Import Godscar environment asset pack
+on:
+  push:
+    branches: [dev]
+    paths:
+      - 'art/import/Godscar_Environment_Asset_Pack_v1.zip'
+      - 'art/Godscar_Environment_Asset_Pack_v1.zip'
+      - '.github/workflows/import-environment-pack.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  import-asset-pack:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Verify and unpack only safe environment files
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path, PurePosixPath
+          import zipfile, hashlib, json
+          archive=Path('art/Godscar_Environment_Asset_Pack_v1.zip')
+          if not archive.is_file():
+              archive=Path('art/import/Godscar_Environment_Asset_Pack_v1.zip')
+          if not archive.is_file():
+              raise SystemExit('No Godscar_Environment_Asset_Pack_v1.zip found in art/ or art/import/ on dev.')
+          h=hashlib.sha256(archive.read_bytes()).hexdigest()
+          out=Path('assets/godscar_environment')
+          root='Godscar_Environment_Asset_Pack_v1/'
+          prefixes=('textures/','sprites/','atlases/','godot_demo/')
+          allowed={'asset_manifest.json','terrain_seam_tests.json','ASSET_INDEX.csv','README.md','PREVIEW.jpg','EXAMPLE_CRYPT.jpg','EXAMPLE_FALLFIELDS.jpg'}
+          count=0
+          with zipfile.ZipFile(archive) as z:
+              bad=z.testzip()
+              if bad:raise SystemExit(f'Bad ZIP entry: {bad}')
+              for info in z.infolist():
+                  if info.is_dir() or not info.filename.startswith(root):
+                      continue
+                  tail=info.filename[len(root):]
+                  rel=PurePosixPath(tail)
+                  if not tail or rel.is_absolute() or '..' in rel.parts:raise SystemExit('Unsafe ZIP path')
+                  if not (tail.startswith(prefixes) or tail in allowed):continue
+                  if info.file_size > 12_000_000:raise SystemExit('Unexpectedly large file: '+tail)
+                  target=out.joinpath(*rel.parts)
+                  target.parent.mkdir(exist_ok=True,parents=True)
+                  target.write_bytes(z.read(info))
+                  count+=1
+          # Preserve source artwork in the original ZIP under art/, not in the Android export.
+          (out/'SOURCE_ARCHIVE_SHA256.txt').write_text(h+'  '+str(archive)+'\\n')
+          manifest=json.loads((out/'asset_manifest.json').read_text())
+          assert manifest['total_assets'] == 197
+          assert count >= 200
+          required_files=manifest.get('assets', [])
+          assert len(required_files) == 197, 'Expected exactly 197 entries in asset manifest'
+          for item in required_files:
+              path=out/item['path']
+              assert path.is_file(), 'Missing extracted asset: '+item['path']
+              assert hashlib.sha256(path.read_bytes()).hexdigest() == item['sha256'], 'Checksum mismatch: '+item['path']
+          print('Imported',count,'files and verified',len(required_files),'asset SHA256 hashes; source SHA256',h)
+          PY
+      - name: Commit unpacked assets on dev
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add assets/godscar_environment/
+          if git diff --cached --quiet; then
+            echo "Already imported, no changes."
+          else
+            git commit -m "art: import Godscar 197-piece environment library [skip ci]"
+            git push origin HEAD:dev
+          fi

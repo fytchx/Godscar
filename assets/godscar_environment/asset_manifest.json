@@ -1,0 +1,4164 @@
+{
+  "name": "Godscar Complete Environment Pack v1",
+  "version": "1.0",
+  "status": "experimental_asset_pack",
+  "art_direction": "2D stylized dark fantasy; 3/4 top-down, optimized for portrait Android",
+  "terrain_grid_px": 128,
+  "logical_tile_px": 32,
+  "source_created_in_chat": true,
+  "total_assets": 197,
+  "categories": {
+    "terrain": 44,
+    "terrain_overlay": 64,
+    "buildings": 2,
+    "crypt": 9,
+    "fences": 3,
+    "foliage": 4,
+    "props": 3,
+    "rocks": 3,
+    "structures": 5,
+    "trees": 3,
+    "walls": 4,
+    "modular_small": 13,
+    "decals": 40
+  },
+  "assets": [
+    {
+      "id": "farm_dirt_00",
+      "category": "terrain",
+      "path": "textures/terrain/farm_dirt_00.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "seam_checked",
+      "notes": "128px texture; seamless edge pixels; can connect to other variants of same material",
+      "sha256": "9a06b9d3713370592defac8af0df9cf9a0f64441fc308a7e7e9c682b9a0c24d0",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "farm_dirt_01",
+      "category": "terrain",
+      "path": "textures/terrain/farm_dirt_01.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "seam_checked",
+      "notes": "128px texture; seamless edge pixels; can connect to other variants of same material",
+      "sha256": "cc58be4dfbe6e0229414cba94c97761851424b8acfd6f9fa6b69646845c59fb6",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "farm_dirt_02",
+      "category": "terrain",
+      "path": "textures/terrain/farm_dirt_02.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "seam_checked",
+      "notes": "128px texture; seamless edge pixels; can connect to other variants of same material",
+      "sha256": "882a5397c6f846cde303572b7a3747d88e9922ce91b6c07af994996c96eed787",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "farm_dirt_03",
+      "category": "terrain",
+      "path": "textures/terrain/farm_dirt_03.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "seam_checked",
+      "notes": "128px texture; seamless edge pixels; can connect to other variants of same material",
+      "sha256": "bfb588ad8f46c79534def034f63543e1a4f281d5022bdd2f5a8efa3ac75dcf4f",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "meadow_grass_00",
+      "category": "terrain",
+      "path": "textures/terrain/meadow_grass_00.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "seam_checked",
+      "notes": "128px texture; seamless edge pixels; can connect to other variants of same material",
+      "sha256": "e6b8bf456b54afc15f9773cb8bb2a94cae1f898835a7bd2060c495de64164c90",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "meadow_grass_01",
+      "category": "terrain",
+      "path": "textures/terrain/meadow_grass_01.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "seam_checked",
+      "notes": "128px texture; seamless edge pixels; can connect to other variants of same material",
+      "sha256": "e24bfda30079ff30d18567a72ac10be7ea8d2b5256e4241a86ef43202c6bae15",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "meadow_grass_02",
+      "category": "terrain",
+      "path": "textures/terrain/meadow_grass_02.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "seam_checked",
+      "notes": "128px texture; seamless edge pixels; can connect to other variants of same material",
+      "sha256": "77fe4502137d593b6b552ad7a86fb1e00c8c2c36db4208a2f742ec0f5d96c746",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "meadow_grass_03",
+      "category": "terrain",
+      "path": "textures/terrain/meadow_grass_03.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "seam_checked",
+      "notes": "128px texture; seamless edge pixels; can connect to other variants of same material",
+      "sha256": "6afb07f9793f04c717b5b5f1a00431520651d1303b3406faab8aaffd936f70ac",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "weathered_stone_00",
+      "category": "terrain",
+      "path": "textures/terrain/weathered_stone_00.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "seam_checked",
+      "notes": "128px texture; seamless edge pixels; can connect to other variants of same material",
+      "sha256": "d90a70b370b74a743b7bc6907a2f559a7561649309f569c2b134aacab0883bb5",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "weathered_stone_01",
+      "category": "terrain",
+      "path": "textures/terrain/weathered_stone_01.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "seam_checked",
+      "notes": "128px texture; seamless edge pixels; can connect to other variants of same material",
+      "sha256": "9953c1a2998f4e58c771cd2c2719ea6e038dbaf2a66c2f31bddc708abada7467",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "weathered_stone_02",
+      "category": "terrain",
+      "path": "textures/terrain/weathered_stone_02.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "seam_checked",
+      "notes": "128px texture; seamless edge pixels; can connect to other variants of same material",
+      "sha256": "82dc2b0dc0a1b450e605fbf30a0f1a1f98d3f8488a5549ddc0c17ee7a4ea0b55",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "weathered_stone_03",
+      "category": "terrain",
+      "path": "textures/terrain/weathered_stone_03.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "seam_checked",
+      "notes": "128px texture; seamless edge pixels; can connect to other variants of same material",
+      "sha256": "85d9ac439361f7faf0c11b1d26f64d599cb25080b00e245b4853f916d87b6a27",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "old_road_00",
+      "category": "terrain",
+      "path": "textures/terrain/old_road_00.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "seam_checked",
+      "notes": "128px texture; seamless edge pixels; can connect to other variants of same material",
+      "sha256": "f1f4d02c96ef897ccfd6e5bee9468b44e3cdf86a64a5d7e90cec93d05cdbb412",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "old_road_01",
+      "category": "terrain",
+      "path": "textures/terrain/old_road_01.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "seam_checked",
+      "notes": "128px texture; seamless edge pixels; can connect to other variants of same material",
+      "sha256": "3b2515aa129ec54c1de91f996a734f7f815e3289b14f768b2a1f24970258d36c",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "old_road_02",
+      "category": "terrain",
+      "path": "textures/terrain/old_road_02.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "seam_checked",
+      "notes": "128px texture; seamless edge pixels; can connect to other variants of same material",
+      "sha256": "455067a60c3a6dee9485f0a995eb03c27aef40bbd1ab86b4de6619f202b0c26a",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "old_road_03",
+      "category": "terrain",
+      "path": "textures/terrain/old_road_03.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "seam_checked",
+      "notes": "128px texture; seamless edge pixels; can connect to other variants of same material",
+      "sha256": "7324cdad7a8c74229bd9f1c1969e7adab54fecaba226331d6b7526948ed47038",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "moss_ruins_00",
+      "category": "terrain",
+      "path": "textures/terrain/moss_ruins_00.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "seam_checked",
+      "notes": "128px texture; seamless edge pixels; can connect to other variants of same material",
+      "sha256": "f52fecbccc598186c94c7d26ba314fa7d9ea959d18fa1a314ff5e3505f047b1d",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "moss_ruins_01",
+      "category": "terrain",
+      "path": "textures/terrain/moss_ruins_01.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "seam_checked",
+      "notes": "128px texture; seamless edge pixels; can connect to other variants of same material",
+      "sha256": "6ebe159f5d7e86b45baa70833d119a28a0ab59b6df64eec89edccfc4e1526324",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "moss_ruins_02",
+      "category": "terrain",
+      "path": "textures/terrain/moss_ruins_02.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "seam_checked",
+      "notes": "128px texture; seamless edge pixels; can connect to other variants of same material",
+      "sha256": "d02a7517e60d13828c589b1db14dc3f55dc6bfcc92c3a8424c38fe8c15b85750",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "moss_ruins_03",
+      "category": "terrain",
+      "path": "textures/terrain/moss_ruins_03.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "seam_checked",
+      "notes": "128px texture; seamless edge pixels; can connect to other variants of same material",
+      "sha256": "2b4b5c8bb13529c5fe31f8153f9eba16369b73bc604948c00dce7eddd3159c50",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "crypt_grate_stone_00",
+      "category": "terrain",
+      "path": "textures/terrain/crypt_grate_stone_00.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "seam_checked",
+      "notes": "128px texture; seamless edge pixels; can connect to other variants of same material",
+      "sha256": "b4ca5253274917a8aeeb413c9a09674eb1fd7b7318e33c55f2b3f853284ef24b",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "crypt_grate_stone_01",
+      "category": "terrain",
+      "path": "textures/terrain/crypt_grate_stone_01.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "seam_checked",
+      "notes": "128px texture; seamless edge pixels; can connect to other variants of same material",
+      "sha256": "88068b85f4919f93c174453ff746a5a78caf7fdf86d6ae51289dd701f69b6673",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "crypt_grate_stone_02",
+      "category": "terrain",
+      "path": "textures/terrain/crypt_grate_stone_02.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "seam_checked",
+      "notes": "128px texture; seamless edge pixels; can connect to other variants of same material",
+      "sha256": "e556d76b488cc7738d3e50a49cb17d422c7fca111e79bfcfe8fe5c35a374c880",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "crypt_grate_stone_03",
+      "category": "terrain",
+      "path": "textures/terrain/crypt_grate_stone_03.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "seam_checked",
+      "notes": "128px texture; seamless edge pixels; can connect to other variants of same material",
+      "sha256": "0cb2e5ca7b943bc5e9cd86075770acfeec4c73e9d1747cbe2e79d34f68e78264",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "cavern_rock_00",
+      "category": "terrain",
+      "path": "textures/terrain/cavern_rock_00.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "seam_checked",
+      "notes": "128px texture; seamless edge pixels; can connect to other variants of same material",
+      "sha256": "7b6b21f541ba4e5e2e71fd1e67edcb3e16ba05d96387af67ad54b5939f175cf7",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "cavern_rock_01",
+      "category": "terrain",
+      "path": "textures/terrain/cavern_rock_01.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "seam_checked",
+      "notes": "128px texture; seamless edge pixels; can connect to other variants of same material",
+      "sha256": "e2c19d7d7e7604fddb4c48caa9ca241e445a516fa7363af833258ca72ffd2c94",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "cavern_rock_02",
+      "category": "terrain",
+      "path": "textures/terrain/cavern_rock_02.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "seam_checked",
+      "notes": "128px texture; seamless edge pixels; can connect to other variants of same material",
+      "sha256": "ebda463ce1967966ad50c1c1eac39fc6180340222a811c136b1b7789cd9a5395",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "cavern_rock_03",
+      "category": "terrain",
+      "path": "textures/terrain/cavern_rock_03.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "seam_checked",
+      "notes": "128px texture; seamless edge pixels; can connect to other variants of same material",
+      "sha256": "a386de4f40df0729130df17372df9f2c58b7b45f1a8eb8105aa8f31155bc5bf8",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "dark_ashstone_00",
+      "category": "terrain",
+      "path": "textures/terrain/dark_ashstone_00.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "seam_checked",
+      "notes": "128px texture; seamless edge pixels; can connect to other variants of same material",
+      "sha256": "620f39a0f495263b9d114c74a8fb5af6a77006467b5e8463b88adb888404ee2f",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "dark_ashstone_01",
+      "category": "terrain",
+      "path": "textures/terrain/dark_ashstone_01.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "seam_checked",
+      "notes": "128px texture; seamless edge pixels; can connect to other variants of same material",
+      "sha256": "54c5f5bd0f230c95ad2a67622d1712b11af1a70ba3304f86500fd29efab5f096",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "dark_ashstone_02",
+      "category": "terrain",
+      "path": "textures/terrain/dark_ashstone_02.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "seam_checked",
+      "notes": "128px texture; seamless edge pixels; can connect to other variants of same material",
+      "sha256": "091f2665f0539634fbbc39887d9f9af7265d9c148f2ea94f69fbd38919484a37",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "dark_ashstone_03",
+      "category": "terrain",
+      "path": "textures/terrain/dark_ashstone_03.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "seam_checked",
+      "notes": "128px texture; seamless edge pixels; can connect to other variants of same material",
+      "sha256": "ed8179780331c156c8cc87d837bc57c80e7c3ed8d7133f43aef9835433293b09",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "blight_crimson_00",
+      "category": "terrain",
+      "path": "textures/terrain/blight_crimson_00.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "seam_checked",
+      "notes": "128px texture; seamless edge pixels; can connect to other variants of same material",
+      "sha256": "432b3e42c523fc4285e12d0a9900d898261dbce14b6093ee1cde886e9af5db68",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "blight_crimson_01",
+      "category": "terrain",
+      "path": "textures/terrain/blight_crimson_01.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "seam_checked",
+      "notes": "128px texture; seamless edge pixels; can connect to other variants of same material",
+      "sha256": "e39d6f38a8efb02f4bb42ff6ca313ef8263a8a4db6364497704aab7775f62a8e",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "blight_crimson_02",
+      "category": "terrain",
+      "path": "textures/terrain/blight_crimson_02.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "seam_checked",
+      "notes": "128px texture; seamless edge pixels; can connect to other variants of same material",
+      "sha256": "fbb6560f7e305cdee73b176d0508053d61a47db1efce8397ff0e24bb5e4d07ff",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "blight_crimson_03",
+      "category": "terrain",
+      "path": "textures/terrain/blight_crimson_03.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "seam_checked",
+      "notes": "128px texture; seamless edge pixels; can connect to other variants of same material",
+      "sha256": "d5ab41007ef8084fd2a3436fe52ab90216151a5f3263143d6a2d54e247995ba9",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "winter_frost_00",
+      "category": "terrain",
+      "path": "textures/terrain/winter_frost_00.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "seam_checked",
+      "notes": "128px texture; seamless edge pixels; can connect to other variants of same material",
+      "sha256": "86cac2cf79274472969e2372ee9477637eaa0092d9be766215eb73f10b63cb38",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "winter_frost_01",
+      "category": "terrain",
+      "path": "textures/terrain/winter_frost_01.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "seam_checked",
+      "notes": "128px texture; seamless edge pixels; can connect to other variants of same material",
+      "sha256": "6520349c4a1efdd2bcd94512ca86d36fd8ecbcb021abcf0249fd2e0188dec5dd",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "winter_frost_02",
+      "category": "terrain",
+      "path": "textures/terrain/winter_frost_02.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "seam_checked",
+      "notes": "128px texture; seamless edge pixels; can connect to other variants of same material",
+      "sha256": "7d00563790bad9e8991d40c20f8d2c6546861da1cf1a74dd9f6577670f845641",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "winter_frost_03",
+      "category": "terrain",
+      "path": "textures/terrain/winter_frost_03.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "seam_checked",
+      "notes": "128px texture; seamless edge pixels; can connect to other variants of same material",
+      "sha256": "4470c59c613eb7e41464f7e700278edc3d395fb2aae31af93fc86351e6cd13f7",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "weathered_planks_00",
+      "category": "terrain",
+      "path": "textures/terrain/weathered_planks_00.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "seam_checked",
+      "notes": "128px texture; seamless edge pixels; can connect to other variants of same material",
+      "sha256": "c8ab88bf56dd796ca757c9270341134a978ec541ad122a16df221c25b8309d57",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "weathered_planks_01",
+      "category": "terrain",
+      "path": "textures/terrain/weathered_planks_01.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "seam_checked",
+      "notes": "128px texture; seamless edge pixels; can connect to other variants of same material",
+      "sha256": "fe4806f55bb02a18baf6f6b193d5853ad6ef47dfc3c2437733acb43158c7c28e",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "weathered_planks_02",
+      "category": "terrain",
+      "path": "textures/terrain/weathered_planks_02.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "seam_checked",
+      "notes": "128px texture; seamless edge pixels; can connect to other variants of same material",
+      "sha256": "87505f4d3a0d2509eb797265650fc3fbba71f50b87c46db75a426f4d27a043f9",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "weathered_planks_03",
+      "category": "terrain",
+      "path": "textures/terrain/weathered_planks_03.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "seam_checked",
+      "notes": "128px texture; seamless edge pixels; can connect to other variants of same material",
+      "sha256": "504dff75dcbd44f258109c254d26915e2ced87356264ab5efe80813351bc48c5",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "grass_on_dirt_nesw_0000",
+      "category": "terrain_overlay",
+      "path": "textures/transitions/grass_on_dirt_nesw_0000.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "render_ready",
+      "notes": "Overlay bits: North=1 East=2 South=4 West=8; use on base material",
+      "sha256": "174d4c523acd489320d739bf5696cc0a435371cbf29565eb5d97dbe3e7401668",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "grass_on_dirt_nesw_0001",
+      "category": "terrain_overlay",
+      "path": "textures/transitions/grass_on_dirt_nesw_0001.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "render_ready",
+      "notes": "Overlay bits: North=1 East=2 South=4 West=8; use on base material",
+      "sha256": "483018a6776d0f8b11840f587db90e0dcdd2bba87775deb4afb4f589815cbc45",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "grass_on_dirt_nesw_0010",
+      "category": "terrain_overlay",
+      "path": "textures/transitions/grass_on_dirt_nesw_0010.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "render_ready",
+      "notes": "Overlay bits: North=1 East=2 South=4 West=8; use on base material",
+      "sha256": "ca04be8e47ff68cf54d4b00ee6b3aa265287fc6483442fdc84622ab0a577c34b",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "grass_on_dirt_nesw_0011",
+      "category": "terrain_overlay",
+      "path": "textures/transitions/grass_on_dirt_nesw_0011.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "render_ready",
+      "notes": "Overlay bits: North=1 East=2 South=4 West=8; use on base material",
+      "sha256": "a772a838a58779baec9a2c08f036bde5703cb1f1c52177558002d3bce8755eaf",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "grass_on_dirt_nesw_0100",
+      "category": "terrain_overlay",
+      "path": "textures/transitions/grass_on_dirt_nesw_0100.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "render_ready",
+      "notes": "Overlay bits: North=1 East=2 South=4 West=8; use on base material",
+      "sha256": "2570a27681718eba5aa9b0324ac59270e8d152c289c9dacea9d56fb755d63cb9",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "grass_on_dirt_nesw_0101",
+      "category": "terrain_overlay",
+      "path": "textures/transitions/grass_on_dirt_nesw_0101.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "render_ready",
+      "notes": "Overlay bits: North=1 East=2 South=4 West=8; use on base material",
+      "sha256": "9334fced49f01de00ad79e01fd0612a24022b217521b6f3e0c44de00354ed270",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "grass_on_dirt_nesw_0110",
+      "category": "terrain_overlay",
+      "path": "textures/transitions/grass_on_dirt_nesw_0110.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "render_ready",
+      "notes": "Overlay bits: North=1 East=2 South=4 West=8; use on base material",
+      "sha256": "e9ae5f37f0f4d8d7a8ccc44ef488169523639c71580aaa4ad7c0a0f7e385c9bc",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "grass_on_dirt_nesw_0111",
+      "category": "terrain_overlay",
+      "path": "textures/transitions/grass_on_dirt_nesw_0111.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "render_ready",
+      "notes": "Overlay bits: North=1 East=2 South=4 West=8; use on base material",
+      "sha256": "6569b7f33ea13071ef3efc06a49ad473c0f75dd9910bcb8b46ae73f38dd64f77",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "grass_on_dirt_nesw_1000",
+      "category": "terrain_overlay",
+      "path": "textures/transitions/grass_on_dirt_nesw_1000.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "render_ready",
+      "notes": "Overlay bits: North=1 East=2 South=4 West=8; use on base material",
+      "sha256": "cf157a31990c5a913ebd676c51a5ec3df192995ff7c3dc2fee592eaf8e4a5eb1",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "grass_on_dirt_nesw_1001",
+      "category": "terrain_overlay",
+      "path": "textures/transitions/grass_on_dirt_nesw_1001.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "render_ready",
+      "notes": "Overlay bits: North=1 East=2 South=4 West=8; use on base material",
+      "sha256": "fd4317e39341e1e9a3763d7f9a1c504f0a4216db6370f5e495293e7403dae977",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "grass_on_dirt_nesw_1010",
+      "category": "terrain_overlay",
+      "path": "textures/transitions/grass_on_dirt_nesw_1010.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "render_ready",
+      "notes": "Overlay bits: North=1 East=2 South=4 West=8; use on base material",
+      "sha256": "812df8761ea17b7c34432f461179887c5b7d6627f1441c65c94ab889280c42a0",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "grass_on_dirt_nesw_1011",
+      "category": "terrain_overlay",
+      "path": "textures/transitions/grass_on_dirt_nesw_1011.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "render_ready",
+      "notes": "Overlay bits: North=1 East=2 South=4 West=8; use on base material",
+      "sha256": "133780e02fe3e59c04210dec2e4d6b9ba99dc844cbb84c18f55676cd0cfb1239",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "grass_on_dirt_nesw_1100",
+      "category": "terrain_overlay",
+      "path": "textures/transitions/grass_on_dirt_nesw_1100.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "render_ready",
+      "notes": "Overlay bits: North=1 East=2 South=4 West=8; use on base material",
+      "sha256": "e743be9feb04104ac22755dcad56714fcd73bd15a90699a4d2d3febf7eebd9dc",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "grass_on_dirt_nesw_1101",
+      "category": "terrain_overlay",
+      "path": "textures/transitions/grass_on_dirt_nesw_1101.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "render_ready",
+      "notes": "Overlay bits: North=1 East=2 South=4 West=8; use on base material",
+      "sha256": "2132ba624a95e7e25b0a8eed92d92a9d56fd4168918ea77e57fa3de47c68876e",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "grass_on_dirt_nesw_1110",
+      "category": "terrain_overlay",
+      "path": "textures/transitions/grass_on_dirt_nesw_1110.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "render_ready",
+      "notes": "Overlay bits: North=1 East=2 South=4 West=8; use on base material",
+      "sha256": "f4b0d011bff1c8607ebb61347731c7e27c21b5cac81162efe32cb4dffab127ce",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "grass_on_dirt_nesw_1111",
+      "category": "terrain_overlay",
+      "path": "textures/transitions/grass_on_dirt_nesw_1111.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "render_ready",
+      "notes": "Overlay bits: North=1 East=2 South=4 West=8; use on base material",
+      "sha256": "9f48663044eb3599bae5e741d4d6ec0729ad2ae25434e2e1471e5348e5589d2a",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "moss_on_stone_nesw_0000",
+      "category": "terrain_overlay",
+      "path": "textures/transitions/moss_on_stone_nesw_0000.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "render_ready",
+      "notes": "Overlay bits: North=1 East=2 South=4 West=8; use on base material",
+      "sha256": "104e78c1777392b6f61692c878d5bd912cc4e1e87ef51643848a4ad20063147a",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "moss_on_stone_nesw_0001",
+      "category": "terrain_overlay",
+      "path": "textures/transitions/moss_on_stone_nesw_0001.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "render_ready",
+      "notes": "Overlay bits: North=1 East=2 South=4 West=8; use on base material",
+      "sha256": "7641dc342bb400c00b94af2a4ebb3b87553822677bfb97ad97876ea1f0492a15",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "moss_on_stone_nesw_0010",
+      "category": "terrain_overlay",
+      "path": "textures/transitions/moss_on_stone_nesw_0010.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "render_ready",
+      "notes": "Overlay bits: North=1 East=2 South=4 West=8; use on base material",
+      "sha256": "f52d72f9a5c71499a6730d1fe3138c233603c8d46bed436c751e3351aadf53b4",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "moss_on_stone_nesw_0011",
+      "category": "terrain_overlay",
+      "path": "textures/transitions/moss_on_stone_nesw_0011.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "render_ready",
+      "notes": "Overlay bits: North=1 East=2 South=4 West=8; use on base material",
+      "sha256": "8b9863b6009a2470f3b15c176109a2cc21d67c0464864fb2d35d34aa07838fbe",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "moss_on_stone_nesw_0100",
+      "category": "terrain_overlay",
+      "path": "textures/transitions/moss_on_stone_nesw_0100.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "render_ready",
+      "notes": "Overlay bits: North=1 East=2 South=4 West=8; use on base material",
+      "sha256": "7bebbc1c2ad490222d0b0a4550feb90bbf732c9a50474de3a0d63f9438bec4ef",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "moss_on_stone_nesw_0101",
+      "category": "terrain_overlay",
+      "path": "textures/transitions/moss_on_stone_nesw_0101.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "render_ready",
+      "notes": "Overlay bits: North=1 East=2 South=4 West=8; use on base material",
+      "sha256": "2da09e8c418721705674db6ccc81030b88752d8a6b41c4c76bd9e2570b0ab188",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "moss_on_stone_nesw_0110",
+      "category": "terrain_overlay",
+      "path": "textures/transitions/moss_on_stone_nesw_0110.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "render_ready",
+      "notes": "Overlay bits: North=1 East=2 South=4 West=8; use on base material",
+      "sha256": "02841473e5deb8fbaa40dc406af24f506949d8282775cd85c85140bff2078c2a",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "moss_on_stone_nesw_0111",
+      "category": "terrain_overlay",
+      "path": "textures/transitions/moss_on_stone_nesw_0111.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "render_ready",
+      "notes": "Overlay bits: North=1 East=2 South=4 West=8; use on base material",
+      "sha256": "cccbd99305842732909238531529306fc178668e87ea7e30ef9759d5b82bb0b9",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "moss_on_stone_nesw_1000",
+      "category": "terrain_overlay",
+      "path": "textures/transitions/moss_on_stone_nesw_1000.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "render_ready",
+      "notes": "Overlay bits: North=1 East=2 South=4 West=8; use on base material",
+      "sha256": "6de532a3b5ee410b5474289ccbd50b3c5cb6be889bdaf1477a411a984d75a5f2",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "moss_on_stone_nesw_1001",
+      "category": "terrain_overlay",
+      "path": "textures/transitions/moss_on_stone_nesw_1001.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "render_ready",
+      "notes": "Overlay bits: North=1 East=2 South=4 West=8; use on base material",
+      "sha256": "0d156c60f749ccbb0b437730dc973ae7ba331b4ea13d8cfd50f93b992b721201",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "moss_on_stone_nesw_1010",
+      "category": "terrain_overlay",
+      "path": "textures/transitions/moss_on_stone_nesw_1010.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "render_ready",
+      "notes": "Overlay bits: North=1 East=2 South=4 West=8; use on base material",
+      "sha256": "aa1ec1b386191fc6e0df011ce107ac5a52a9855abf8ba6f0e380991efc6510d9",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "moss_on_stone_nesw_1011",
+      "category": "terrain_overlay",
+      "path": "textures/transitions/moss_on_stone_nesw_1011.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "render_ready",
+      "notes": "Overlay bits: North=1 East=2 South=4 West=8; use on base material",
+      "sha256": "a14444c0ca93a814fa4c0557ae02974ad331ed5ee2e33bca7de10e632af1ac34",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "moss_on_stone_nesw_1100",
+      "category": "terrain_overlay",
+      "path": "textures/transitions/moss_on_stone_nesw_1100.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "render_ready",
+      "notes": "Overlay bits: North=1 East=2 South=4 West=8; use on base material",
+      "sha256": "8cda4d4b7af6b16290e99665715b47e79c9c04ea603759c3f9c74c5a794d38c2",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "moss_on_stone_nesw_1101",
+      "category": "terrain_overlay",
+      "path": "textures/transitions/moss_on_stone_nesw_1101.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "render_ready",
+      "notes": "Overlay bits: North=1 East=2 South=4 West=8; use on base material",
+      "sha256": "fd1dde5792faf813c76f475bb1c0e75d88709cfe1cddde520ac6c6916923cdc4",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "moss_on_stone_nesw_1110",
+      "category": "terrain_overlay",
+      "path": "textures/transitions/moss_on_stone_nesw_1110.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "render_ready",
+      "notes": "Overlay bits: North=1 East=2 South=4 West=8; use on base material",
+      "sha256": "b1f05e02af331e752652b31a6534a54cf3cbacd23a39df68d4161884b838f7cd",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "moss_on_stone_nesw_1111",
+      "category": "terrain_overlay",
+      "path": "textures/transitions/moss_on_stone_nesw_1111.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "render_ready",
+      "notes": "Overlay bits: North=1 East=2 South=4 West=8; use on base material",
+      "sha256": "ce1098adaad6a06c9361cf9d1cadb70d74c6f1cc11397965c89c1d1a9c87efd1",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "blight_on_stone_nesw_0000",
+      "category": "terrain_overlay",
+      "path": "textures/transitions/blight_on_stone_nesw_0000.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "render_ready",
+      "notes": "Overlay bits: North=1 East=2 South=4 West=8; use on base material",
+      "sha256": "9f9912b959a3c1d736a83a070e64786cc90a2aa61c639f997f78cb69ccc91f91",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "blight_on_stone_nesw_0001",
+      "category": "terrain_overlay",
+      "path": "textures/transitions/blight_on_stone_nesw_0001.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "render_ready",
+      "notes": "Overlay bits: North=1 East=2 South=4 West=8; use on base material",
+      "sha256": "2221887e26cbe3eea783aac769a8c9a16d89f27eafbc11fe63368c66727f5f4f",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "blight_on_stone_nesw_0010",
+      "category": "terrain_overlay",
+      "path": "textures/transitions/blight_on_stone_nesw_0010.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "render_ready",
+      "notes": "Overlay bits: North=1 East=2 South=4 West=8; use on base material",
+      "sha256": "efc631ea7e9c4d4dacf2997018a5fd2535b2f8dcfd6536144c3e4fd1323d433f",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "blight_on_stone_nesw_0011",
+      "category": "terrain_overlay",
+      "path": "textures/transitions/blight_on_stone_nesw_0011.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "render_ready",
+      "notes": "Overlay bits: North=1 East=2 South=4 West=8; use on base material",
+      "sha256": "b1e66a627aa58fdb48e403e008c1cc03d5ed4124e8626de1504079c4e6b2e143",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "blight_on_stone_nesw_0100",
+      "category": "terrain_overlay",
+      "path": "textures/transitions/blight_on_stone_nesw_0100.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "render_ready",
+      "notes": "Overlay bits: North=1 East=2 South=4 West=8; use on base material",
+      "sha256": "d9b9d6716cb9354292366ebd278be60c53ad6945f1e01364ddb68efc9ce006e4",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "blight_on_stone_nesw_0101",
+      "category": "terrain_overlay",
+      "path": "textures/transitions/blight_on_stone_nesw_0101.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "render_ready",
+      "notes": "Overlay bits: North=1 East=2 South=4 West=8; use on base material",
+      "sha256": "6943f93c19abd376ec31ffe7d92788ef29ab05b7503e577f4f3a30a2daac8179",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "blight_on_stone_nesw_0110",
+      "category": "terrain_overlay",
+      "path": "textures/transitions/blight_on_stone_nesw_0110.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "render_ready",
+      "notes": "Overlay bits: North=1 East=2 South=4 West=8; use on base material",
+      "sha256": "d49b0389550a2c6960f8394335f841efc92279dca41c230680da914ad07e93d8",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "blight_on_stone_nesw_0111",
+      "category": "terrain_overlay",
+      "path": "textures/transitions/blight_on_stone_nesw_0111.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "render_ready",
+      "notes": "Overlay bits: North=1 East=2 South=4 West=8; use on base material",
+      "sha256": "50cf2c9db48cd73a7f14e637050bec1f2a1e108a2f56e59dcbdb1e249ca7c991",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "blight_on_stone_nesw_1000",
+      "category": "terrain_overlay",
+      "path": "textures/transitions/blight_on_stone_nesw_1000.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "render_ready",
+      "notes": "Overlay bits: North=1 East=2 South=4 West=8; use on base material",
+      "sha256": "9d1d7122ad13bb3506a17f64ded8eefddb6c8b6dcd385c2d550b6038817eb0ff",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "blight_on_stone_nesw_1001",
+      "category": "terrain_overlay",
+      "path": "textures/transitions/blight_on_stone_nesw_1001.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "render_ready",
+      "notes": "Overlay bits: North=1 East=2 South=4 West=8; use on base material",
+      "sha256": "4db84940cb459fbdc236f97cb88601f8a2cf8cce62d1215c1427eb0a091225b7",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "blight_on_stone_nesw_1010",
+      "category": "terrain_overlay",
+      "path": "textures/transitions/blight_on_stone_nesw_1010.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "render_ready",
+      "notes": "Overlay bits: North=1 East=2 South=4 West=8; use on base material",
+      "sha256": "725819a36aaee28d38cd07a4b00c859c3e10e9e2ef299fe93a0e39c7d16889a9",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "blight_on_stone_nesw_1011",
+      "category": "terrain_overlay",
+      "path": "textures/transitions/blight_on_stone_nesw_1011.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "render_ready",
+      "notes": "Overlay bits: North=1 East=2 South=4 West=8; use on base material",
+      "sha256": "d69b6a6d7883b6feee6afecd372f3678617848fd33adab4def35d96ba0f51b62",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "blight_on_stone_nesw_1100",
+      "category": "terrain_overlay",
+      "path": "textures/transitions/blight_on_stone_nesw_1100.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "render_ready",
+      "notes": "Overlay bits: North=1 East=2 South=4 West=8; use on base material",
+      "sha256": "77daf54615c0b673258321682d01eeae21677003bdd7e161c805c8231e17b3b0",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "blight_on_stone_nesw_1101",
+      "category": "terrain_overlay",
+      "path": "textures/transitions/blight_on_stone_nesw_1101.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "render_ready",
+      "notes": "Overlay bits: North=1 East=2 South=4 West=8; use on base material",
+      "sha256": "5352b1b02b8477d124563c80f482ddf98f4ce4769f50fe56c5a1138509052a28",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "blight_on_stone_nesw_1110",
+      "category": "terrain_overlay",
+      "path": "textures/transitions/blight_on_stone_nesw_1110.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "render_ready",
+      "notes": "Overlay bits: North=1 East=2 South=4 West=8; use on base material",
+      "sha256": "d34deb29c7f96a6528581d04ff55aedf0123c18a0dda35274888c9aaadda90d4",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "blight_on_stone_nesw_1111",
+      "category": "terrain_overlay",
+      "path": "textures/transitions/blight_on_stone_nesw_1111.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "render_ready",
+      "notes": "Overlay bits: North=1 East=2 South=4 West=8; use on base material",
+      "sha256": "9840c8f1b323de25ddf58d6bb9a16a8ceb348d00502bf90f757c0f3a91e244e2",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "snow_on_stone_nesw_0000",
+      "category": "terrain_overlay",
+      "path": "textures/transitions/snow_on_stone_nesw_0000.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "render_ready",
+      "notes": "Overlay bits: North=1 East=2 South=4 West=8; use on base material",
+      "sha256": "72b54e7f18ba5bcdadb74893f2681afb47717b352cdf6952d22ed7a4b9f041cc",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "snow_on_stone_nesw_0001",
+      "category": "terrain_overlay",
+      "path": "textures/transitions/snow_on_stone_nesw_0001.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "render_ready",
+      "notes": "Overlay bits: North=1 East=2 South=4 West=8; use on base material",
+      "sha256": "a4790cee1af30420af45c1e4b2b5f2a256ad0e1e6bfee2f24af1180289ce574d",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "snow_on_stone_nesw_0010",
+      "category": "terrain_overlay",
+      "path": "textures/transitions/snow_on_stone_nesw_0010.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "render_ready",
+      "notes": "Overlay bits: North=1 East=2 South=4 West=8; use on base material",
+      "sha256": "9bbc24a3199d8227a12b03eb16864efa712c31ebb9c0af2b07b83cf531493809",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "snow_on_stone_nesw_0011",
+      "category": "terrain_overlay",
+      "path": "textures/transitions/snow_on_stone_nesw_0011.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "render_ready",
+      "notes": "Overlay bits: North=1 East=2 South=4 West=8; use on base material",
+      "sha256": "556a99405fb2100368600b3a223ba8272721312369870c103bca97e9fcdddea8",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "snow_on_stone_nesw_0100",
+      "category": "terrain_overlay",
+      "path": "textures/transitions/snow_on_stone_nesw_0100.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "render_ready",
+      "notes": "Overlay bits: North=1 East=2 South=4 West=8; use on base material",
+      "sha256": "7500023533ab0c88d489e7d5daf5e5ad673105c7d9b5b7076b6cefbfc76f5f84",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "snow_on_stone_nesw_0101",
+      "category": "terrain_overlay",
+      "path": "textures/transitions/snow_on_stone_nesw_0101.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "render_ready",
+      "notes": "Overlay bits: North=1 East=2 South=4 West=8; use on base material",
+      "sha256": "0cfc6d63c1fe61d5a54bf0621ec8c9252025cec73d69845dba1d4a2ac60ca832",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "snow_on_stone_nesw_0110",
+      "category": "terrain_overlay",
+      "path": "textures/transitions/snow_on_stone_nesw_0110.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "render_ready",
+      "notes": "Overlay bits: North=1 East=2 South=4 West=8; use on base material",
+      "sha256": "a391f73ef92643fc858c04be7a4029fbbfc488803781dbff01a0fbf6e2c5edbe",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "snow_on_stone_nesw_0111",
+      "category": "terrain_overlay",
+      "path": "textures/transitions/snow_on_stone_nesw_0111.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "render_ready",
+      "notes": "Overlay bits: North=1 East=2 South=4 West=8; use on base material",
+      "sha256": "578ad034fe35aac79de2553fdf4c7c914715a8d5af60cca8a5a259742a717ec5",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "snow_on_stone_nesw_1000",
+      "category": "terrain_overlay",
+      "path": "textures/transitions/snow_on_stone_nesw_1000.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "render_ready",
+      "notes": "Overlay bits: North=1 East=2 South=4 West=8; use on base material",
+      "sha256": "ab07a3d1db449fda3dc8def085976a997a46e972219d85a7d6b4f9371e367574",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "snow_on_stone_nesw_1001",
+      "category": "terrain_overlay",
+      "path": "textures/transitions/snow_on_stone_nesw_1001.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "render_ready",
+      "notes": "Overlay bits: North=1 East=2 South=4 West=8; use on base material",
+      "sha256": "f380d5ccba653871e5da75d97083efd8537d1873d65e74f708181f70aaf0ddde",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "snow_on_stone_nesw_1010",
+      "category": "terrain_overlay",
+      "path": "textures/transitions/snow_on_stone_nesw_1010.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "render_ready",
+      "notes": "Overlay bits: North=1 East=2 South=4 West=8; use on base material",
+      "sha256": "43b984c82267e6a5a5f8d589e4121acb24fe0d7740c34db78e7869b6b4a8e763",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "snow_on_stone_nesw_1011",
+      "category": "terrain_overlay",
+      "path": "textures/transitions/snow_on_stone_nesw_1011.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "render_ready",
+      "notes": "Overlay bits: North=1 East=2 South=4 West=8; use on base material",
+      "sha256": "a524906cbfc32d07bceca6bc534a9d7481d48860d65ee56bc454c99125caa1cf",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "snow_on_stone_nesw_1100",
+      "category": "terrain_overlay",
+      "path": "textures/transitions/snow_on_stone_nesw_1100.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "render_ready",
+      "notes": "Overlay bits: North=1 East=2 South=4 West=8; use on base material",
+      "sha256": "95cd7aa034fc6b76e39bf8ab7d0f82ba57e371d59a5634940bb4d7c62c7ba9a3",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "snow_on_stone_nesw_1101",
+      "category": "terrain_overlay",
+      "path": "textures/transitions/snow_on_stone_nesw_1101.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "render_ready",
+      "notes": "Overlay bits: North=1 East=2 South=4 West=8; use on base material",
+      "sha256": "090fcdc2428c529980e312c8b0658598d3b7a18926479b4be1c0448b353011d7",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "snow_on_stone_nesw_1110",
+      "category": "terrain_overlay",
+      "path": "textures/transitions/snow_on_stone_nesw_1110.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "render_ready",
+      "notes": "Overlay bits: North=1 East=2 South=4 West=8; use on base material",
+      "sha256": "a31955530791b15c9fc21dd953187e1f9c83af99b1d9caa09f3aeb2150d8d45d",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "snow_on_stone_nesw_1111",
+      "category": "terrain_overlay",
+      "path": "textures/transitions/snow_on_stone_nesw_1111.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "top_left",
+      "status": "render_ready",
+      "notes": "Overlay bits: North=1 East=2 South=4 West=8; use on base material",
+      "sha256": "5221b6ef3e67bb593b028a4253d058780bce5306c83a3d5ddaae47a840faa1d1",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "chapel_ruined",
+      "category": "buildings",
+      "path": "sprites/buildings/chapel_ruined.png",
+      "width": 308,
+      "height": 205,
+      "collision": "solid",
+      "pivot": "bottom_center",
+      "status": "review_pass_needed",
+      "notes": "Transparent real game texture; collision size/pivot still require design review",
+      "sha256": "529d463fa72c89d2747399a06832541664bd7f293af48d2e9db8a755f2203c09",
+      "footprint_ratio_x_y": [
+        0.73,
+        0.23
+      ],
+      "feet_anchor_ratio": [
+        0.5,
+        0.94
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "cottage_thatched",
+      "category": "buildings",
+      "path": "sprites/buildings/cottage_thatched.png",
+      "width": 308,
+      "height": 171,
+      "collision": "solid",
+      "pivot": "bottom_center",
+      "status": "review_pass_needed",
+      "notes": "Transparent real game texture; collision size/pivot still require design review",
+      "sha256": "2e2e4be52ea0fa8b7ab622545401010528ffa661b0406d6116854df8208d5d7b",
+      "footprint_ratio_x_y": [
+        0.73,
+        0.23
+      ],
+      "feet_anchor_ratio": [
+        0.5,
+        0.94
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "crypt_blight_brazier",
+      "category": "crypt",
+      "path": "sprites/crypt/crypt_blight_brazier.png",
+      "width": 162,
+      "height": 238,
+      "collision": "none",
+      "pivot": "bottom_center",
+      "status": "review_pass_needed",
+      "notes": "Transparent real game texture; collision size/pivot still require design review",
+      "sha256": "858d7c1195c49b7380f3b2105c928f9c6ba7faf280bdac34a78a68602887486b",
+      "footprint_ratio_x_y": [
+        0.64,
+        0.19
+      ],
+      "feet_anchor_ratio": [
+        0.5,
+        0.94
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "crypt_blood_shrine",
+      "category": "crypt",
+      "path": "sprites/crypt/crypt_blood_shrine.png",
+      "width": 227,
+      "height": 238,
+      "collision": "none",
+      "pivot": "bottom_center",
+      "status": "review_pass_needed",
+      "notes": "Transparent real game texture; collision size/pivot still require design review",
+      "sha256": "b62a4baa8f946a9388602f224d41964a365f712234950051af7d3d739ebf3872",
+      "footprint_ratio_x_y": [
+        0.64,
+        0.19
+      ],
+      "feet_anchor_ratio": [
+        0.5,
+        0.94
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "crypt_candle_altar",
+      "category": "crypt",
+      "path": "sprites/crypt/crypt_candle_altar.png",
+      "width": 238,
+      "height": 188,
+      "collision": "none",
+      "pivot": "bottom_center",
+      "status": "review_pass_needed",
+      "notes": "Transparent real game texture; collision size/pivot still require design review",
+      "sha256": "e9dcd3eb8a09a7bd1265f307991601db02465a30d8692706c7d9e793d28b7c04",
+      "footprint_ratio_x_y": [
+        0.64,
+        0.19
+      ],
+      "feet_anchor_ratio": [
+        0.5,
+        0.94
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "crypt_grated_gate",
+      "category": "crypt",
+      "path": "sprites/crypt/crypt_grated_gate.png",
+      "width": 238,
+      "height": 194,
+      "collision": "none",
+      "pivot": "bottom_center",
+      "status": "review_pass_needed",
+      "notes": "Transparent real game texture; collision size/pivot still require design review",
+      "sha256": "754da57431302844dd5a44142958b4ec881dc444d9ffff672526abf94957b22f",
+      "footprint_ratio_x_y": [
+        0.64,
+        0.19
+      ],
+      "feet_anchor_ratio": [
+        0.5,
+        0.94
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "crypt_rubble",
+      "category": "crypt",
+      "path": "sprites/crypt/crypt_rubble.png",
+      "width": 238,
+      "height": 134,
+      "collision": "none",
+      "pivot": "bottom_center",
+      "status": "review_pass_needed",
+      "notes": "Transparent real game texture; collision size/pivot still require design review",
+      "sha256": "212ef292bfe4eab9b031b7ba50c6c3992a6cb07301f61d93c3aa90938a9df4fc",
+      "footprint_ratio_x_y": [
+        0.64,
+        0.19
+      ],
+      "feet_anchor_ratio": [
+        0.5,
+        0.94
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "crypt_sarcophagus",
+      "category": "crypt",
+      "path": "sprites/crypt/crypt_sarcophagus.png",
+      "width": 238,
+      "height": 165,
+      "collision": "none",
+      "pivot": "bottom_center",
+      "status": "review_pass_needed",
+      "notes": "Transparent real game texture; collision size/pivot still require design review",
+      "sha256": "c9295819c84efe1e6ce13cb4e61971bd2fdddebaf07d16a6d922cbc76887c3dd",
+      "footprint_ratio_x_y": [
+        0.64,
+        0.19
+      ],
+      "feet_anchor_ratio": [
+        0.5,
+        0.94
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "crypt_sarcophagus_broken",
+      "category": "crypt",
+      "path": "sprites/crypt/crypt_sarcophagus_broken.png",
+      "width": 238,
+      "height": 162,
+      "collision": "none",
+      "pivot": "bottom_center",
+      "status": "review_pass_needed",
+      "notes": "Transparent real game texture; collision size/pivot still require design review",
+      "sha256": "39604208ce63dbd5e2ffbb7069b8b6852b67481934fc8545b3b16eee5c195ec6",
+      "footprint_ratio_x_y": [
+        0.64,
+        0.19
+      ],
+      "feet_anchor_ratio": [
+        0.5,
+        0.94
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "crypt_torture_table",
+      "category": "crypt",
+      "path": "sprites/crypt/crypt_torture_table.png",
+      "width": 238,
+      "height": 180,
+      "collision": "none",
+      "pivot": "bottom_center",
+      "status": "review_pass_needed",
+      "notes": "Transparent real game texture; collision size/pivot still require design review",
+      "sha256": "c9c9e7847c1b9782017a23f1e82abdffc2b6fbf0b678136945191bca5bc08708",
+      "footprint_ratio_x_y": [
+        0.64,
+        0.19
+      ],
+      "feet_anchor_ratio": [
+        0.5,
+        0.94
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "crypt_treasure_chest",
+      "category": "crypt",
+      "path": "sprites/crypt/crypt_treasure_chest.png",
+      "width": 238,
+      "height": 225,
+      "collision": "interact",
+      "pivot": "bottom_center",
+      "status": "review_pass_needed",
+      "notes": "Transparent real game texture; collision size/pivot still require design review",
+      "sha256": "ac19cf1a8699840820e5e10eca45c7a946387d414aff4ba43f698bc5ad7a4d9e",
+      "footprint_ratio_x_y": [
+        0.64,
+        0.19
+      ],
+      "feet_anchor_ratio": [
+        0.5,
+        0.94
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "fence_broken",
+      "category": "fences",
+      "path": "sprites/fences/fence_broken.png",
+      "width": 210,
+      "height": 139,
+      "collision": "solid",
+      "pivot": "bottom_center",
+      "status": "review_pass_needed",
+      "notes": "Transparent real game texture; collision size/pivot still require design review",
+      "sha256": "afbc1a792d73c245e43bf2e96f2226e0bb2c8027a619a6a6e564ddc26ddf91e4",
+      "footprint_ratio_x_y": [
+        0.8,
+        0.12
+      ],
+      "feet_anchor_ratio": [
+        0.5,
+        0.94
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "fence_wood",
+      "category": "fences",
+      "path": "sprites/fences/fence_wood.png",
+      "width": 210,
+      "height": 122,
+      "collision": "solid",
+      "pivot": "bottom_center",
+      "status": "review_pass_needed",
+      "notes": "Transparent real game texture; collision size/pivot still require design review",
+      "sha256": "8d075317e469ba1eefa84a681166af05af4154e7a0520549fab45d03248d3a0b",
+      "footprint_ratio_x_y": [
+        0.8,
+        0.12
+      ],
+      "feet_anchor_ratio": [
+        0.5,
+        0.94
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "gate_wood",
+      "category": "fences",
+      "path": "sprites/fences/gate_wood.png",
+      "width": 210,
+      "height": 164,
+      "collision": "solid",
+      "pivot": "bottom_center",
+      "status": "review_pass_needed",
+      "notes": "Transparent real game texture; collision size/pivot still require design review",
+      "sha256": "113ff2c40115405d1a09e752016de3501a20b456e7f1e414094b8b9137c38485",
+      "footprint_ratio_x_y": [
+        0.8,
+        0.12
+      ],
+      "feet_anchor_ratio": [
+        0.5,
+        0.94
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "bush_blighted",
+      "category": "foliage",
+      "path": "sprites/foliage/bush_blighted.png",
+      "width": 153,
+      "height": 122,
+      "collision": "none",
+      "pivot": "bottom_center",
+      "status": "review_pass_needed",
+      "notes": "Transparent real game texture; collision size/pivot still require design review",
+      "sha256": "309e19319151680ae5dfc6d1935b20b33b21ce14543249ac494570e4098714d0",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0.5,
+        0.94
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "bush_green",
+      "category": "foliage",
+      "path": "sprites/foliage/bush_green.png",
+      "width": 153,
+      "height": 118,
+      "collision": "none",
+      "pivot": "bottom_center",
+      "status": "review_pass_needed",
+      "notes": "Transparent real game texture; collision size/pivot still require design review",
+      "sha256": "2335b71b337fbfb9f1ef53e33627cb3bc6475e6f394afafaf98af0c14f855eab",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0.5,
+        0.94
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "grass_tall",
+      "category": "foliage",
+      "path": "sprites/foliage/grass_tall.png",
+      "width": 153,
+      "height": 150,
+      "collision": "none",
+      "pivot": "bottom_center",
+      "status": "review_pass_needed",
+      "notes": "Transparent real game texture; collision size/pivot still require design review",
+      "sha256": "c1050eb9fdd2c31cbf9bacbaf0ac2b5232c4240962de33edff3c9859613c4afc",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0.5,
+        0.94
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "wheat_clump",
+      "category": "foliage",
+      "path": "sprites/foliage/wheat_clump.png",
+      "width": 153,
+      "height": 142,
+      "collision": "none",
+      "pivot": "bottom_center",
+      "status": "review_pass_needed",
+      "notes": "Transparent real game texture; collision size/pivot still require design review",
+      "sha256": "b3b53464dedfee5e1cd4c2702a1a614d64955c8f8350c6931ceb2c77ff60eabf",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0.5,
+        0.94
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "cart_broken",
+      "category": "props",
+      "path": "sprites/props/cart_broken.png",
+      "width": 198,
+      "height": 126,
+      "collision": "none",
+      "pivot": "bottom_center",
+      "status": "review_pass_needed",
+      "notes": "Transparent real game texture; collision size/pivot still require design review",
+      "sha256": "be0ee23fee9be769d3775ba73890f4d31a326d97cf53b7a27225a7556775f431",
+      "footprint_ratio_x_y": [
+        0.62,
+        0.2
+      ],
+      "feet_anchor_ratio": [
+        0.5,
+        0.94
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "crates_barrels",
+      "category": "props",
+      "path": "sprites/props/crates_barrels.png",
+      "width": 198,
+      "height": 189,
+      "collision": "none",
+      "pivot": "bottom_center",
+      "status": "review_pass_needed",
+      "notes": "Transparent real game texture; collision size/pivot still require design review",
+      "sha256": "a690bff958290e10803ac252ab2cd543708ca0947d09c6e1c5a040106baf386c",
+      "footprint_ratio_x_y": [
+        0.62,
+        0.2
+      ],
+      "feet_anchor_ratio": [
+        0.5,
+        0.94
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "sign_lantern",
+      "category": "props",
+      "path": "sprites/props/sign_lantern.png",
+      "width": 156,
+      "height": 198,
+      "collision": "none",
+      "pivot": "bottom_center",
+      "status": "review_pass_needed",
+      "notes": "Transparent real game texture; collision size/pivot still require design review",
+      "sha256": "b184aea4202a2ecce6bd00a893322feab1fc3876170d696f6bbc7006eff0c6d3",
+      "footprint_ratio_x_y": [
+        0.62,
+        0.2
+      ],
+      "feet_anchor_ratio": [
+        0.5,
+        0.94
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "fallen_log",
+      "category": "rocks",
+      "path": "sprites/rocks/fallen_log.png",
+      "width": 180,
+      "height": 130,
+      "collision": "solid",
+      "pivot": "bottom_center",
+      "status": "review_pass_needed",
+      "notes": "Transparent real game texture; collision size/pivot still require design review",
+      "sha256": "ed785b7c913a1777cb3cf0179b671f1204a3e05c263b30f4d7365d22638e1a6a",
+      "footprint_ratio_x_y": [
+        0.65,
+        0.2
+      ],
+      "feet_anchor_ratio": [
+        0.5,
+        0.94
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "rock_cliff",
+      "category": "rocks",
+      "path": "sprites/rocks/rock_cliff.png",
+      "width": 180,
+      "height": 117,
+      "collision": "solid",
+      "pivot": "bottom_center",
+      "status": "review_pass_needed",
+      "notes": "Transparent real game texture; collision size/pivot still require design review",
+      "sha256": "79db9b1625bd02534283e3ee8824f4553fe30ff2c7c959961af0408fa79553d6",
+      "footprint_ratio_x_y": [
+        0.65,
+        0.2
+      ],
+      "feet_anchor_ratio": [
+        0.5,
+        0.94
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "tree_stump",
+      "category": "rocks",
+      "path": "sprites/rocks/tree_stump.png",
+      "width": 180,
+      "height": 129,
+      "collision": "solid",
+      "pivot": "bottom_center",
+      "status": "review_pass_needed",
+      "notes": "Transparent real game texture; collision size/pivot still require design review",
+      "sha256": "ed840c465c6e59d759bc4a05b46e737d2fa05f17f9cf0b23bfb6c265c0e3ccaa",
+      "footprint_ratio_x_y": [
+        0.65,
+        0.2
+      ],
+      "feet_anchor_ratio": [
+        0.5,
+        0.94
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "ruin_iron_gate",
+      "category": "structures",
+      "path": "sprites/structures/ruin_iron_gate.png",
+      "width": 205,
+      "height": 248,
+      "collision": "solid",
+      "pivot": "bottom_center",
+      "status": "review_pass_needed",
+      "notes": "Transparent real game texture; collision size/pivot still require design review",
+      "sha256": "263568ca3bcfc2888e30f9275b134dccafdd96af2cfed489652e640002f8eced",
+      "footprint_ratio_x_y": [
+        0.5,
+        0.25
+      ],
+      "feet_anchor_ratio": [
+        0.5,
+        0.94
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "ruin_pillar_short",
+      "category": "structures",
+      "path": "sprites/structures/ruin_pillar_short.png",
+      "width": 217,
+      "height": 248,
+      "collision": "solid",
+      "pivot": "bottom_center",
+      "status": "review_pass_needed",
+      "notes": "Transparent real game texture; collision size/pivot still require design review",
+      "sha256": "5d856bedc4fc471365f43cfcb5d4b02d4db95880e443a52dc8adf074b94138e9",
+      "footprint_ratio_x_y": [
+        0.5,
+        0.25
+      ],
+      "feet_anchor_ratio": [
+        0.5,
+        0.94
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "ruin_pillar_tall",
+      "category": "structures",
+      "path": "sprites/structures/ruin_pillar_tall.png",
+      "width": 126,
+      "height": 248,
+      "collision": "solid",
+      "pivot": "bottom_center",
+      "status": "review_pass_needed",
+      "notes": "Transparent real game texture; collision size/pivot still require design review",
+      "sha256": "7d0cd5fcd915cb26fa7fd89e861a5f49f43cdf10556bf316828632a398a1deac",
+      "footprint_ratio_x_y": [
+        0.5,
+        0.25
+      ],
+      "feet_anchor_ratio": [
+        0.5,
+        0.94
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "ruin_stairs",
+      "category": "structures",
+      "path": "sprites/structures/ruin_stairs.png",
+      "width": 235,
+      "height": 248,
+      "collision": "solid",
+      "pivot": "bottom_center",
+      "status": "review_pass_needed",
+      "notes": "Transparent real game texture; collision size/pivot still require design review",
+      "sha256": "db928e38598ca14d2619e1e75797c98f5240c69424c4edeeb02cabf33ef33189",
+      "footprint_ratio_x_y": [
+        0.5,
+        0.25
+      ],
+      "feet_anchor_ratio": [
+        0.5,
+        0.94
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "well_wood",
+      "category": "structures",
+      "path": "sprites/structures/well_wood.png",
+      "width": 222,
+      "height": 248,
+      "collision": "solid",
+      "pivot": "bottom_center",
+      "status": "review_pass_needed",
+      "notes": "Transparent real game texture; collision size/pivot still require design review",
+      "sha256": "e0e0b4fce261d264cf3bf63d587d5852e11a87720227b01113599d299b1ef117",
+      "footprint_ratio_x_y": [
+        0.5,
+        0.25
+      ],
+      "feet_anchor_ratio": [
+        0.5,
+        0.94
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "tree_blighted",
+      "category": "trees",
+      "path": "sprites/trees/tree_blighted.png",
+      "width": 206,
+      "height": 233,
+      "collision": "trunk",
+      "pivot": "bottom_center",
+      "status": "review_pass_needed",
+      "notes": "Transparent real game texture; collision size/pivot still require design review",
+      "sha256": "7accf34fb25514c22991d7c99752f88a21e7856c6a663e4ab9391fdd070efe66",
+      "footprint_ratio_x_y": [
+        0.23,
+        0.1
+      ],
+      "feet_anchor_ratio": [
+        0.5,
+        0.94
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "tree_dead",
+      "category": "trees",
+      "path": "sprites/trees/tree_dead.png",
+      "width": 196,
+      "height": 233,
+      "collision": "trunk",
+      "pivot": "bottom_center",
+      "status": "review_pass_needed",
+      "notes": "Transparent real game texture; collision size/pivot still require design review",
+      "sha256": "2f5b5b1d46b4a2a0c0d1c1046baf7f2b2f18b48bcc87296b6284763ab61c8888",
+      "footprint_ratio_x_y": [
+        0.23,
+        0.1
+      ],
+      "feet_anchor_ratio": [
+        0.5,
+        0.94
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "tree_green",
+      "category": "trees",
+      "path": "sprites/trees/tree_green.png",
+      "width": 207,
+      "height": 233,
+      "collision": "trunk",
+      "pivot": "bottom_center",
+      "status": "review_pass_needed",
+      "notes": "Transparent real game texture; collision size/pivot still require design review",
+      "sha256": "a0e10e4d7f22ef338d91de9da04f3c7f259c9f94d51246fa418c7f820875957a",
+      "footprint_ratio_x_y": [
+        0.23,
+        0.1
+      ],
+      "feet_anchor_ratio": [
+        0.5,
+        0.94
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "ruin_wall_broken",
+      "category": "walls",
+      "path": "sprites/walls/ruin_wall_broken.png",
+      "width": 208,
+      "height": 187,
+      "collision": "solid",
+      "pivot": "bottom_center",
+      "status": "review_pass_needed",
+      "notes": "Transparent real game texture; collision size/pivot still require design review",
+      "sha256": "c9d00bba7cfbe494fce7bcfda16188ab74284dfd87727a64be52f1e2c24f3389",
+      "footprint_ratio_x_y": [
+        0.75,
+        0.2
+      ],
+      "feet_anchor_ratio": [
+        0.5,
+        0.94
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "ruin_wall_corner",
+      "category": "walls",
+      "path": "sprites/walls/ruin_wall_corner.png",
+      "width": 200,
+      "height": 208,
+      "collision": "solid",
+      "pivot": "bottom_center",
+      "status": "review_pass_needed",
+      "notes": "Transparent real game texture; collision size/pivot still require design review",
+      "sha256": "9508cea7e5ed9396ac71993479fd2fe12f91edd3864a330483fea1d2a1d5394a",
+      "footprint_ratio_x_y": [
+        0.75,
+        0.2
+      ],
+      "feet_anchor_ratio": [
+        0.5,
+        0.94
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "ruin_wall_end",
+      "category": "walls",
+      "path": "sprites/walls/ruin_wall_end.png",
+      "width": 202,
+      "height": 208,
+      "collision": "solid",
+      "pivot": "bottom_center",
+      "status": "review_pass_needed",
+      "notes": "Transparent real game texture; collision size/pivot still require design review",
+      "sha256": "470930874a83ad450b276d37440ab11eed290415bacc595bf2f47e40aebc53de",
+      "footprint_ratio_x_y": [
+        0.75,
+        0.2
+      ],
+      "feet_anchor_ratio": [
+        0.5,
+        0.94
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "ruin_wall_straight",
+      "category": "walls",
+      "path": "sprites/walls/ruin_wall_straight.png",
+      "width": 208,
+      "height": 171,
+      "collision": "solid",
+      "pivot": "bottom_center",
+      "status": "review_pass_needed",
+      "notes": "Transparent real game texture; collision size/pivot still require design review",
+      "sha256": "bb6cce52c380cb30e6b667588e1a14a27ee75b5b33eaeb683c78cb56b5988771",
+      "footprint_ratio_x_y": [
+        0.75,
+        0.2
+      ],
+      "feet_anchor_ratio": [
+        0.5,
+        0.94
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "iron_spikes",
+      "category": "modular_small",
+      "path": "sprites/modular_small/iron_spikes.png",
+      "width": 78,
+      "height": 68,
+      "collision": "solid",
+      "pivot": "bottom_center",
+      "status": "review_pass_needed",
+      "notes": "Smaller first-pass cutout; verify alignment against adjacent pieces",
+      "sha256": "86de2f651a3c7d831b3c5ade10e5bb8447dcd4f0fee604c54c6756befa6857a1",
+      "footprint_ratio_x_y": [
+        0.68,
+        0.23
+      ],
+      "feet_anchor_ratio": [
+        0.5,
+        0.94
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "wood_barricade",
+      "category": "modular_small",
+      "path": "sprites/modular_small/wood_barricade.png",
+      "width": 78,
+      "height": 72,
+      "collision": "solid",
+      "pivot": "bottom_center",
+      "status": "review_pass_needed",
+      "notes": "Smaller first-pass cutout; verify alignment against adjacent pieces",
+      "sha256": "c68eb4b80a6203e243e3cf4d8c7b7d787e0d7d297dafff616e16672ad014a1a3",
+      "footprint_ratio_x_y": [
+        0.68,
+        0.23
+      ],
+      "feet_anchor_ratio": [
+        0.5,
+        0.94
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "stone_wall_corner",
+      "category": "modular_small",
+      "path": "sprites/modular_small/stone_wall_corner.png",
+      "width": 82,
+      "height": 81,
+      "collision": "solid",
+      "pivot": "bottom_center",
+      "status": "review_pass_needed",
+      "notes": "Smaller first-pass cutout; verify alignment against adjacent pieces",
+      "sha256": "c01512c0fb3e43ecb4b52a9e0d9ad31456a4009ee1c3d5abd328455e98a54d9c",
+      "footprint_ratio_x_y": [
+        0.68,
+        0.23
+      ],
+      "feet_anchor_ratio": [
+        0.5,
+        0.94
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "wood_palisade",
+      "category": "modular_small",
+      "path": "sprites/modular_small/wood_palisade.png",
+      "width": 98,
+      "height": 74,
+      "collision": "solid",
+      "pivot": "bottom_center",
+      "status": "review_pass_needed",
+      "notes": "Smaller first-pass cutout; verify alignment against adjacent pieces",
+      "sha256": "346e20dc0778f840688a8dff4ce8560da8b5c37a492296685516fd84a971ebe9",
+      "footprint_ratio_x_y": [
+        0.68,
+        0.23
+      ],
+      "feet_anchor_ratio": [
+        0.5,
+        0.94
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "stone_wall_broken",
+      "category": "modular_small",
+      "path": "sprites/modular_small/stone_wall_broken.png",
+      "width": 86,
+      "height": 86,
+      "collision": "solid",
+      "pivot": "bottom_center",
+      "status": "review_pass_needed",
+      "notes": "Smaller first-pass cutout; verify alignment against adjacent pieces",
+      "sha256": "389ded6a1d7cfdc324c11dbf30032d12decd3c4dad8271c8411fd7be15beaccf",
+      "footprint_ratio_x_y": [
+        0.68,
+        0.23
+      ],
+      "feet_anchor_ratio": [
+        0.5,
+        0.94
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "wood_gate",
+      "category": "modular_small",
+      "path": "sprites/modular_small/wood_gate.png",
+      "width": 91,
+      "height": 63,
+      "collision": "solid",
+      "pivot": "bottom_center",
+      "status": "review_pass_needed",
+      "notes": "Smaller first-pass cutout; verify alignment against adjacent pieces",
+      "sha256": "591f90ab9650249b107369da4bc027501e7625bc1872d8eff53bc564f234dac7",
+      "footprint_ratio_x_y": [
+        0.68,
+        0.23
+      ],
+      "feet_anchor_ratio": [
+        0.5,
+        0.94
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "stone_wall_low",
+      "category": "modular_small",
+      "path": "sprites/modular_small/stone_wall_low.png",
+      "width": 84,
+      "height": 62,
+      "collision": "solid",
+      "pivot": "bottom_center",
+      "status": "review_pass_needed",
+      "notes": "Smaller first-pass cutout; verify alignment against adjacent pieces",
+      "sha256": "17521b69b5e9c85da1a12baedb690a581dc460deb68ddaf92ea618f4ee2330f0",
+      "footprint_ratio_x_y": [
+        0.68,
+        0.23
+      ],
+      "feet_anchor_ratio": [
+        0.5,
+        0.94
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "wood_fence_broken",
+      "category": "modular_small",
+      "path": "sprites/modular_small/wood_fence_broken.png",
+      "width": 93,
+      "height": 65,
+      "collision": "solid",
+      "pivot": "bottom_center",
+      "status": "review_pass_needed",
+      "notes": "Smaller first-pass cutout; verify alignment against adjacent pieces",
+      "sha256": "baab3421c66c34a976995250af6809899daaf4c6201973dbe5a71034f87cbcca",
+      "footprint_ratio_x_y": [
+        0.68,
+        0.23
+      ],
+      "feet_anchor_ratio": [
+        0.5,
+        0.94
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "stone_pillar_short",
+      "category": "modular_small",
+      "path": "sprites/modular_small/stone_pillar_short.png",
+      "width": 46,
+      "height": 65,
+      "collision": "solid",
+      "pivot": "bottom_center",
+      "status": "review_pass_needed",
+      "notes": "Smaller first-pass cutout; verify alignment against adjacent pieces",
+      "sha256": "ce1b9e731264be1c4068a0b8b9585edcef8d9e3c856ec7b179b30646f543fe65",
+      "footprint_ratio_x_y": [
+        0.68,
+        0.23
+      ],
+      "feet_anchor_ratio": [
+        0.5,
+        0.94
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "stone_pillar",
+      "category": "modular_small",
+      "path": "sprites/modular_small/stone_pillar.png",
+      "width": 43,
+      "height": 93,
+      "collision": "solid",
+      "pivot": "bottom_center",
+      "status": "review_pass_needed",
+      "notes": "Smaller first-pass cutout; verify alignment against adjacent pieces",
+      "sha256": "50dab8b1a359f51b46f48cfa1efaa4ea4f0be0269a1b3dc44c81e5f049a9a04a",
+      "footprint_ratio_x_y": [
+        0.68,
+        0.23
+      ],
+      "feet_anchor_ratio": [
+        0.5,
+        0.94
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "stone_arch",
+      "category": "modular_small",
+      "path": "sprites/modular_small/stone_arch.png",
+      "width": 88,
+      "height": 91,
+      "collision": "solid",
+      "pivot": "bottom_center",
+      "status": "review_pass_needed",
+      "notes": "Smaller first-pass cutout; verify alignment against adjacent pieces",
+      "sha256": "04ab69dffa2c641789fd07a9953aad0cbf938785a9fd0dee2908d0be05cd82ea",
+      "footprint_ratio_x_y": [
+        0.68,
+        0.23
+      ],
+      "feet_anchor_ratio": [
+        0.5,
+        0.94
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "stone_wall_straight",
+      "category": "modular_small",
+      "path": "sprites/modular_small/stone_wall_straight.png",
+      "width": 95,
+      "height": 80,
+      "collision": "solid",
+      "pivot": "bottom_center",
+      "status": "review_pass_needed",
+      "notes": "Smaller first-pass cutout; verify alignment against adjacent pieces",
+      "sha256": "85de617fcb07b3cc5f8cd1306e05b783704bfed35810f11fe513dc7ae4bf1ee8",
+      "footprint_ratio_x_y": [
+        0.68,
+        0.23
+      ],
+      "feet_anchor_ratio": [
+        0.5,
+        0.94
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "wood_fence_straight",
+      "category": "modular_small",
+      "path": "sprites/modular_small/wood_fence_straight.png",
+      "width": 80,
+      "height": 63,
+      "collision": "solid",
+      "pivot": "bottom_center",
+      "status": "review_pass_needed",
+      "notes": "Smaller first-pass cutout; verify alignment against adjacent pieces",
+      "sha256": "685d8e6da89679b167e657eac182ccdace1a16f7d328c5dad85eec17bf602536",
+      "footprint_ratio_x_y": [
+        0.68,
+        0.23
+      ],
+      "feet_anchor_ratio": [
+        0.5,
+        0.94
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "pebbles_00",
+      "category": "decals",
+      "path": "textures/decals/pebbles_00.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "bottom_center",
+      "status": "render_ready",
+      "notes": "Transparent decorative overlay; does not require collision",
+      "sha256": "ba41656aa0b2ff2f2f50916f7b4f76f0f1c9432b893d464672271cf55e6bf445",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "pebbles_01",
+      "category": "decals",
+      "path": "textures/decals/pebbles_01.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "bottom_center",
+      "status": "render_ready",
+      "notes": "Transparent decorative overlay; does not require collision",
+      "sha256": "ca97c39778c389379b1b98df2dfa036796368297b4f1ec017da64538daabed9f",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "pebbles_02",
+      "category": "decals",
+      "path": "textures/decals/pebbles_02.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "bottom_center",
+      "status": "render_ready",
+      "notes": "Transparent decorative overlay; does not require collision",
+      "sha256": "75235649870818705b11f73582d850d22ce197a6ab93830f99650c9492ea0a24",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "pebbles_03",
+      "category": "decals",
+      "path": "textures/decals/pebbles_03.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "bottom_center",
+      "status": "render_ready",
+      "notes": "Transparent decorative overlay; does not require collision",
+      "sha256": "47a7a4d01d1fc82b1c869063854f491628ed5f358a0d6c793f753851f040ec4a",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "pebbles_04",
+      "category": "decals",
+      "path": "textures/decals/pebbles_04.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "bottom_center",
+      "status": "render_ready",
+      "notes": "Transparent decorative overlay; does not require collision",
+      "sha256": "9ee0fb4db795eddfd073acf67bd9892b8e77e817d08e4cad43dd260e68819876",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "dry_grass_00",
+      "category": "decals",
+      "path": "textures/decals/dry_grass_00.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "bottom_center",
+      "status": "render_ready",
+      "notes": "Transparent decorative overlay; does not require collision",
+      "sha256": "ae7c1ecf04f0ddba8d5a416aa3f4f2ada1e3eb5912ef53508cc25db138912708",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "dry_grass_01",
+      "category": "decals",
+      "path": "textures/decals/dry_grass_01.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "bottom_center",
+      "status": "render_ready",
+      "notes": "Transparent decorative overlay; does not require collision",
+      "sha256": "502cdc031f7cd13f550e9fc8ad7f0ee211d16cac996dfd9b1a1e473af6c31403",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "dry_grass_02",
+      "category": "decals",
+      "path": "textures/decals/dry_grass_02.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "bottom_center",
+      "status": "render_ready",
+      "notes": "Transparent decorative overlay; does not require collision",
+      "sha256": "fb57c619153bad2b146fee06429e9690c697ada024f3e7f4398918d14f347027",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "dry_grass_03",
+      "category": "decals",
+      "path": "textures/decals/dry_grass_03.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "bottom_center",
+      "status": "render_ready",
+      "notes": "Transparent decorative overlay; does not require collision",
+      "sha256": "142eb94d268ae07cfbacc698eb15eeb71e10c04ef9c5aba3051881e1eccbaf0a",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "dry_grass_04",
+      "category": "decals",
+      "path": "textures/decals/dry_grass_04.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "bottom_center",
+      "status": "render_ready",
+      "notes": "Transparent decorative overlay; does not require collision",
+      "sha256": "0130605698cb6b9925b8819e0397883d4317669a61ffd0e3d027daa7ea825c23",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "leaves_00",
+      "category": "decals",
+      "path": "textures/decals/leaves_00.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "bottom_center",
+      "status": "render_ready",
+      "notes": "Transparent decorative overlay; does not require collision",
+      "sha256": "a7358fe5397a17008af4dc5602f1a31ccb3ff18f36eae447b73a3d6a8ba86ef3",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "leaves_01",
+      "category": "decals",
+      "path": "textures/decals/leaves_01.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "bottom_center",
+      "status": "render_ready",
+      "notes": "Transparent decorative overlay; does not require collision",
+      "sha256": "a473e7dd940c8af4d2c06a09ed5a839a28411f98734c3a09798e8f59c341b14e",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "leaves_02",
+      "category": "decals",
+      "path": "textures/decals/leaves_02.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "bottom_center",
+      "status": "render_ready",
+      "notes": "Transparent decorative overlay; does not require collision",
+      "sha256": "22d5374a4ae50014612361fd7f2a3d3566d301067917c60605634d2506e29a27",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "leaves_03",
+      "category": "decals",
+      "path": "textures/decals/leaves_03.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "bottom_center",
+      "status": "render_ready",
+      "notes": "Transparent decorative overlay; does not require collision",
+      "sha256": "09c81dee7f96780e917d0d9cd5a6c7cdffab75eef96afdc03799e5a9f80906d0",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "leaves_04",
+      "category": "decals",
+      "path": "textures/decals/leaves_04.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "bottom_center",
+      "status": "render_ready",
+      "notes": "Transparent decorative overlay; does not require collision",
+      "sha256": "bf6ceb829bd6d32d5f5d1bc87582b70900da010097904252e6c20ff605d1ea1d",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "rune_scar_00",
+      "category": "decals",
+      "path": "textures/decals/rune_scar_00.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "bottom_center",
+      "status": "render_ready",
+      "notes": "Transparent decorative overlay; does not require collision",
+      "sha256": "f932f4202520a39dbf581140dd52f60c19557b91312714aca1fbdc10e23ae96f",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "rune_scar_01",
+      "category": "decals",
+      "path": "textures/decals/rune_scar_01.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "bottom_center",
+      "status": "render_ready",
+      "notes": "Transparent decorative overlay; does not require collision",
+      "sha256": "09dc72324643bb1d3ff29af4b8550c88753b9348c661440f4b6cc8221444cec7",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "rune_scar_02",
+      "category": "decals",
+      "path": "textures/decals/rune_scar_02.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "bottom_center",
+      "status": "render_ready",
+      "notes": "Transparent decorative overlay; does not require collision",
+      "sha256": "52676b746183a7693a8f645ce1eb38363e48e380511157428daa26a2784509d7",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "rune_scar_03",
+      "category": "decals",
+      "path": "textures/decals/rune_scar_03.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "bottom_center",
+      "status": "render_ready",
+      "notes": "Transparent decorative overlay; does not require collision",
+      "sha256": "63950186c0c018a885049a5757f3493012c22b350dcf1663cdff32677033ad34",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "rune_scar_04",
+      "category": "decals",
+      "path": "textures/decals/rune_scar_04.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "bottom_center",
+      "status": "render_ready",
+      "notes": "Transparent decorative overlay; does not require collision",
+      "sha256": "9154065738031be19598fb11ce12cdf2c0a9d4036752c7ee316485e3de3c2fdd",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "mud_splatter_00",
+      "category": "decals",
+      "path": "textures/decals/mud_splatter_00.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "bottom_center",
+      "status": "render_ready",
+      "notes": "Transparent decorative overlay; does not require collision",
+      "sha256": "32c82c6ac43a2407151768f3380f1fbf6c5dc45db3df10a9e62ce3c4f5d270c5",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "mud_splatter_01",
+      "category": "decals",
+      "path": "textures/decals/mud_splatter_01.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "bottom_center",
+      "status": "render_ready",
+      "notes": "Transparent decorative overlay; does not require collision",
+      "sha256": "9e38314e3094799a79c2bcd3910fbec75b6a48a659a9da00b14f1795a5747125",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "mud_splatter_02",
+      "category": "decals",
+      "path": "textures/decals/mud_splatter_02.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "bottom_center",
+      "status": "render_ready",
+      "notes": "Transparent decorative overlay; does not require collision",
+      "sha256": "7bfdba99e74a17dd1ab2457cb4a9efd0eac3d09485bd16cb9a0070ee14bb7717",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "mud_splatter_03",
+      "category": "decals",
+      "path": "textures/decals/mud_splatter_03.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "bottom_center",
+      "status": "render_ready",
+      "notes": "Transparent decorative overlay; does not require collision",
+      "sha256": "c94dc363c080fa0dbb12668befeb2ae628ac0925c13b88b72792c2814db3f896",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "mud_splatter_04",
+      "category": "decals",
+      "path": "textures/decals/mud_splatter_04.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "bottom_center",
+      "status": "render_ready",
+      "notes": "Transparent decorative overlay; does not require collision",
+      "sha256": "b2aac37d2d886b519e72ee5e3709d1881caf25f6903bbbdc2668c006ecfcc1d4",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "floor_cracks_00",
+      "category": "decals",
+      "path": "textures/decals/floor_cracks_00.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "bottom_center",
+      "status": "render_ready",
+      "notes": "Transparent decorative overlay; does not require collision",
+      "sha256": "2a45628d630e01d37c0b18fc5d02e4e73d9f9fb1fd7e481dd667de373dfaeb41",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "floor_cracks_01",
+      "category": "decals",
+      "path": "textures/decals/floor_cracks_01.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "bottom_center",
+      "status": "render_ready",
+      "notes": "Transparent decorative overlay; does not require collision",
+      "sha256": "5a48a027b9973435dbd46408d7168b4c767f7a95fa2eea5feb5a0e08c25b7d7d",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "floor_cracks_02",
+      "category": "decals",
+      "path": "textures/decals/floor_cracks_02.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "bottom_center",
+      "status": "render_ready",
+      "notes": "Transparent decorative overlay; does not require collision",
+      "sha256": "bbd383e2731684e8d8ffe32368ec9813e8c7f75a36526654be80df66ec7f2005",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "floor_cracks_03",
+      "category": "decals",
+      "path": "textures/decals/floor_cracks_03.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "bottom_center",
+      "status": "render_ready",
+      "notes": "Transparent decorative overlay; does not require collision",
+      "sha256": "49aefe4a9a17432d0a3aa8bea735467acb0be9c323808c2768c05b5e06a60e27",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "floor_cracks_04",
+      "category": "decals",
+      "path": "textures/decals/floor_cracks_04.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "bottom_center",
+      "status": "render_ready",
+      "notes": "Transparent decorative overlay; does not require collision",
+      "sha256": "53bbdf39adf42b071f00750526113a294858f119bae055ef741221ac6d4d4aaa",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "moss_00",
+      "category": "decals",
+      "path": "textures/decals/moss_00.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "bottom_center",
+      "status": "render_ready",
+      "notes": "Transparent decorative overlay; does not require collision",
+      "sha256": "e9ab16ee81bd46a76a4d2814a7400e5472573c655e3790f327ffdc4835b1da13",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "moss_01",
+      "category": "decals",
+      "path": "textures/decals/moss_01.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "bottom_center",
+      "status": "render_ready",
+      "notes": "Transparent decorative overlay; does not require collision",
+      "sha256": "08a4741abc6d52d14a169e072542e9d821bee8aa0c5d85b52d234ce1817163c1",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "moss_02",
+      "category": "decals",
+      "path": "textures/decals/moss_02.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "bottom_center",
+      "status": "render_ready",
+      "notes": "Transparent decorative overlay; does not require collision",
+      "sha256": "4c6f7b1a99a9ef7ba2edc3630ec69e7863b77340d458a431dfbd9c7fd2d6af59",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "moss_03",
+      "category": "decals",
+      "path": "textures/decals/moss_03.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "bottom_center",
+      "status": "render_ready",
+      "notes": "Transparent decorative overlay; does not require collision",
+      "sha256": "8ecb4d4477ebcf01eab56ea4f632da90255e709ab4c315bf6fe587328ba29312",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "moss_04",
+      "category": "decals",
+      "path": "textures/decals/moss_04.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "bottom_center",
+      "status": "render_ready",
+      "notes": "Transparent decorative overlay; does not require collision",
+      "sha256": "d2afda6434feda0933f69e1032a467050e45122be83827344d4f06ece1f7054b",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "bones_00",
+      "category": "decals",
+      "path": "textures/decals/bones_00.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "bottom_center",
+      "status": "render_ready",
+      "notes": "Transparent decorative overlay; does not require collision",
+      "sha256": "eedf5431aa72adf8df671f1c6b733f0bf4e228c3917d246a4f15e5724120c4c2",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "bones_01",
+      "category": "decals",
+      "path": "textures/decals/bones_01.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "bottom_center",
+      "status": "render_ready",
+      "notes": "Transparent decorative overlay; does not require collision",
+      "sha256": "f4026a19f0c7bd2ffdf639f25f5b1aefaed938ebdfbd93f3417d7081cfd4b531",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "bones_02",
+      "category": "decals",
+      "path": "textures/decals/bones_02.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "bottom_center",
+      "status": "render_ready",
+      "notes": "Transparent decorative overlay; does not require collision",
+      "sha256": "12418785793c68d41fb435346ef1e3916eef5ec5b52ccdaadad5cb0d2d7a2f64",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "bones_03",
+      "category": "decals",
+      "path": "textures/decals/bones_03.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "bottom_center",
+      "status": "render_ready",
+      "notes": "Transparent decorative overlay; does not require collision",
+      "sha256": "84f67808aab6afa8ab6eaab2b83bca868d509c52e5d8886adbae020dceb0057b",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    },
+    {
+      "id": "bones_04",
+      "category": "decals",
+      "path": "textures/decals/bones_04.png",
+      "width": 128,
+      "height": 128,
+      "collision": "none",
+      "pivot": "bottom_center",
+      "status": "render_ready",
+      "notes": "Transparent decorative overlay; does not require collision",
+      "sha256": "d7a14649580cdf3a88f1aa5490200dc7b4fa2278c009cc58694a73eae278d0f8",
+      "footprint_ratio_x_y": [
+        0,
+        0
+      ],
+      "feet_anchor_ratio": [
+        0,
+        0
+      ],
+      "collision_verified": false
+    }
+  ]
+}

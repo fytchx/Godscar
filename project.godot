@@ -1,10 +1,10 @@
-; GODSCAR - Portrait ARPG combat sandbox 0.3
+; GODSCAR 0.4 - Fallfields solo story vertical slice
 config_version=5
 
 [application]
 config/name="Godscar"
-run/main_scene="res://scenes/arena.tscn"
-config/description="One thumb. Five classes. Too many demons."
+run/main_scene="res://scenes/fallfields.tscn"
+config/description="Two worlds. One wound. The Fallfields playable slice."
 config/icon="res://assets/icon.png"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 

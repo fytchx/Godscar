@@ -1,0 +1,33 @@
+name: Verify art review assets
+on:
+  push:
+    branches: [dev]
+    paths:
+      - "assets/art_review/**"
+      - "art/**"
+      - "tools/build_art_assets.py"
+      - ".github/workflows/art-review.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check review PNGs
+        run: |
+          python -m pip install pillow
+          python - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+          files=list(Path('assets/art_review').rglob('*.png'))
+          if not files: raise SystemExit('No committed PNG candidates found')
+          for f in files:
+              with Image.open(f) as im:
+                  im.load()
+                  assert im.width > 0 and im.height > 0
+                  assert im.mode in ('RGBA','P'), f'{f} has no RGBA/palette transparency'
+              print('OK', f)
+          print('Verified',len(files),'review sprites. Modular art QA still required.')
+          PY

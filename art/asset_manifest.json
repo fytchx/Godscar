@@ -1,0 +1,482 @@
+{
+  "version": 1,
+  "project": "Godscar",
+  "batch": "art_batch_01",
+  "stage": "review_only",
+  "perspective": "slightly angled top-down 2D",
+  "source_size": [
+    1448,
+    1086
+  ],
+  "description": "AI-generated source sheets; crop geometry is reviewed but extracted sprites have not passed seam, lighting, scale, or collision QA.",
+  "candidates": [
+    {
+      "id": "ruin_wall_straight",
+      "group": "walls",
+      "source": "dark_fantasy_ruin_architecture_asset_sheet.png",
+      "crop": [
+        10,
+        88,
+        399,
+        479
+      ],
+      "collision_hint": "solid",
+      "status": "candidate_needs_QA"
+    },
+    {
+      "id": "ruin_wall_broken",
+      "group": "walls",
+      "source": "dark_fantasy_ruin_architecture_asset_sheet.png",
+      "crop": [
+        402,
+        90,
+        780,
+        481
+      ],
+      "collision_hint": "solid",
+      "status": "candidate_needs_QA"
+    },
+    {
+      "id": "ruin_wall_corner",
+      "group": "walls",
+      "source": "dark_fantasy_ruin_architecture_asset_sheet.png",
+      "crop": [
+        772,
+        84,
+        1110,
+        480
+      ],
+      "collision_hint": "solid",
+      "status": "candidate_needs_QA"
+    },
+    {
+      "id": "ruin_wall_end",
+      "group": "walls",
+      "source": "dark_fantasy_ruin_architecture_asset_sheet.png",
+      "crop": [
+        1105,
+        85,
+        1437,
+        479
+      ],
+      "collision_hint": "solid",
+      "status": "candidate_needs_QA"
+    },
+    {
+      "id": "ruin_iron_gate",
+      "group": "structures",
+      "source": "dark_fantasy_ruin_architecture_asset_sheet.png",
+      "crop": [
+        12,
+        480,
+        418,
+        1055
+      ],
+      "collision_hint": "solid",
+      "status": "candidate_needs_QA"
+    },
+    {
+      "id": "ruin_pillar_short",
+      "group": "structures",
+      "source": "dark_fantasy_ruin_architecture_asset_sheet.png",
+      "crop": [
+        422,
+        552,
+        701,
+        1062
+      ],
+      "collision_hint": "solid",
+      "status": "candidate_needs_QA"
+    },
+    {
+      "id": "ruin_pillar_tall",
+      "group": "structures",
+      "source": "dark_fantasy_ruin_architecture_asset_sheet.png",
+      "crop": [
+        709,
+        475,
+        983,
+        1064
+      ],
+      "collision_hint": "solid",
+      "status": "candidate_needs_QA"
+    },
+    {
+      "id": "ruin_stairs",
+      "group": "structures",
+      "source": "dark_fantasy_ruin_architecture_asset_sheet.png",
+      "crop": [
+        995,
+        501,
+        1437,
+        1070
+      ],
+      "collision_hint": "slope",
+      "status": "candidate_needs_QA"
+    },
+    {
+      "id": "crypt_sarcophagus",
+      "group": "crypt",
+      "source": "gothic_crypt_asset_sprite_sheet.png",
+      "crop": [
+        20,
+        27,
+        548,
+        385
+      ],
+      "collision_hint": "solid",
+      "status": "candidate_needs_QA"
+    },
+    {
+      "id": "crypt_sarcophagus_broken",
+      "group": "crypt",
+      "source": "gothic_crypt_asset_sprite_sheet.png",
+      "crop": [
+        572,
+        35,
+        1064,
+        374
+      ],
+      "collision_hint": "solid",
+      "status": "candidate_needs_QA"
+    },
+    {
+      "id": "crypt_blight_brazier",
+      "group": "crypt",
+      "source": "gothic_crypt_asset_sprite_sheet.png",
+      "crop": [
+        1100,
+        0,
+        1409,
+        367
+      ],
+      "collision_hint": "decor",
+      "status": "candidate_needs_QA"
+    },
+    {
+      "id": "crypt_candle_altar",
+      "group": "crypt",
+      "source": "gothic_crypt_asset_sprite_sheet.png",
+      "crop": [
+        30,
+        362,
+        465,
+        676
+      ],
+      "collision_hint": "decor",
+      "status": "candidate_needs_QA"
+    },
+    {
+      "id": "crypt_rubble",
+      "group": "crypt",
+      "source": "gothic_crypt_asset_sprite_sheet.png",
+      "crop": [
+        473,
+        393,
+        955,
+        690
+      ],
+      "collision_hint": "decor",
+      "status": "candidate_needs_QA"
+    },
+    {
+      "id": "crypt_grated_gate",
+      "group": "crypt",
+      "source": "gothic_crypt_asset_sprite_sheet.png",
+      "crop": [
+        1007,
+        368,
+        1430,
+        708
+      ],
+      "collision_hint": "solid",
+      "status": "candidate_needs_QA"
+    },
+    {
+      "id": "crypt_blood_shrine",
+      "group": "crypt",
+      "source": "gothic_crypt_asset_sprite_sheet.png",
+      "crop": [
+        25,
+        643,
+        453,
+        1063
+      ],
+      "collision_hint": "solid",
+      "status": "candidate_needs_QA"
+    },
+    {
+      "id": "crypt_torture_table",
+      "group": "crypt",
+      "source": "gothic_crypt_asset_sprite_sheet.png",
+      "crop": [
+        432,
+        675,
+        988,
+        1063
+      ],
+      "collision_hint": "solid",
+      "status": "candidate_needs_QA"
+    },
+    {
+      "id": "crypt_treasure_chest",
+      "group": "crypt",
+      "source": "gothic_crypt_asset_sprite_sheet.png",
+      "crop": [
+        1015,
+        675,
+        1438,
+        1067
+      ],
+      "collision_hint": "interact",
+      "status": "candidate_needs_QA"
+    },
+    {
+      "id": "tree_green",
+      "group": "trees",
+      "source": "dark_fantasy_nature_asset_spritesheet.png",
+      "crop": [
+        25,
+        0,
+        480,
+        496
+      ],
+      "collision_hint": "trunk",
+      "status": "candidate_needs_QA"
+    },
+    {
+      "id": "tree_dead",
+      "group": "trees",
+      "source": "dark_fantasy_nature_asset_spritesheet.png",
+      "crop": [
+        484,
+        0,
+        933,
+        495
+      ],
+      "collision_hint": "trunk",
+      "status": "candidate_needs_QA"
+    },
+    {
+      "id": "tree_blighted",
+      "group": "trees",
+      "source": "dark_fantasy_nature_asset_spritesheet.png",
+      "crop": [
+        936,
+        0,
+        1437,
+        510
+      ],
+      "collision_hint": "trunk",
+      "status": "candidate_needs_QA"
+    },
+    {
+      "id": "bush_green",
+      "group": "foliage",
+      "source": "dark_fantasy_nature_asset_spritesheet.png",
+      "crop": [
+        35,
+        500,
+        373,
+        792
+      ],
+      "collision_hint": "decor",
+      "status": "candidate_needs_QA"
+    },
+    {
+      "id": "grass_tall",
+      "group": "foliage",
+      "source": "dark_fantasy_nature_asset_spritesheet.png",
+      "crop": [
+        397,
+        510,
+        681,
+        796
+      ],
+      "collision_hint": "decor",
+      "status": "candidate_needs_QA"
+    },
+    {
+      "id": "wheat_clump",
+      "group": "foliage",
+      "source": "dark_fantasy_nature_asset_spritesheet.png",
+      "crop": [
+        684,
+        500,
+        1006,
+        790
+      ],
+      "collision_hint": "decor",
+      "status": "candidate_needs_QA"
+    },
+    {
+      "id": "bush_blighted",
+      "group": "foliage",
+      "source": "dark_fantasy_nature_asset_spritesheet.png",
+      "crop": [
+        1036,
+        512,
+        1437,
+        808
+      ],
+      "collision_hint": "decor",
+      "status": "candidate_needs_QA"
+    },
+    {
+      "id": "rock_cliff",
+      "group": "rocks",
+      "source": "dark_fantasy_nature_asset_spritesheet.png",
+      "crop": [
+        21,
+        768,
+        514,
+        1078
+      ],
+      "collision_hint": "solid",
+      "status": "candidate_needs_QA"
+    },
+    {
+      "id": "tree_stump",
+      "group": "rocks",
+      "source": "dark_fantasy_nature_asset_spritesheet.png",
+      "crop": [
+        535,
+        772,
+        954,
+        1077
+      ],
+      "collision_hint": "solid",
+      "status": "candidate_needs_QA"
+    },
+    {
+      "id": "fallen_log",
+      "group": "rocks",
+      "source": "dark_fantasy_nature_asset_spritesheet.png",
+      "crop": [
+        959,
+        760,
+        1436,
+        1077
+      ],
+      "collision_hint": "solid",
+      "status": "candidate_needs_QA"
+    },
+    {
+      "id": "fence_wood",
+      "group": "fences",
+      "source": "dark_fantasy_village_props_sheet.png",
+      "crop": [
+        20,
+        19,
+        520,
+        350
+      ],
+      "collision_hint": "solid",
+      "status": "candidate_needs_QA"
+    },
+    {
+      "id": "fence_broken",
+      "group": "fences",
+      "source": "dark_fantasy_village_props_sheet.png",
+      "crop": [
+        501,
+        23,
+        999,
+        346
+      ],
+      "collision_hint": "solid",
+      "status": "candidate_needs_QA"
+    },
+    {
+      "id": "gate_wood",
+      "group": "fences",
+      "source": "dark_fantasy_village_props_sheet.png",
+      "crop": [
+        998,
+        12,
+        1435,
+        343
+      ],
+      "collision_hint": "solid",
+      "status": "candidate_needs_QA"
+    },
+    {
+      "id": "cart_broken",
+      "group": "props",
+      "source": "dark_fantasy_village_props_sheet.png",
+      "crop": [
+        35,
+        351,
+        610,
+        700
+      ],
+      "collision_hint": "solid",
+      "status": "candidate_needs_QA"
+    },
+    {
+      "id": "sign_lantern",
+      "group": "props",
+      "source": "dark_fantasy_village_props_sheet.png",
+      "crop": [
+        615,
+        340,
+        1005,
+        714
+      ],
+      "collision_hint": "decor",
+      "status": "candidate_needs_QA"
+    },
+    {
+      "id": "well_wood",
+      "group": "structures",
+      "source": "dark_fantasy_village_props_sheet.png",
+      "crop": [
+        992,
+        338,
+        1436,
+        745
+      ],
+      "collision_hint": "solid",
+      "status": "candidate_needs_QA"
+    },
+    {
+      "id": "cottage_thatched",
+      "group": "buildings",
+      "source": "dark_fantasy_village_props_sheet.png",
+      "crop": [
+        24,
+        740,
+        603,
+        1079
+      ],
+      "collision_hint": "solid",
+      "status": "candidate_needs_QA"
+    },
+    {
+      "id": "chapel_ruined",
+      "group": "buildings",
+      "source": "dark_fantasy_village_props_sheet.png",
+      "crop": [
+        603,
+        734,
+        1099,
+        1081
+      ],
+      "collision_hint": "solid",
+      "status": "candidate_needs_QA"
+    },
+    {
+      "id": "crates_barrels",
+      "group": "props",
+      "source": "dark_fantasy_village_props_sheet.png",
+      "crop": [
+        1093,
+        745,
+        1444,
+        1082
+      ],
+      "collision_hint": "solid",
+      "status": "candidate_needs_QA"
+    }
+  ]
+}
