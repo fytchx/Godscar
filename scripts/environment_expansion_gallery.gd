@@ -179,11 +179,18 @@ func _build_ui() -> void:
     ui.add_child(catalog)
     info = Label.new()
     info.position = Vector2(8, 120)
-    info.size = Vector2(520, 60)
+    info.size = Vector2(305, 60)
     info.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
     info.add_theme_font_size_override("font_size", 14)
     info.add_theme_color_override("font_color", Color("#f2d4ab"))
     ui.add_child(info)
+    var judge := Button.new()
+    judge.text = "A/B/C JUDGE"
+    judge.position = Vector2(319, 123)
+    judge.size = Vector2(207, 58)
+    judge.add_theme_font_size_override("font_size", 18)
+    judge.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/asset_judge.tscn"))
+    ui.add_child(judge)
     _build_catalogue()
 
 
