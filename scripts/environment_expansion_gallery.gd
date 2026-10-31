@@ -6,6 +6,8 @@ const BASE := "res://assets/godscar_environment/"
 const EXPANSION := "res://assets/godscar_expansion/"
 const WORLD_SIZE := Vector2(1664.0, 1664.0)
 const VIEW_NAMES := ["FALLFIELDS", "CRYPT", "BLIGHT"]
+const REVIEW_PATH := "res://art/reviews/v2_2026-10-31.json"
+const GRADE_FILTERS := ["ALL", "A", "B", "C"]
 const CATEGORIES := ["ALL", "stone_architecture", "crypt_props", "village", "vegetation", "ground_overlays", "decals"]
 
 var items: Array = []
@@ -13,6 +15,9 @@ var current_view: int = 0
 var catalogue: bool = false
 var catalog_page: int = 0
 var catalog_category: int = 0
+var catalog_grade: int = 0
+var grades_by_id: Dictionary = {}
+var grade_button: Button
 var previous_drag: Vector2
 var dragging: bool = false
 var pan: Vector2 = Vector2(832, 820)
@@ -44,7 +49,10 @@ func _ready() -> void:
     add_child(ui)
     _build_ui()
     _read_manifest()
+    _read_review()
     _rebuild()
+    if "--curation-smoke" in OS.get_cmdline_user_args():
+        call_deferred("_curation_smoke_test")
 
 
 func _read_manifest() -> void:
@@ -58,7 +66,43 @@ func _read_manifest() -> void:
         info.text = "Failed to parse asset manifest"
         return
     items = parsed.get("assets", [])
+    for i in range(items.size()):
+        var entry: Dictionary = items[i]
+        entry["judge_number"] = i + 1
+        items[i] = entry
     info.text = "%d new sprites | view-only art preview | camera scale is NOT finalized" % items.size()
+
+
+func _read_review() -> void:
+    if not FileAccess.file_exists(REVIEW_PATH):
+        push_warning("Asset rating file not available; catalogue will show unrated sprites.")
+        return
+    var file: FileAccess = FileAccess.open(REVIEW_PATH, FileAccess.READ)
+    if file == null:
+        return
+    var parsed: Variant = JSON.parse_string(file.get_as_text())
+    if typeof(parsed) != TYPE_DICTIONARY:
+        return
+    grades_by_id = parsed.get("grades_by_id", {})
+
+
+func _grade(item: Dictionary) -> String:
+    return str(grades_by_id.get(str(item.get("id", "")), "?"))
+
+
+func _curation_smoke_test() -> void:
+    assert(items.size() == 728, "Expansion manifest missing assets")
+    var counts: Dictionary = {"A": 0, "B": 0, "C": 0}
+    for item in items:
+        var grade: String = _grade(item)
+        assert(counts.has(grade), "Unrated sprite in curation registry")
+        counts[grade] += 1
+    assert(counts["A"] == 598 and counts["B"] == 128 and counts["C"] == 2,
+        "Owner votes were not loaded accurately")
+    catalog_grade = 2
+    _redraw_catalogue()
+    assert(cat_head.text.contains("128"), "Fix category filter not working")
+    print("GODSCAR_CURATION_SMOKE_OK")
 
 
 func _get_texture(path: String) -> Texture2D:
@@ -109,7 +153,7 @@ func _rebuild() -> void:
             terrain.add_child(floor_sprite)
     var candidates: Array = []
     for item in items:
-        if _filtered(item, current_view):
+        if _filtered(item, current_view) and _grade(item) == "A":
             candidates.append(item)
     # Deterministic spread of actual art around a broad two-dimensional space.
     # Modest sprite count protects 4GB Android phones during this visual review.
@@ -207,16 +251,26 @@ func _build_catalogue() -> void:
     var category_button := Button.new()
     category_button.text = "CATEGORY"
     category_button.position = Vector2(12, 8)
-    category_button.size = Vector2(170, 46)
+    category_button.size = Vector2(165, 46)
     category_button.pressed.connect(func():
         catalog_category = (catalog_category + 1) % CATEGORIES.size()
         catalog_page = 0
         _redraw_catalogue()
     )
     cat_root.add_child(category_button)
+    grade_button = Button.new()
+    grade_button.text = "GRADE: ALL"
+    grade_button.position = Vector2(183, 8)
+    grade_button.size = Vector2(150, 46)
+    grade_button.pressed.connect(func():
+        catalog_grade = (catalog_grade + 1) % GRADE_FILTERS.size()
+        catalog_page = 0
+        _redraw_catalogue()
+    )
+    cat_root.add_child(grade_button)
     cat_head = Label.new()
-    cat_head.position = Vector2(190, 12)
-    cat_head.size = Vector2(330, 39)
+    cat_head.position = Vector2(337, 12)
+    cat_head.size = Vector2(195, 39)
     cat_head.add_theme_font_size_override("font_size", 16)
     cat_root.add_child(cat_head)
     cat_items = Control.new()
@@ -250,11 +304,13 @@ func _redraw_catalogue() -> void:
     var filtered: Array = []
     var category: String = str(CATEGORIES[catalog_category])
     for item in items:
-        if category == "ALL" or str(item.get("category")) == category:
+        if (category == "ALL" or str(item.get("category")) == category) and (
+                GRADE_FILTERS[catalog_grade] == "ALL" or _grade(item) == GRADE_FILTERS[catalog_grade]):
             filtered.append(item)
     var total_pages: int = maxi(1, ceili(float(filtered.size()) / 24.0))
     catalog_page = clampi(catalog_page, 0, total_pages - 1)
-    cat_head.text = "%s   %d/%d" % [category, catalog_page + 1, total_pages]
+    grade_button.text = "GRADE: " + str(GRADE_FILTERS[catalog_grade])
+    cat_head.text = "%d ASSETS  %d/%d" % [filtered.size(), catalog_page + 1, total_pages]
     page_button.disabled = catalog_page >= total_pages - 1
     for j in range(24):
         var index: int = catalog_page * 24 + j
@@ -275,7 +331,11 @@ func _redraw_catalogue() -> void:
         preview.mouse_filter = Control.MOUSE_FILTER_IGNORE
         cat_items.add_child(preview)
         var idlabel := Label.new()
-        idlabel.text = str(item["id"]).substr(0, 18)
+        var rating: String = _grade(item)
+        idlabel.text = "#%03d   %s   %s" % [int(item["judge_number"]), rating, str(item["id"]).right(8)]
+        var rating_color: Color = Color("#8ada99") if rating == "A" else (
+            Color("#edbe77") if rating == "B" else Color("#ee8686"))
+        idlabel.add_theme_color_override("font_color", rating_color)
         idlabel.position = Vector2(col * 134 + 8, row * 110 + 91)
         idlabel.size = Vector2(125, 18)
         idlabel.add_theme_font_size_override("font_size", 10)

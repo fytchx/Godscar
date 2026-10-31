@@ -103,6 +103,18 @@ jobs:
           fi
           grep -q 'GODSCAR_JUDGE_SMOKE_OK' /tmp/godscar-judge-smoke.log
 
+      - name: Headless curated art-gallery smoke test
+        if: steps.source.outputs.ready == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          godot --headless --path . --scene res://scenes/environment_expansion_gallery.tscn --quit-after 45 -- --curation-smoke 2>&1 | tee /tmp/godscar-curation-smoke.log
+          if grep -E 'SCRIPT ERROR|Parse Error|Invalid call|Assertion failed' /tmp/godscar-curation-smoke.log; then
+            echo "::error::Curated gallery reported a script failure."
+            exit 1
+          fi
+          grep -q 'GODSCAR_CURATION_SMOKE_OK' /tmp/godscar-curation-smoke.log
+
       - name: Export debug APK
         if: steps.source.outputs.ready == 'true'
         shell: bash
