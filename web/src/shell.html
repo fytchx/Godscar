@@ -184,6 +184,38 @@ nav.tabs button .badge { font-family: var(--font-body); font-size: 11px; color: 
 .chip.pmc { color: var(--gold); border-color: color-mix(in srgb, var(--gold) 50%, transparent); }
 .chip.splc { color: var(--r-magic); border-color: color-mix(in srgb, var(--r-magic) 50%, transparent); }
 .spells li { padding-block: 1px; }
+
+/* v3 additions */
+:root { --r-uncommon: #8cc76a; --r-epic: #b88ae6; --r-legendary: #e8893a; --r-ascended: #e9d79a; --r-jewel: #f04b58;
+  --t-phys: #c9bfb5; --t-fire: #e8834a; --t-frost: #8cc8ec; --t-light: #e8d65a; --t-shadow: #a98be0; --t-holy: #f2e6b8; }
+.c-common { color: var(--r-common); } .c-uncommon { color: var(--r-uncommon); } .c-rare { color: var(--r-magic); } .c-epic { color: var(--r-epic); }
+.c-legendary { color: var(--r-legendary); } .c-ascended { color: var(--r-ascended); } .c-jewel { color: var(--r-jewel); } .c-none { color: var(--muted); } .c-bad { color: var(--rift); }
+.chip.c-common, .chip.c-uncommon, .chip.c-rare, .chip.c-epic, .chip.c-legendary, .chip.c-ascended, .chip.c-jewel { border-color: currentColor; }
+.t-phys { color: var(--t-phys); } .t-fire { color: var(--t-fire); } .t-frost { color: var(--t-frost); } .t-light { color: var(--t-light); } .t-shadow { color: var(--t-shadow); } .t-holy { color: var(--t-holy); }
+.chip.t-phys, .chip.t-fire, .chip.t-frost, .chip.t-light, .chip.t-shadow, .chip.t-holy { border-color: color-mix(in srgb, currentColor 45%, transparent); }
+.item.epic { border-color: color-mix(in srgb, var(--r-epic) 45%, var(--line)); }
+.item.legendary { border-color: color-mix(in srgb, var(--r-legendary) 60%, var(--line)); }
+.item.ascended { border-color: color-mix(in srgb, var(--r-ascended) 60%, var(--line)); }
+.affs .ench { color: var(--r-epic); } .affs .aug { color: var(--r-legendary); } .affs .set { color: var(--r-ascended); } .affs .set .off { opacity: .5; }
+.affs .jw { color: var(--r-jewel); } .affs.rules li { padding-block: 1px; color: var(--muted); }
+.pmline { color: var(--r-legendary); }
+.tiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+.tile { position: relative; text-align: left; min-height: 64px; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 6px 8px; display: grid; align-content: start; gap: 2px; }
+.tile.uncommon { border-color: color-mix(in srgb, var(--r-uncommon) 40%, var(--line)); } .tile.rare { border-color: color-mix(in srgb, var(--r-magic) 45%, var(--line)); }
+.tile.epic { border-color: color-mix(in srgb, var(--r-epic) 55%, var(--line)); } .tile.legendary { border-color: var(--r-legendary); } .tile.ascended { border-color: var(--r-ascended); }
+.tile.empty { border-style: dashed; }
+.tile.sel { box-shadow: inset 0 0 0 2px var(--scar); }
+.tile .tn { font-size: 12.5px; line-height: 1.25; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.tile .asl { position: absolute; top: 5px; right: 7px; font-size: 11px; color: var(--r-ascended); }
+.tile .tdot { position: absolute; bottom: 4px; right: 7px; font-size: 11px; }
+.stats.bare { background: none; border: 0; padding: 0; }
+.bar.foe.chilled > i { background: linear-gradient(#5b8fb0, #2f5670); }
+.bar.foe.shocked { box-shadow: 0 0 0 1px var(--t-light); }
+.toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(var(--nav-h) + env(safe-area-inset-bottom, 0px) + 12px); z-index: 30; background: var(--surface-2); border: 1px solid var(--scar); border-radius: 8px; padding: 8px 14px; max-width: min(92vw, 480px); font-size: 14px; }
+.log .k-loot-uncommon { color: var(--r-uncommon); } .log .k-loot-rare { color: var(--r-magic); } .log .k-loot-epic { color: var(--r-epic); }
+.log .k-loot-legendary { color: var(--r-legendary); } .log .k-loot-ascended { color: var(--r-ascended); } .log .k-loot-jewel { color: var(--r-jewel); }
+.mats { grid-template-columns: repeat(4, 1fr); }
+@media (max-width: 360px) { .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 </style>
 
 <div id="app"></div>

@@ -1,13 +1,12 @@
-// Headless balance run: a greedy bot farms with auto-push, equips projected upgrades, spends shards and points, fights bosses.
+// Headless balance run (v3). The bot plays only through doAction, like a client would.
 const S = require('../src/sim.js');
 const cls = process.argv[2] || 'warrior';
 const hours = +(process.argv[3] || 6);
 const quiet = process.argv[4] === 'q';
 const g = S.newGame(cls, 0, 42);
-let t = 0;
+const act = a => S.doAction(g, a);
+let t = 0, bossWins = 0, bossTries = 0;
 const t0 = Date.now();
-const total = S.emptyOut();
-let bossWins = 0, bossTries = 0;
 function bestTarget() {
   let best = null;
   for (const k of S.MONSTER_KEYS) {
@@ -23,43 +22,33 @@ function bestTarget() {
 }
 for (let m = 0; m < hours * 60; m++) {
   t += 60;
-  const out = S.emptyOut();
-  S.advance(g, t, out);
-  for (const k in out) if (typeof out[k] === 'number') total[k] += out[k];
-  if (m % 5 === 0) {
-    const passOrder = ['might', 'vitality', 'swiftness', 'precision'];
-    while (g.hero.points > 0) { const k = passOrder[g.hero.points % 4]; g.hero.passives[k] = (g.hero.passives[k] || 0) + 1; g.hero.points--; }
-    if (g.hero.level >= S.SPEC_LEVEL && g.hero.spec == null) g.hero.spec = 0;
-    S.refresh(g);
-    for (const it of [...g.bag]) {
-      const cur = S.project(g, { secs: 120 });
-      const alt = S.project(g, { secs: 120, equip: { [it.slot]: it } });
-      if (alt.xpm > cur.xpm * 1.02 && alt.deaths <= cur.deaths) {
-        const old = g.equip[it.slot];
-        g.equip[it.slot] = it; g.bag.splice(g.bag.indexOf(it), 1);
-        if (old) g.bag.push(old);
-        S.refresh(g);
-      }
-    }
-    while (g.bag.length > 20) { const it = g.bag.shift(); g.gold += S.salvageValue(it); g.mats.shards += S.salvageShards(it); }
-    let changed = true;
-    while (changed) {
-      changed = false;
-      const it = Object.values(g.equip).sort((a, b) => S.upgradeCost(a) - S.upgradeCost(b))[0];
-      if (it && it.plus < 10 && g.mats.shards >= S.upgradeCost(it)) { const c = S.upgradeCost(it); g.mats.shards -= c; it.shardsIn = (it.shardsIn || 0) + c; it.plus++; changed = true; S.refresh(g); }
-    }
-    while (g.sigils > 0) {
-      const bk = g.zones.hollow ? 'woundwarden' : 'bellkeeper';
-      const res = S.fightBoss(g, bk, g.bossUnlocked[bk]);
-      g.sigils--; bossTries++;
-      if (res.win) { bossWins++; S.bossRewards(g, res, S.emptyOut()); }
-    }
-    const b = bestTarget();
-    g.target = { key: b.k, level: b.L };
+  S.advance(g, t, S.emptyOut());
+  if (m % 5 !== 0) continue;
+  const order = ['might', 'vitality', 'swiftness', 'precision'];
+  while (g.hero.points > 0) act({ type: 'passive', k: order[g.hero.points % 4] });
+  if (g.hero.level >= S.SPEC_LEVEL && g.hero.spec == null) act({ type: 'spec', i: 0 });
+  for (const it of [...g.bag]) {
+    const key = S.verdictSlot(g, it);
+    const cur = S.project(g, { secs: 120 }), alt = S.project(g, { secs: 120, equip: { [key]: it } });
+    if (alt.xpm > cur.xpm * 1.02 && alt.deaths <= cur.deaths) act({ type: 'equip', id: it.id, to: key });
   }
-  if (!quiet && (m + 1) % 60 === 0 || (quiet && m + 1 === hours * 60)) {
+  if (g.jewels.length && g.equip.belt && g.equip.belt.socket && !g.equip.belt.jewel) act({ type: 'socketJewel', id: g.jewels[0].id });
+  while (g.bag.length > 24) { const it = g.bag.find(x => !x.locked && S.RANK[x.rarity] < 4) || g.bag[0]; if (act({ type: 'salvage', id: it.id })) break; }
+  for (let guard = 0; guard < 50; guard++) {
+    const it = Object.values(g.equip).filter(x => x.rarity !== 'ascended' && x.plus < 10).sort((a, b) => S.upgradeCost(a) - S.upgradeCost(b))[0];
+    if (!it || act({ type: 'upgrade', id: it.id })) break;
+  }
+  if (g.asc.unlocked) for (const s of S.ARMOR_SLOTS) while (!act({ type: 'ascend', slot: s }));
+  while (g.sigils > 0) {
+    const bk = g.zones.hollow ? 'woundwarden' : 'bellkeeper';
+    act({ type: 'boss', key: bk, level: g.bossUnlocked[bk] }); bossTries++; if (g.lastBoss.res.win) bossWins++;
+  }
+  const b = bestTarget();
+  act({ type: 'target', key: b.k, level: b.L });
+  if (!quiet && (m + 5) % 60 === 0 || (quiet && m + 5 >= hours * 60)) {
     const p = S.project(g, { secs: 120 });
-    console.log(`${cls.padEnd(8)} h${(m + 1) / 60} lvl ${g.hero.level} ${g.target.key}@${g.target.level} hollow:${g.zones.hollow} kpm ${p.kpm.toFixed(1)} d/2m ${p.deaths} life ${S.fmt(g.stats.life)} dps ${S.fmt(p.dps)} shards ${g.mats.shards} ess ${g.mats.ember}/${g.mats.ash}/${g.mats.rift} bosses ${bossWins}/${bossTries} bar ${g.cast.map(c => c.k).join(',')} pm ${Object.keys(g.stats.pmods).join(',')}`);
+    const rar = Object.values(g.equip).map(i => i.rarity[0]).join('');
+    console.log(`${cls.padEnd(8)} h${Math.round((m + 5) / 60)} lvl ${g.hero.level} ${g.target.key}@${g.target.level} hollow:${g.zones.hollow ? 'y' : 'n'} asc:${g.asc.unlocked ? JSON.stringify(Object.values(g.asc.slots)) : 'n'} kpm ${p.kpm.toFixed(1)} d/2m ${p.deaths} life ${S.fmt(g.stats.life)} hit ${S.fmt(g.stats.hit)} dps ${S.fmt(p.dps)} bosses ${bossWins}/${bossTries} gear ${rar} aug ${Object.keys(g.stats.aug).join(',')} sets ${JSON.stringify(g.stats.sets)} evo ${g.stats.evo || '-'} jewels ${g.jewels.length}`);
   }
 }
-if (!quiet) console.log('totals', JSON.stringify({ kills: total.kills, deaths: total.deaths, items: total.items }), 'ms', Date.now() - t0);
+if (!quiet) console.log('ms', Date.now() - t0);

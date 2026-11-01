@@ -14,7 +14,9 @@ The browser direction for Godscar: a mobile-first idle ARPG where combat never s
 ## Build
     python3 build.py   # writes dist/index.html
 
-## What's in v2
-Five classes, each with a primary ability that never stops and a class spell. A 3 offensive + 2 utility autocast bar with cast conditions. Items that change the primary ability. Specializations at level 10 (15 total). Passive points. Two zones (the Fallfields and the Ashen Hollow). Spell-granting rares. Scar Shards for upgrades. Ember/Ash/Rift essences for inscribing spells. Reforging. Boss fights that run on a snapshot of the build while farming continues.
+## What's in v3
+Everything a player does goes through `doAction` in `src/sim.js`, the interface a server can later run and verify. On top of v2: the item anatomy from the design doc (base stat by slot, Epic+ enchants, up to 6 affixes, Legendary augments built from rule families), six damage types with their own mechanics (burn, chill, shock, drain, purify), STR/DEX/INT for any class, eleven equipment slots (off-hands, belt, legs, two rings), Ascended set pieces that scale to per-slot Ascension levels fed by monster-specific materials, Scarbound Jewels in socketed belts that evolve all five classes, crafting Common to Legendary, and auto-push retry settings.
 
-Not yet: alchemy, dungeons, a server, multiplayer. Saves live in the browser (plus a private cloud copy when run as a claude.ai artifact), so nothing here is cheat-proof.
+Tests: `node test/balance.js <class> <hours>`, `node test/evo.js` (every evolution changes combat; trigger and repeat loops stay bounded), `node test/migrate.js`, `node test/browser.js`.
+
+Not yet: alchemy, the branching passive tree, group content, a server. Saves live in the browser (plus a private cloud copy as a claude.ai artifact), so nothing is cheat-proof yet.

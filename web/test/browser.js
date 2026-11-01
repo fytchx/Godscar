@@ -19,7 +19,7 @@ const fs = require('fs');
   await p.screenshot({ path: __dirname + '/shots/1fight.png', fullPage: true });
   // simulate 24h+ offline: close the page, rewind the save before the next load runs
   await p.close();
-  const rewind = () => { if (sessionStorage.getItem('rw')) return; sessionStorage.setItem('rw','1'); const s = JSON.parse(localStorage.getItem('godscar.save.v1')); const d = 26 * 3600; s.t -= d; s.fight.pNext -= d; s.fight.skillNext -= d; s.fight.pulseNext -= d; s.fight.respawnAt -= d; s.fight.deadUntil = 0; if (s.fight.mon) { s.fight.mon.next -= d; s.fight.mon.burnUntil -= d; s.fight.mon.bleedUntil -= d; } for (const k in (s.fight.cd||{})) s.fight.cd[k] -= d; for (const k in (s.fight.buffs||{})) s.fight.buffs[k] -= d; localStorage.setItem('godscar.save.v1', JSON.stringify(s)); localStorage.removeItem('godscar.lock'); };
+  const rewind = () => { if (sessionStorage.getItem('rw')) return; sessionStorage.setItem('rw','1'); const s = JSON.parse(localStorage.getItem('godscar.save.v1')); const d = 26 * 3600; s.t -= d; s.fight.pNext -= d; s.fight.skillNext -= d; s.fight.pulseNext -= d; s.fight.respawnAt -= d; s.fight.deadUntil = 0; if (s.fight.mon) { for (const k of ['next','burnUntil','bleedUntil','chillUntil','shockUntil']) s.fight.mon[k] -= d; } s.fight.critCastAt -= d; for (const k in (s.fight.cd||{})) s.fight.cd[k] -= d; for (const k in (s.fight.buffs||{})) s.fight.buffs[k] -= d; localStorage.setItem('godscar.save.v1', JSON.stringify(s)); localStorage.removeItem('godscar.lock'); };
   const pp = await ctx.newPage(); pp.on('pageerror', e => errs.push('PAGEERR ' + e.message));
   await pp.addInitScript(rewind);
   const t0 = Date.now();
@@ -36,15 +36,17 @@ const fs = require('fs');
   await pp.waitForTimeout(300);
   await pp.screenshot({ path: __dirname + '/shots/4bag.png', fullPage: true });
   const eq = await pp.$('[data-act="equip"]'); if (eq) await eq.click();
-  await pp.click('[data-tab="gear"]'); await pp.waitForTimeout(300);
-  await pp.screenshot({ path: __dirname + '/shots/5gear.png', fullPage: true });
   await pp.click('[data-tab="build"]'); await pp.waitForTimeout(300);
   const sp = await pp.$('[data-act="spec"]'); if (sp) { await sp.click(); await pp.waitForTimeout(200); }
   for (let i = 0; i < 3; i++) { const pb = await pp.$('[data-act="pas"]:not([disabled])'); if (pb) await pb.click(); }
   await pp.waitForTimeout(300);
   await pp.screenshot({ path: __dirname + '/shots/6build.png', fullPage: true });
   await pp.click('[data-tab="forge"]'); await pp.waitForTimeout(300);
+  await pp.click('[data-act="craft"]'); await pp.waitForTimeout(300);
   await pp.screenshot({ path: __dirname + '/shots/7forge.png', fullPage: true });
+  await pp.click('[data-tab="gear"]'); await pp.waitForTimeout(300);
+  await pp.click('[data-act="gsel"][data-k="ring1"]'); await pp.waitForTimeout(200);
+  await pp.screenshot({ path: __dirname + '/shots/5gear.png', fullPage: true });
   await pp.click('[data-tab="fight"]'); await pp.waitForTimeout(300);
   const bb = await pp.$('[data-act="boss"]:not([disabled])'); if (bb) { await bb.click(); await pp.waitForTimeout(400); }
   await pp.screenshot({ path: __dirname + '/shots/8boss.png', fullPage: true });
