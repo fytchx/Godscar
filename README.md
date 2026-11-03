@@ -4,7 +4,7 @@ Online idle ARPG for the browser, phone first. One character, combat never stops
 
 The game lives in `web/`. See `web/README.md` for layout, build and tests.
 
-The earlier Godot/Android action prototype and its art packs were removed from this branch. They are kept in git history under the tag `godot-archive`.
+The earlier Godot/Android action prototype and its art packs were removed from this branch. They are kept on the `archive/godot` branch and in git history.
 
 ## Next
 
