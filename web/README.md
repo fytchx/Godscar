@@ -1,6 +1,6 @@
 # Godscar web: idle ARPG prototype
 
-The browser direction for Godscar: a mobile-first idle ARPG where combat never stops. Everything in this folder is separate from the Godot project in the rest of the repo, and this branch does not trigger the Android build workflow (it only runs on `main` and `dev`).
+Godscar: a mobile-first idle ARPG where combat never stops.
 
 ## Layout
 - `src/sim.js`: the whole game simulation. One deterministic event engine drives live play, offline catch-up (24h cap), item verdicts, zone scouting and boss fights.
