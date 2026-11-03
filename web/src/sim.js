@@ -2,6 +2,9 @@
 // One deterministic event simulation drives live play, offline catch-up, item verdicts, scouting and boss fights.
 // Every player change goes through ACTIONS (doAction), so a server can run this same file and verify them.
 'use strict';
+const SIM_VERSION = 4; // bump whenever a change alters simulation results; the server rejects clients on another version
+const own = (o, k) => typeof k === 'string' && Object.prototype.hasOwnProperty.call(o, k);
+const isInt = (v, lo, hi) => Number.isInteger(v) && v >= lo && v <= hi;
 
 // ---------- RNG ----------
 function rand(r) {
@@ -283,8 +286,7 @@ const SIGIL_KILLS = 150, SIGIL_CAP = 5, BOSS_TIME = 150, PUSH_STREAK = 25;
 const xpToNext = lvl => Math.round(70 * Math.pow(1.19, lvl - 1) + 40 * lvl);
 
 // ---------- ITEM GENERATION ----------
-let itemSeq = 0;
-function newId(r) { return 'i' + Math.floor(rand(r) * 1e9).toString(36) + (itemSeq++).toString(36); }
+function newId(r) { r.n = (r.n || 0) + 1; return 'i' + Math.floor(rand(r) * 1e9).toString(36) + r.n.toString(36); }
 function rollRarity(r, w) { let x = rand(r) * w.reduce((a, b) => a + b, 0); for (let i = 0; i < w.length; i++) if ((x -= w.at(i)) < 0) return RARITIES.at(i); return 'common'; }
 function rollAffix(r, it, exclude) {
   const pool = Object.keys(AFFIXES).filter(k => AFFIXES[k].slots.includes(it.slot) && !exclude.includes(k));
@@ -821,6 +823,7 @@ const ACTIONS = {
   equip(g, a) {
     const i = findBag(g, a.id); if (i < 0) return 'Item not found.';
     const it = g.bag[i];
+    if (a.to != null && !EQUIP.includes(a.to)) return 'That item doesn\'t fit there.';
     let key = a.to || (it.slot === 'ring' ? (!g.equip.ring1 ? 'ring1' : !g.equip.ring2 ? 'ring2' : 'ring1') : it.slot);
     if (it.slot === 'weapon' && a.to === 'offhand') key = 'offhand';
     if (slotOf(key) !== it.slot && !(key === 'offhand' && it.slot === 'weapon')) return 'That item doesn\'t fit there.';
@@ -852,19 +855,21 @@ const ACTIONS = {
   },
   reforge(g, a) {
     const k = findEquipped(g, a.id); if (!k) return 'Equip it first.'; const it = g.equip[k]; const c = reforgeCost(it); if (g.gold < c) return 'Not enough gold.';
+    if (!isInt(a.i, 0, it.affixes.length - 1)) return 'No such stat.';
     const na = rollAffix(g.rng, it, it.affixes.map(x => x[0])); if (!na) return 'No other stats can roll here.';
     g.gold -= c; it.affixes[a.i] = na; return null;
   },
   inscribe(g, a) {
     const k = findEquipped(g, a.id); if (!k) return 'Equip it first.'; const it = g.equip[k];
     if (RANK[it.rarity] < 2 || it.spell) return 'Needs a Rare or better item without a spell.';
-    const sp = SPELLS[a.spell]; if (!sp || !sp.el) return 'Unknown spell.'; const c = inscribeCost(it);
+    const sp = own(SPELLS, a.spell) ? SPELLS[a.spell] : null; if (!sp || !sp.el) return 'Unknown spell.'; const c = inscribeCost(it);
     if (g.gold < c.gold || (g.mats[sp.el] || 0) < c.essence) return `Needs ${c.essence} ${MAT_NAMES[sp.el]} and ${fmt(c.gold)} gold.`;
     g.gold -= c.gold; g.mats[sp.el] -= c.essence; it.spell = a.spell; return null;
   },
   craft(g, a) {
-    const rar = a.rarity; if (!CRAFT_MULT[rar]) return 'Unknown rarity.'; if (!DROP_SLOTS.includes(a.slot)) return 'Unknown slot.';
-    const ilvl = Math.max(1, a.ilvl | 0); const maxL = Math.max(...MONSTER_KEYS.map(k => g.unlocked[k])) + 4; if (ilvl > maxL) return 'You can\'t craft above your progress.';
+    const rar = a.rarity; if (!own(CRAFT_MULT, rar)) return 'Unknown rarity.'; if (!DROP_SLOTS.includes(a.slot)) return 'Unknown slot.';
+    if (a.base != null && !(a.slot === 'weapon' ? own(WEAPONS, a.base) : a.slot === 'offhand' ? own(OFFHANDS, a.base) : false)) return 'Unknown base.';
+    const ilvl = Math.max(1, Number(a.ilvl) | 0); const maxL = Math.max(...MONSTER_KEYS.map(k => g.unlocked[k])) + 4; if (ilvl > maxL) return 'You can\'t craft above your progress.';
     const c = craftCost(rar, ilvl); const ess = TYPES.every(t => (g.mats[t] || 0) >= c.essence);
     if (g.gold < c.gold || g.mats.shards < c.shards || !ess) return 'Not enough materials.';
     if (g.bag.length >= BAG_CAP) return 'Bag is full.';
@@ -888,23 +893,31 @@ const ACTIONS = {
     if (g.equip.offhand && g.equip.offhand.slot === 'weapon') { g.bag.push(g.equip.offhand); delete g.equip.offhand; }
     return null;
   },
-  spec(g, a) { if (g.hero.level < SPEC_LEVEL) return 'Not yet.'; const cost = g.hero.spec == null ? 0 : respecCost(g.hero.level); if (g.gold < cost) return 'Not enough gold.'; g.gold -= cost; g.hero.spec = a.i; return null; },
-  passive(g, a) { if (!g.hero.points || !PASSIVES[a.k]) return 'No points.'; g.hero.points--; g.hero.passives[a.k] = (g.hero.passives[a.k] || 0) + 1; return null; },
+  spec(g, a) { if (g.hero.level < SPEC_LEVEL) return 'Not yet.'; if (!isInt(a.i, 0, CLASSES[g.hero.cls].specs.length - 1)) return 'Unknown specialization.'; if (a.i === g.hero.spec) return null; const cost = g.hero.spec == null ? 0 : respecCost(g.hero.level); if (g.gold < cost) return 'Not enough gold.'; g.gold -= cost; g.hero.spec = a.i; return null; },
+  passive(g, a) { if (!own(PASSIVES, a.k)) return 'Unknown passive.'; if (!g.hero.points) return 'No points.'; g.hero.points--; g.hero.passives[a.k] = (g.hero.passives[a.k] || 0) + 1; return null; },
   passiveReset(g) { const n = PASSIVE_KEYS.reduce((s, k) => s + (g.hero.passives[k] || 0), 0); g.hero.passives = {}; g.hero.points += n; return null; },
-  barOff(g, a) { g.bar.off[a.i] = a.k || null; return null; },
-  barUtil(g, a) { g.bar.util[a.i] = a.k ? { k: a.k, cond: SPELLS[a.k].cond } : null; return null; },
-  barCond(g, a) { if (g.bar.util[a.i] && CONDS[a.cond]) g.bar.util[a.i].cond = a.cond; return null; },
+  barOff(g, a) {
+    if (!isInt(a.i, 0, g.bar.off.length - 1)) return 'No such slot.';
+    if (a.k != null && !(own(SPELLS, a.k) && SPELLS[a.k].kind === 'off' && availableSpells(g).includes(a.k))) return 'You don\'t have that spell.';
+    g.bar.off[a.i] = a.k || null; return null;
+  },
+  barUtil(g, a) {
+    if (!isInt(a.i, 0, g.bar.util.length - 1)) return 'No such slot.';
+    if (a.k != null && !(own(SPELLS, a.k) && SPELLS[a.k].kind === 'util' && availableSpells(g).includes(a.k))) return 'You don\'t have that spell.';
+    g.bar.util[a.i] = a.k ? { k: a.k, cond: SPELLS[a.k].cond } : null; return null;
+  },
+  barCond(g, a) { if (!isInt(a.i, 0, g.bar.util.length - 1) || !own(CONDS, a.cond)) return 'Unknown condition.'; if (g.bar.util[a.i]) g.bar.util[a.i].cond = a.cond; return null; },
   target(g, a) {
-    const M = MONSTERS[a.key]; if (!M || !g.zones[M.zone]) return 'Not available.';
-    g.target = { key: a.key, level: Math.max(ZONES[M.zone].minLevel, Math.min(g.unlocked[a.key], a.level | 0)) }; g.streak = 0; g.deathsHere = 0; return null;
+    const M = own(MONSTERS, a.key) ? MONSTERS[a.key] : null; if (!M || !g.zones[M.zone]) return 'Not available.';
+    g.target = { key: a.key, level: Math.max(ZONES[M.zone].minLevel, Math.min(g.unlocked[a.key], Number(a.level) | 0)) }; g.streak = 0; g.deathsHere = 0; return null;
   },
   autoPush(g, a) { g.autoPush = !!a.on; g.streak = 0; return null; },
-  pushRetries(g, a) { g.pushRetries = Math.max(0, Math.min(2, a.n | 0)); return null; },
-  filter(g, a) { if (!(a.rarity in RANK)) return 'Unknown.'; g.filter = a.rarity; return null; },
+  pushRetries(g, a) { g.pushRetries = Math.max(0, Math.min(2, Number(a.n) | 0)); return null; },
+  filter(g, a) { if (!own(RANK, a.rarity)) return 'Unknown.'; g.filter = a.rarity; return null; },
   dismiss(g, a) { g.notices = (g.notices || []).filter(k => k !== a.key); return null; },
   boss(g, a) {
-    const B = BOSSES[a.key]; if (!B || !g.zones[B.zone]) return 'Not available.'; if (g.sigils < 1) return 'No sigils.';
-    const L = Math.max(B.minLevel, Math.min(g.bossUnlocked[a.key], a.level | 0));
+    const B = own(BOSSES, a.key) ? BOSSES[a.key] : null; if (!B || !g.zones[B.zone]) return 'Not available.'; if (g.sigils < 1) return 'No sigils.';
+    const L = Math.max(B.minLevel, Math.min(g.bossUnlocked[a.key], Number(a.level) | 0));
     g.sigils--;
     const res = fightBoss(g, a.key, L);
     g.lastBoss = { res: { key: res.key, level: res.level, win: res.win, died: res.died, time: res.time, pct: res.pct }, lines: res.lines.slice(-40) };
@@ -912,7 +925,7 @@ const ACTIONS = {
     return null;
   }
 };
-function doAction(g, a) { const fn = ACTIONS[a.type]; if (!fn) return 'Unknown action.'; const err = fn(g, a); if (!err) refresh(g); return err; }
+function doAction(g, a) { if (!a || typeof a !== 'object' || !own(ACTIONS, a.type)) return 'Unknown action.'; const fn = ACTIONS[a.type]; const err = fn(g, a); if (!err) refresh(g); return err; }
 
 // ---------- PROJECTION ----------
 function cloneBuild(g, opts) {
@@ -1000,7 +1013,7 @@ function shiftFight(g, d) {
 }
 
 if (typeof module !== 'undefined') module.exports = {
-  rand, TYPES, ELEMS, TYPE_NAMES, TYPE_RULES, ATTRS, ATTR_RULES, CLASSES, CLASS_KEYS, SPELLS, FOUND_SPELLS, CONDS, PASSIVES, PASSIVE_KEYS,
+  SIM_VERSION, ACTIONS, rand, TYPES, ELEMS, TYPE_NAMES, TYPE_RULES, ATTRS, ATTR_RULES, CLASSES, CLASS_KEYS, SPELLS, FOUND_SPELLS, CONDS, PASSIVES, PASSIVE_KEYS,
   EQUIP, DROP_SLOTS, ARMOR_SLOTS, SLOT_NAMES, WEAPONS, OFFHANDS, AFFIXES, ENCHANTS, AUGMENTS, SETS, ASC_MATS, MAT_NAMES, RARITIES, RARITY_NAMES, RANK,
   ZONES, ZONE_KEYS, MONSTERS, MONSTER_KEYS, BOSSES, BOSS_KEYS, mdef, makeItem, makeJewel, computeStats, refresh, availableSpells, advance, emptyOut,
   newGame, migrate, doAction, project, verdictSlot, fightBoss, bossRewards, catchUp, effIlvl, scaleOf, xpToNext, upgradeCost, salvageValue, salvageShards,

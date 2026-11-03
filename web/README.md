@@ -10,6 +10,7 @@ Godscar: a mobile-first idle ARPG where combat never stops.
 - `test/balance.js`: headless bot that plays N hours for a class. `node test/balance.js rogue 6`
 - `test/browser.js`: Playwright phone-size check (needs `playwright`).
 - `test/migrate.js`: v1 save to v2 migration check.
+- `test/actions.js`: fuzzes every action with junk input (must never throw or change state when rejected) and checks determinism across processes.
 
 ## Build
     python3 build.py   # writes dist/index.html
