@@ -9,3 +9,5 @@ The earlier Godot/Android action prototype and its art packs were removed from t
 ## Next
 
 Server-authoritative from day one: the server runs `web/src/sim.js` and every player change goes through `doAction`, so the client can't edit its own progress.
+
+The first API implementation is in `server/`. See `server/README.md` for its current development-only limits and local setup. The browser client is not connected to it yet.
