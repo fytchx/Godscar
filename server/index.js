@@ -11,9 +11,9 @@ const PORT = Number(process.env.PORT || 3000);
 const DATABASE_URL = process.env.DATABASE_URL;
 const BASE_URL = process.env.PUBLIC_BASE_URL;
 const PROD = process.env.NODE_ENV === 'production';
-const LOGIN_TTL_MIN = 15;
 const SESSION_DAYS = 30;
 const BODY_LIMIT = 64 * 1024;
+const DEV_LOGIN_LINKS = process.env.DEV_LOGIN_LINKS === 'true';
 const pool = new Pool({ connectionString: DATABASE_URL, ssl: process.env.PGSSLMODE === 'require' ? { rejectUnauthorized: false } : undefined });
 const loginAttempts = new Map();
 
@@ -109,7 +109,7 @@ async function route(req, res) {
     const email = typeof body.email === 'string' ? body.email.trim().toLowerCase() : '';
     if (email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return send(res, 400, { error: 'Enter a valid email address.' });
     if (!BASE_URL) return send(res, 503, { error: 'Sign-in links are not configured.' });
-    if (PROD) return send(res, 503, { error: 'Email delivery is not configured.' });
+    if (PROD || !DEV_LOGIN_LINKS) return send(res, 503, { error: 'Email delivery is not configured.' });
 
     const rawToken = randomBytes(32).toString('base64url');
     await pool.query('INSERT INTO login_tokens(token_hash, email, expires_at) VALUES ($1, $2, now() + interval \'15 minutes\')', [hash(rawToken), email]);
@@ -225,7 +225,7 @@ async function route(req, res) {
 async function start() {
   if (!DATABASE_URL) throw new Error('DATABASE_URL is required.');
   if (!BASE_URL) throw new Error('PUBLIC_BASE_URL is required.');
-  if (PROD) throw new Error('Production startup is disabled until email delivery is configured.');
+  if (PROD || !DEV_LOGIN_LINKS) throw new Error('Email delivery is not configured. For local development only, set DEV_LOGIN_LINKS=true to print sign-in links to the log.');
   const schema = await readFile(path.join(__dirname, 'schema.sql'), 'utf8');
   await pool.query(schema);
   const server = http.createServer((req, res) => {

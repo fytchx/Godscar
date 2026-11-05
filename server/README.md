@@ -11,6 +11,7 @@ npm install
 createdb godscar
 DATABASE_URL=postgres://localhost/godscar \
 PUBLIC_BASE_URL=http://localhost:3000 \
+DEV_LOGIN_LINKS=true \
 npm start
 ```
 
@@ -33,6 +34,6 @@ Every action response returns the authoritative state and a monotonically increa
 ## Not ready for public deployment
 
 - The UI still uses browser storage and does not call this API.
-- Magic links are logged, not emailed. Production startup deliberately fails closed until email delivery is implemented.
+- Magic links are logged, not emailed. Startup requires an explicit `DEV_LOGIN_LINKS=true` local-only setting and fails closed in production or when that setting is absent.
 - No deploy target or database has been selected or provisioned.
 - Add durable migrations, operational monitoring, account recovery, and abuse controls before opening registration.
