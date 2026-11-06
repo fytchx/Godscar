@@ -1,0 +1,113 @@
+name: Godscar Android test APK
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'godot/**'
+      - '.github/workflows/android-apk.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: godscar-android-test-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-apk:
+    name: Signed ARM64 APK
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    container:
+      image: barichello/godot-ci:4.4.1
+    steps:
+      - name: Checkout Godscar
+        uses: actions/checkout@v4
+
+      - name: Prepare Godot 4.4.1 export environment
+        shell: bash
+        run: |
+          set -euo pipefail
+          godot --version
+          if [[ "$HOME" != "/root" ]]; then
+            mkdir -p "$HOME/.local/share/godot/export_templates/4.4.1.stable" "$HOME/.config/godot"
+            cp -a /root/.local/share/godot/export_templates/4.4.1.stable/. "$HOME/.local/share/godot/export_templates/4.4.1.stable/"
+            if [[ -d /root/.config/godot ]]; then
+              cp -a /root/.config/godot/. "$HOME/.config/godot/"
+            fi
+          fi
+          test -s "$HOME/.local/share/godot/export_templates/4.4.1.stable/android_debug.apk"
+          command -v keytool
+          command -v java
+          test -d "${ANDROID_HOME:-/opt/android-sdk}" || test -d "${ANDROID_SDK_ROOT:-/opt/android-sdk}"
+          echo "ANDROID_HOME=${ANDROID_HOME:-unset}"
+
+      - name: Restore persistent debug signing key
+        uses: actions/cache@v4
+        with:
+          path: .ci_signing/debug.keystore
+          key: godscar-android-test-signing-v1
+
+      - name: Generate debug key if none is cached
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p .ci_signing
+          if [[ ! -s .ci_signing/debug.keystore ]]; then
+            keytool -genkeypair -noprompt \
+              -keystore .ci_signing/debug.keystore \
+              -alias godscardebug \
+              -keyalg RSA -keysize 2048 -validity 10000 \
+              -storepass android -keypass android \
+              -dname "CN=Godscar Android Test, O=Godscar, C=US"
+          fi
+          chmod 600 .ci_signing/debug.keystore
+
+      - name: Set unique Android build version
+        shell: bash
+        env:
+          BUILD_NUMBER: ${{ github.run_number }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import os
+          file = Path("godot/export_presets.cfg")
+          data = file.read_text()
+          data = data.replace('version/code=1', f'version/code={1000 + int(os.environ["BUILD_NUMBER"])}')
+          data = data.replace('version/name="0.1.0-dev"', f'version/name="0.1.0-test.{os.environ["BUILD_NUMBER"]}"')
+          file.write_text(data)
+          PY
+
+      - name: Validate and import Godot project
+        shell: bash
+        run: |
+          set -euo pipefail
+          godot --headless --path godot --editor --import --quit
+          godot --headless --path godot --script res://scripts/smoke_test.gd
+
+      - name: Export and verify installable Android APK
+        shell: bash
+        env:
+          GODOT_ANDROID_KEYSTORE_DEBUG_PATH: ${{ github.workspace }}/.ci_signing/debug.keystore
+          GODOT_ANDROID_KEYSTORE_DEBUG_USER: godscardebug
+          GODOT_ANDROID_KEYSTORE_DEBUG_PASSWORD: android
+        run: |
+          set -euo pipefail
+          mkdir -p build/android
+          godot --headless --path godot --export-debug "Android" "$GITHUB_WORKSPACE/build/android/Godscar-test.apk"
+          test -s build/android/Godscar-test.apk
+          unzip -tq build/android/Godscar-test.apk >/dev/null
+          du -h build/android/Godscar-test.apk
+          sha256sum build/android/Godscar-test.apk | tee build/android/SHA256SUMS.txt
+          printf 'Godscar Android test APK\nGit SHA: %s\nWorkflow run: %s\nPackage: com.fytchx.godscar\nThis is a debug-signed prototype, not a production release.\n' "$GITHUB_SHA" "$GITHUB_RUN_NUMBER" > build/android/BUILD-INFO.txt
+
+      - name: Upload APK you can install on your phone
+        uses: actions/upload-artifact@v4
+        with:
+          name: Godscar-Android-Test-${{ github.run_number }}
+          path: build/android/
+          if-no-files-found: error
+          retention-days: 60
