@@ -2,7 +2,9 @@ name: Living Arsenal systems lab checks
 
 on:
   push:
-    branches: [work/living-arsenal-lab, preview/browser]
+    branches: [work/living-arsenal-lab, work/**, preview/browser]
+  pull_request:
+    branches: [preview/browser]
   workflow_dispatch:
 
 permissions:
@@ -39,6 +41,6 @@ jobs:
           curl -fsS http://127.0.0.1:3106/ > /tmp/godscar-original.html
           grep -q GODSCAR /tmp/godscar-original.html
           curl -fsS http://127.0.0.1:3106/lab/arsenal/ > /tmp/godscar-lab.html
-          grep -q "Living Arsenal Lab" /tmp/godscar-lab.html
+          grep -q "The Living Arsenal" /tmp/godscar-lab.html
           curl -fsS http://127.0.0.1:3106/lab/arsenal/engine.mjs | grep -q "createGame"
-          curl -fsS http://127.0.0.1:3106/lab/arsenal/styles.css | grep -q "slate"
+          curl -fsS http://127.0.0.1:3106/lab/arsenal/styles.css | grep -q -- "--paper"

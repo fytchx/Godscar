@@ -1,5 +1,14 @@
 # Godscar project changelog and handoff history
 
+## 2026-11-06 UTC — Expanded the browser-first Living Arsenal prototype
+- **Why:** Owner confirmed this should be a browser idle game and full-sent a significant prototype after the earlier combat UI felt too empty. Grim Dawn equipment influence and weapon-defined build identity guide this iteration.
+- **Changed:** Expanded the isolated lab to four distinct weapons and arts, nine equipment slots, five affixes, Warden set defense, three hunts including a named boss, loot/lock/salvage/reserve flow, weapon refinement, charm engraving, and responsive Hunt / Build & Gear / Forge screens. Updated the route smoke checks and prototype/architecture/handoff/design docs.
+- **Paths:** `lab/arsenal/{catalog,engine,index.html,styles.css,tests,ui}.mjs`, `lab/arsenal/README.md`, `.github/workflows/living-arsenal-lab.yml`, `docs/{PROJECT-STATE,ARCHITECTURE,DECISIONS,OPEN-QUESTIONS,CHANGELOG}.md`.
+- **Data impact:** Separate `godscar.living-arsenal.lab.v2` browser-local save; original game route and save are untouched.
+- **Validation:** `node --check` for all lab modules, 16 focused lab checks, `npm test`, `npm run build`, and local route smoke for `/`, `/lab/arsenal/`, engine module, CSS and `/health` all passed. Playwright visual check was unavailable because its browser executable is not installed. Remote CI and deployment are pending; no physical-phone visual check completed.
+- **Status / next:** Work is local on `work/living-arsenal-browser-prototype`, based on `preview/browser`. Run complete checks, open PR to active preview branch, merge after CI, and verify Railway revision and route. All content and balance values remain provisional.
+
+
 ## 2026-11-06 PT — Release opt-in Living Arsenal systems lab alongside original browser game
 - **Reason:** Owner endorsed Living Arsenal as new core and requested a tangible, reviewable implementation without the prior fidelity-losing wholesale rewrite.
 - **Change:** Merge feature branch `work/living-arsenal-lab` into active `preview/browser`; serve lab at `/lab/arsenal/` from the existing Godscar Railway preview. Original browser homepage remains served at `/`, untouched. Added lab link, expanded lab CI to active branch, and clarified source documentation.

@@ -1,12 +1,13 @@
-import { CONDUIT_LEVELS, HUNTS, SKILLS, SUPPORTS, WEAPONS, supportsFor } from "./catalog.mjs";
+import { AFFIXES, CONDUIT_LEVELS, HUNTS, SKILLS, SLOT_LABELS, SUPPORTS, WEAPONS, supportsFor } from "./catalog.mjs";
 import { action, advance, availableSkillIds, BAG_CAPACITY, createGame, itemTitle, LAB_VERSION, summarize, VAULT_CAPACITY } from "./engine.mjs";
 
-const SAVE_KEY = "godscar.living-arsenal.lab.v1"; // Isolated from original Godscar saves.
+const SAVE_KEY = "godscar.living-arsenal.lab.v2";
 const root = document.getElementById("game");
 let game = restore();
 let lastFrame = Date.now();
 let lastUiPaint = 0;
 let notice = "";
+let selectedTab = "battle";
 
 function restore() {
   try {
@@ -14,8 +15,6 @@ function restore() {
     if (!raw) return createGame();
     const state = JSON.parse(raw);
     if (state?.version !== LAB_VERSION || !Array.isArray(state.conduits) || !state.gear?.weapon) return createGame();
-    // A separate local save and limited offline catch-up. Existing Godscar's
-    // save key is never opened or modified by this experimental page.
     const elapsed = Math.max(0, Math.min(4 * 60 * 60 * 1000, Date.now() - (state.savedAtWallMs || Date.now())));
     if (elapsed > 0) advance(state, elapsed);
     return state;
@@ -28,120 +27,131 @@ function persist() {
     game.savedAtWallMs = Date.now();
     localStorage.setItem(SAVE_KEY, JSON.stringify(game));
   } catch {
-    notice = "Browser storage unavailable. This experiment may not persist.";
+    notice = "Browser storage is unavailable. This lab may not save.";
   }
 }
-function escapeHtml(text) {
-  return String(text).replace(/[&<>"']/g, character => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[character]));
+function esc(value) {
+  return String(value).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 }
-function formatTime(ms) {
-  const seconds = Math.floor(ms / 1000);
-  return seconds >= 3600 ? Math.floor(seconds / 3600) + "h " + Math.floor((seconds % 3600) / 60) + "m" : Math.floor(seconds / 60) + "m " + seconds % 60 + "s";
+function shortTime(ms) {
+  const sec = Math.max(0, Math.floor(ms / 1000));
+  return sec >= 3600 ? Math.floor(sec / 3600) + "h " + Math.floor(sec % 3600 / 60) + "m" : Math.floor(sec / 60) + "m " + sec % 60 + "s";
 }
-function chip(label, style = "") { return '<span class="chip ' + style + '">' + escapeHtml(label) + "</span>"; }
-function panel(title, body, extra = "") {
-  return '<section class="panel ' + extra + '"><h2>' + escapeHtml(title) + "</h2>" + body + "</section>";
+function rarity(it) { return it.rarity === "rare" ? "rare" : it.rarity === "magic" ? "magic" : "common"; }
+function affixLine(it) {
+  if (!it.affixes?.length && !it.engraving && !it.set) return "Unmarked base";
+  const values = (it.affixes || []).map(key => AFFIXES[key]?.short || key);
+  if (it.engraving) values.push("Grants " + (SKILLS[it.engraving]?.name || it.engraving));
+  if (it.set) values.push("Ashen Warden set");
+  return values.join(" · ");
 }
-function option(value, label, selected) {
-  return '<option value="' + escapeHtml(value) + '"' + (selected ? " selected" : "") + ">" + escapeHtml(label) + "</option>";
+function icon(name) {
+  const icons = {
+    weapon: "⚔", helm: "◈", chest: "▣", gloves: "✣", boots: "⌁", offhand: "⬡", ring: "◉", belt: "▤", charm: "✧",
+    ember: "♨", aegis: "⛨", hawk: "⌁", frost: "❄", blood: "✣", scrap: "◆", seals: "⬢", sigils: "✦"
+  };
+  return icons[name] || "◇";
 }
-function weaponPanel(view) {
-  const selected = game.gear.weapon;
-  const weapon = WEAPONS[selected.base];
-  const choices = game.bag.filter(i => i.slot === "weapon");
-  const gear = '<div class="equipment-name">' + escapeHtml(itemTitle(selected)) + "</div>" +
-    '<p class="muted">' + escapeHtml(weapon.description) + "</p>" +
-    '<div class="tags">' + chip("Permanent: " + weapon.attack, "gold") + chip(weapon.type) +
-    chip((view.intervalMs / 1000).toFixed(2) + "s interval") + chip(selected.rarity) + "</div>" +
-    '<p class="micro">Weapon mastery (persists when swapping): ' + Object.entries(game.mastery).map(([key, n]) => escapeHtml(WEAPONS[key].name) + " " + n).join(" · ") + '. Every 50 attacks grants +2% to that family’s primary (max +6%).</p>';
-  const items = choices.map(i => '<div class="itemline"><span>' + escapeHtml(itemTitle(i)) + "</span>" +
-    '<button data-action="equip" data-id="' + i.id + '">Equip</button></div>').join("");
-  return panel("Your weapon", gear + '<h3>Try another style</h3>' + (items || '<p class="muted">No spare weapons in your bag.</p>'), "weapon");
+function nav() {
+  const tabs = [["battle", "The Hunt"], ["build", "Build & Gear"], ["forge", "The Forge"]];
+  return '<nav class="main-nav" aria-label="Prototype sections">' + tabs.map(([id, label]) =>
+    '<button class="nav-tab ' + (selectedTab === id ? "active" : "") + '" data-tab="' + id + '">' + esc(label) + "</button>").join("") +
+    '<a class="nav-tab original-link" href="/">Original Godscar</a></nav>';
 }
-function conduitPanel(view) {
-  const available = availableSkillIds(game);
-  const slots = CONDUIT_LEVELS.map((level, index) => {
-    if (index >= view.unlocked) return '<div class="conduit locked"><span class="slot-number">0' + (index + 1) + '</span><div><strong>Locked conduit</strong><small>Unlocks at level ' + level + "</small></div></div>";
-    const id = game.conduits[index], active = !!id && available.includes(id);
-    const choices = option("", "Empty", !id) + available.map(skillId => option(skillId, SKILLS[skillId].name, skillId === id)).join("") +
-      (id && !available.includes(id) ? option(id, SKILLS[id]?.name + " (source missing)", true) : "");
-    const supportChoices = id && active ? option("", "No support", !game.supports[id]) +
-      supportsFor(id).map(s => option(s.id, s.name, game.supports[id] === s.id)).join("") : "";
-    return '<div class="conduit"><span class="slot-number">0' + (index + 1) + "</span><div class='conduit-body'>" +
-      '<label for="skill-' + index + '">Autocast ability</label>' +
-      '<select id="skill-' + index + '" data-change="assign" data-slot="' + index + '">' + choices + "</select>" +
-      (id ? '<small>' + escapeHtml(SKILLS[id]?.description || "Unknown ability") + "</small>" : '<small>A free slot. Your weapon still fights.</small>') +
-      (id && active ? '<label class="support-label" for="support-' + index + '">Support modifier · 6 Scrap to add/change</label><select id="support-' + index + '" data-change="support" data-skill="' + id + '">' + supportChoices + "</select>" : "") +
-      (id && !active ? '<p class="warning-text">Item source unavailable. Slot waits for its return.</p>' : "") +
-      "</div></div>";
+function sceneSvg(enemy, boss) {
+  const foe = boss
+    ? '<path d="M804 248l20-40 10 8 16-52 19 38 20-28 10 58 31 16-8 75H794z" fill="#1a1a1b"/><circle cx="843" cy="244" r="4" fill="#db6d62"/><circle cx="873" cy="244" r="4" fill="#db6d62"/><path d="M821 269h56" stroke="#b4564f" stroke-width="5"/>'
+    : '<path d="M815 288q2-43 32-58l17-34 19 35q28 22 30 57l-12 44h-72z" fill="#212528"/><path d="M831 248l16 8m18-8l16-8" stroke="#c88758" stroke-width="4"/><circle cx="852" cy="269" r="5" fill="#d59f63"/>';
+  return '<svg viewBox="0 0 1100 390" role="img" aria-label="A lone hunter faces ' + esc(enemy?.name || "the foe") + ' in a ruined marsh." preserveAspectRatio="xMidYMid slice">' +
+    '<defs><linearGradient id="sky" x2="0" y2="1"><stop stop-color="#273a43"/><stop offset=".58" stop-color="#6d5947"/><stop offset="1" stop-color="#292b28"/></linearGradient><linearGradient id="mist" x2="0" y2="1"><stop stop-color="#b49a70" stop-opacity=".05"/><stop offset="1" stop-color="#bcc1aa" stop-opacity=".26"/></linearGradient></defs>' +
+    '<rect width="1100" height="390" fill="url(#sky)"/><circle cx="548" cy="100" r="49" fill="#d2b985" opacity=".68"/><path d="M0 220L140 112l113 104 155-143 149 155 144-120 158 120 124-128 107 106v104H0z" fill="#303938" opacity=".95"/><path d="M0 255l159-66 130 79 146-84 167 100 164-78 166 73 168-88v99H0z" fill="#45443b"/><path d="M137 260v-98l25-21 24 21v98m0-67h43v67m531 2V132l40-34 44 34v131m-79-63h77" fill="none" stroke="#292d2b" stroke-width="14" opacity=".86"/><path d="M0 260q180-22 320 9t279-3 501 3v121H0z" fill="url(#mist)"/><path d="M0 333q185-25 334 2t310-3 456 10v48H0z" fill="#252927"/><path d="M180 337l22-89 18 51 28-73 15 118m572-9 26-90 17 45 24-79 18 121" fill="#202522"/><path d="M540 63l57 90" stroke="#a8504a" stroke-width="9" opacity=".78"/>' +
+    '<g transform="translate(0 0)"><circle cx="369" cy="227" r="20" fill="#c2aa86"/><path d="M349 222q9-38 38-7l-4 16h-31z" fill="#283037"/><path d="M349 250q20-15 39 0l15 70-13 26h-44l-9-27z" fill="#30373b"/><path d="M357 275l-32 42m57-36 35 27m-49 10-17 47m34-46 23 46" stroke="#b7a281" stroke-width="12" stroke-linecap="round"/><path d="M403 286l42-53" stroke="#d0bd93" stroke-width="6"/><path d="M439 247l10-22 5 20" fill="#d0bd93"/></g>' + foe +
+    '<rect width="1100" height="390" fill="#0c1415" opacity=".15"/></svg>';
+}
+function meter(label, value, max, kind = "health") {
+  const percent = Math.max(0, Math.min(100, max ? value / max * 100 : 0));
+  return '<div class="meter ' + kind + '"><div class="meter-caption"><span>' + esc(label) + '</span><b>' + Math.round(value) + ' / ' + Math.round(max) + '</b></div><div class="meter-track"><i style="width:' + percent + '%"></i></div></div>';
+}
+function topbar(view) {
+  return '<header class="topbar"><div class="brand"><div class="brand-mark"><i></i></div><div><div class="brand-name">GODSCAR</div><div class="brand-sub">THE LIVING ARSENAL <span>·</span> PLAYABLE PROTOTYPE</div></div></div>' + nav() +
+    '<div class="top-resource"><span>◆</span> ' + game.materials.scrap + ' <small>scrap</small></div></header>' +
+    '<div class="page-title"><div><div class="eyebrow">' + esc(HUNTS[game.hunt].region) + ' <span> / </span> Character ' + game.level + '</div><h1>' + esc(HUNTS[game.hunt].name) + '</h1></div><div class="p-title-right"><span class="session-state"><i></i> AUTO-HUNTING</span><span class="counter">' + game.kills + ' kills</span></div></div>';
+}
+function battlePanel(view) {
+  const enemy = game.enemy;
+  const hunt = HUNTS[game.hunt];
+  const hpPercent = enemy ? Math.max(0, enemy.hp / enemy.maxHp * 100) : 0;
+  const latest = game.log.slice(-3).reverse();
+  return '<section class="battle-card panel"><div class="battle-head"><div><span class="section-kicker">CURRENT ENCOUNTER</span><h2>' + esc(enemy?.name || "Returning foe") + (enemy?.boss ? '<span class="boss-mark">BOSS</span>' : "") + '</h2><p>' + esc(hunt.region) + ' <span class="dot-sep">·</span> ' + (enemy?.boss ? "Named encounter" : "Hunt in progress") + '</p></div><div class="enemy-health">' + meter("FOE VITALITY", Math.max(0, enemy?.hp || 0), enemy?.maxHp || 1, "enemy") + '</div></div>' +
+    '<div class="scene" data-hp="' + hpPercent + '">' + sceneSvg(enemy, enemy?.boss) + '<div class="scene-vignette"></div><div class="scene-legend"><span class="legend-hero"><i></i> YOUR WARDEN</span><span class="legend-foe"><i></i> ' + esc(enemy?.name || hunt.enemy).toUpperCase() + '</span></div><div class="scene-callout"><span class="callout-symbol">' + icon("weapon") + '</span><div><small>WEAPON ART</small><b>' + esc(view.weaponArt) + '</b><span>Every ' + view.weaponArtEvery + 'th primary hit</span></div></div></div>' +
+    '<div class="fight-foot"><div class="hero-health">' + meter("WARDEN VITALITY", game.health, view.healthMax, "health") + '<div class="micro-stats"><span>Shield ' + Math.round(game.shield) + '</span><span>Armor ' + view.armor + '</span><span>' + (view.intervalMs / 1000).toFixed(2) + 's attack</span></div></div>' +
+    '<div class="fight-cycle"><div class="cycle-icon">↻</div><div><b>Automatic combat</b><small>Weapon, arts and assigned powers fire while you manage your build.</small></div></div></div>' +
+    '<div class="hunt-strip"><div class="strip-label">CHOOSE A HUNT</div><div class="hunt-options">' + Object.entries(HUNTS).map(([key, option]) => {
+      const locked = game.level < option.level;
+      return '<button class="hunt-option ' + (game.hunt === key ? "selected" : "") + '" data-action="hunt" data-hunt="' + key + '" ' + (locked ? "disabled" : "") + '><span class="hunt-emblem">' + (option.boss ? "♜" : key === "rift" ? "◈" : "♧") + '</span><span><b>' + esc(option.name) + '</b><small>' + esc(locked ? "Opens at level " + option.level : option.description) + '</small></span>' + (game.hunt === key ? '<i class="hunt-live">HUNTING</i>' : "") + '</button>';
+    }).join("") + '</div></div><div class="battle-log"><span class="section-kicker">RECENT BATTLE LEDGER</span><ol>' + (latest.length ? latest.map(entry => '<li class="' + esc(entry.kind) + '"><i></i>' + esc(entry.message) + '</li>').join("") : '<li><i></i>The first strike is moments away.</li>') + '</ol></div></section>';
+}
+function buildPanel(view) {
+  const currentWeapon = game.gear.weapon;
+  const weapon = WEAPONS[currentWeapon.base];
+  const active = view.activeSkills;
+  const slots = CONDUIT_LEVELS.map((unlock, index) => {
+    const unlocked = game.level >= unlock;
+    const id = game.conduits[index];
+    const options = '<option value="">Empty</option>' + availableSkillIds(game).map(skillId => '<option value="' + skillId + '" ' + (skillId === id ? "selected" : "") + '>' + esc(SKILLS[skillId].name) + '</option>').join("");
+    if (!unlocked) return '<div class="ability-row locked"><span class="ability-icon">' + String(index + 1).padStart(2, "0") + '</span><span class="ability-copy"><b>Sealed conduit</b><small>Opens at level ' + unlock + '</small></span><span class="lock-etch">LOCKED</span></div>';
+    return '<div class="ability-row ' + (id && active.includes(id) ? "assigned" : "") + '"><span class="ability-icon">' + (id ? icon(id) : String(index + 1).padStart(2, "0")) + '</span><span class="ability-copy"><select data-change="assign" data-slot="' + index + '" aria-label="Assign ability slot ' + (index + 1) + '">' + options + '</select><small>' + (id ? esc(SKILLS[id].description) : "Weapon art remains active without a conduit.") + '</small></span><span class="auto-tag">AUTO</span></div>';
   }).join("");
-  return panel("Autocast conduits", '<p class="muted">Your primary attack is always active. These are additional, automatically triggered powers, not buttons to press.</p>' +
-    '<div class="conduits">' + slots + "</div>");
+  const wardenPieces = Object.values(game.gear).filter(it => it?.set === "warden").length;
+  return '<section class="panel build-panel"><div class="panel-head"><div><span class="section-kicker">BUILD ENGINE</span><h2>Your Arsenal</h2></div><span class="set-counter">' + (wardenPieces ? 'WARDEN ' + wardenPieces + '/2' : 'FIELD KIT') + '</span></div>' +
+    '<div class="weapon-feature"><div class="weapon-sigil">' + icon("weapon") + '<span></span></div><div class="weapon-main"><small>EQUIPPED WEAPON</small><h3>' + esc(itemTitle(currentWeapon)) + '</h3><p>' + esc(weapon.description) + '</p><div class="weapon-tags"><span>' + esc(weapon.type.toUpperCase()) + '</span><span>' + (view.intervalMs / 1000).toFixed(2) + ' SEC</span><span>' + view.masteryCount + ' MASTERY</span></div></div></div>' +
+    '<div class="weapon-art-row"><span class="art-crest">✦</span><div><small>WEAPON-BOUND ART</small><b>' + esc(weapon.art) + '</b><span>Only this weapon family can call it.</span></div><span class="art-trigger">' + weapon.artEvery + '<small>HITS</small></span></div>' +
+    '<div class="conduit-title"><span>LEARNED POWERS</span><small>' + active.length + ' / ' + view.unlocked + ' ACTIVE</small></div><div class="ability-list">' + slots + '</div>' +
+    '<div class="xp-block"><div class="xp-top"><span>CHARACTER GROWTH</span><b>LV ' + game.level + '</b></div><div class="meter-track xp"><i style="width:' + view.xpPercent + '%"></i></div><small>' + game.xp + ' / ' + view.xpNeeded + ' XP <span>· next conduit milestones at 2 / 5 / 10 / 18 / 30</span></small></div></section>';
+}
+function gearPanel() {
+  const slots = Object.entries(SLOT_LABELS);
+  const rows = slots.map(([key, label]) => {
+    const item = game.gear[key];
+    const options = game.bag.filter(found => found.slot === key).map(found => '<button class="mini-action" data-action="equip" data-id="' + esc(found.id) + '" title="Equip ' + esc(itemTitle(found)) + '">⇄</button>').join("");
+    return '<div class="gear-row"><span class="gear-icon">' + icon(key) + '</span><div class="gear-desc"><small>' + esc(label) + '</small><b class="' + (item ? rarity(item) : "empty") + '">' + (item ? esc(itemTitle(item)) : "Empty") + '</b><span>' + (item ? esc(affixLine(item)) : "Find a drop to fill this slot") + '</span></div>' + options + '</div>';
+  }).join("");
+  return '<section class="panel gear-panel"><div class="panel-head"><div><span class="section-kicker">EQUIPPED KIT</span><h2>Field Gear</h2></div><span class="gear-count">' + Object.values(game.gear).filter(Boolean).length + ' pieces</span></div><div class="gear-grid">' + rows + '</div><div class="set-note"><span>✦</span><div><b>Ashen Warden regalia</b><small>Collect 2 marked armor pieces for +6 Armor. Set progress stays visible here.</small></div><strong>' + wardenCount() + '/2</strong></div></section>';
+}
+function wardenCount() { return Object.values(game.gear).filter(it => it?.set === "warden").length; }
+function inventoryPanel() {
+  const items = game.bag.map(it => '<article class="loot-card ' + rarity(it) + (it.locked ? " locked-item" : "") + '"><div class="loot-icon">' + icon(it.slot) + '</div><div class="loot-info"><div class="loot-title ' + rarity(it) + '">' + esc(itemTitle(it)) + '</div><small>' + esc(SLOT_LABELS[it.slot] || it.slot) + ' <span>·</span> ' + esc(affixLine(it)) + '</small></div><div class="loot-buttons"><button data-action="equip" data-id="' + esc(it.id) + '">Equip</button><button class="quiet" data-action="lock" data-id="' + esc(it.id) + '" aria-label="' + (it.locked ? "Unlock" : "Lock") + ' item">' + (it.locked ? "◆" : "◇") + '</button><button class="quiet" data-action="salvage" data-id="' + esc(it.id) + '" ' + (it.locked ? "disabled" : "") + '>Salvage</button></div></article>').join("");
+  const vault = game.vault.map(it => '<div class="reserve-row"><span class="rarity-dot rare"></span><b>' + esc(itemTitle(it)) + '</b><button data-action="claim" data-id="' + esc(it.id) + '">Recover</button></div>').join("");
+  return '<section class="panel loot-panel"><div class="panel-head"><div><span class="section-kicker">FIELD FINDS</span><h2>Recovered Loot</h2></div><span class="bag-count">' + game.bag.length + ' / ' + BAG_CAPACITY + '</span></div><p class="panel-intro">The fight keeps going. Compare a drop, equip it, lock it, or break it down at the Forge.</p>' +
+    (game.lootPaused ? '<div class="notice">Your bag and reserve are full. New gear rolls are paused; your hunt still earns XP and materials.</div>' : "") +
+    '<div class="loot-list">' + (items || '<div class="empty-state">No loose gear. The next find is already on its way.</div>') + '</div><div class="reserve-head">PROTECTED RESERVE <span>' + game.vault.length + ' / ' + VAULT_CAPACITY + '</span></div>' + (vault || '<small class="muted">Rare overflow waits here safely.</small>') + '</section>';
 }
 function forgePanel() {
-  const weapon = game.gear.weapon, next = weapon.rarity === "white" ? "Magic" : "Rare";
-  const eligible = weapon.rarity !== "rare";
+  const weapon = game.gear.weapon;
+  const next = weapon.rarity === "white" ? "Magic" : "Rare";
   const price = weapon.rarity === "white" ? "8 Scrap" : "24 Scrap + 2 Seals";
-  const forge = '<div class="forge-row"><p>Refine the equipped ' + escapeHtml(WEAPONS[weapon.base].name) + " into " + next + " while preserving its attack and old stats.</p>" +
-    '<div class="buttonrow">' + (eligible ? ['sharp', 'quick', 'vigor'].map(focus => '<button data-action="refine" data-focus="' + focus + '">' + ({ sharp: "Offense", quick: "Speed", vigor: "Survival" }[focus]) + "</button>").join("") : chip("Already Rare")) + "</div>" +
-    '<p class="micro">Cost: ' + (eligible ? price : "none") + '. Current affixes: ' + (weapon.affixes.length ? weapon.affixes.map(escapeHtml).join(", ") : "none") + ".</p></div>";
+  const enabled = weapon.rarity !== "rare" && game.materials.scrap >= (weapon.rarity === "white" ? 8 : 24) && (weapon.rarity === "white" || game.materials.seals >= 2);
   const charm = game.gear.charm;
-  const engrave = '<div class="forge-row"><p><strong>Charm engraving</strong> grants an ability while the charm is equipped. Choose the style, then assign it to an unlocked conduit.</p>' +
-    '<div class="buttonrow"><button data-action="engrave" data-skill="frost">Engrave Frost Lance</button>' +
-    '<button data-action="engrave" data-skill="blood">Engrave Blood Mark</button></div>' +
-    '<p class="micro">Current: ' + escapeHtml(charm.engraving ? SKILLS[charm.engraving].name : "none") + '. Cost: ' + (charm.engraving ? "2" : "1") + ' Sigil + 5 Scrap.</p></div>';
-  return panel("The Forge", '<p class="muted">Every operation happens while you continue fighting. These early recipes preserve your item instead of risking total destruction.</p>' + forge + engrave);
+  return '<section class="panel forge-panel"><div class="panel-head"><div><span class="section-kicker">CRAFT WITH INTENT</span><h2>The Forge</h2></div><span class="forge-flame">♨</span></div>' +
+    '<div class="recipe-card"><div class="recipe-title"><span class="recipe-icon">⚒</span><div><small>WEAPON REFINEMENT</small><b>' + esc(itemTitle(weapon)) + '</b></div></div><p>Promote this exact base to ' + next + '. Choose the property; its weapon art and mastery stay with it.</p><div class="recipe-options">' +
+    ['sharp', 'quick', 'vigor'].map(key => '<button data-action="refine" data-focus="' + key + '" ' + (!enabled ? "disabled" : "") + '><b>' + esc(AFFIXES[key].name) + '</b><small>' + esc(AFFIXES[key].detail) + '</small></button>').join("") +
+    '</div><div class="recipe-cost">COST <b>' + (weapon.rarity === "rare" ? "Already Rare" : price) + '</b><span>' + game.materials.scrap + ' Scrap · ' + game.materials.seals + ' Seals available</span></div></div>' +
+    '<div class="recipe-card engraving"><div class="recipe-title"><span class="recipe-icon">✦</span><div><small>CHARM ENGRAVING</small><b>' + esc(itemTitle(charm)) + '</b></div></div><p>Find a Sigil, choose an inscription, then assign it to an open conduit.</p><div class="recipe-options">' +
+    ['frost', 'blood'].map(id => '<button data-action="engrave" data-skill="' + id + '" ' + (game.materials.sigils < (charm.engraving ? 2 : 1) || game.materials.scrap < 5 ? "disabled" : "") + '><b>' + esc(SKILLS[id].name) + '</b><small>' + (charm.engraving === id ? "Currently inscribed" : esc(SKILLS[id].description)) + '</small></button>').join("") +
+    '</div><div class="recipe-cost">COST <b>' + (charm.engraving ? "2 Sigils + 5 Scrap" : "1 Sigil + 5 Scrap") + '</b><span>' + game.materials.sigils + ' Sigils available</span></div></div></section>';
 }
-function inventoryPanel() {
-  const bag = game.bag.map(i => '<div class="itemline"><div><strong>' + escapeHtml(itemTitle(i)) + "</strong>" +
-    (i.engraving ? '<small>Grants ' + escapeHtml(SKILLS[i.engraving].name) + "</small>" : "") + "</div>" +
-    '<div class="buttonrow"><button data-action="equip" data-id="' + i.id + '">Equip</button><button class="secondary" data-action="lock" data-id="' + i.id + '">' + (i.locked ? "Unlock" : "Lock") + '</button><button class="secondary" data-action="salvage" data-id="' + i.id + '" ' + (i.locked ? "disabled" : "") + '>Salvage</button></div></div>').join("");
-  const reserve = game.vault.map(i => '<div class="itemline">' + escapeHtml(itemTitle(i)) + '<button data-action="claim" data-id="' + i.id + '">Claim</button></div>').join("");
-  return panel("Found equipment", '<p class="muted">Bag: ' + game.bag.length + "/" + BAG_CAPACITY + " · Protected reserve: " +
-    game.vault.length + "/" + VAULT_CAPACITY + '. No rare item is silently destroyed. If storage fills, item rolls pause but XP and materials continue.</p>' +
-    (game.lootPaused ? '<p class="warning-text">Equipment rolls paused by storage limits. Clear space to resume them.</p>' : "") +
-    (bag || '<p class="muted">The bag is empty.</p>') +
-    '<h3>Protected reserve</h3>' + (reserve || '<p class="muted">No protected items waiting.</p>'));
-}
-function huntPanel(view) {
-  const hunting = Object.entries(HUNTS).map(([key, h]) => {
-    const locked = game.level < h.level;
-    return '<button class="hunt-option ' + (game.hunt === key ? "selected" : "") + '" data-action="hunt" data-hunt="' + key +
-      '" ' + (locked ? "disabled" : "") + '><strong>' + escapeHtml(h.name) + "</strong><small>" + escapeHtml(locked ? "Unlocks level " + h.level : h.description) + "</small></button>";
-  }).join("");
-  return panel("World paths", '<p class="muted">The safe hunt never locks. Advance for rarer crafting resources or return to recover.</p>' +
-    '<div class="hunt-options">' + hunting + '</div><div class="enemy-bar"><strong>' + escapeHtml(game.enemy?.name || "Enemy respawning") +
-    '</strong><span>' + (game.enemy ? Math.max(0, Math.ceil(game.enemy.hp)) + "/" + game.enemy.maxHp : "Respawning") +
-    '</span></div><div class="bar"><div style="width:' + (game.enemy ? Math.max(0, game.enemy.hp / game.enemy.maxHp * 100) : 0) + '%"></div></div>');
-}
-function activityPanel() {
-  const lines = game.log.slice(-12).reverse().map(e =>
-    '<li><span>' + formatTime(e.timeMs) + '</span><span class="' + escapeHtml(e.kind) + '">' + escapeHtml(e.message) + "</span></li>").join("");
-  return panel("The combat ledger", '<p class="muted">Passive attacks, triggers and discoveries are recorded here.</p><ol class="ledger">' + lines + "</ol>");
+function economy() {
+  return '<section class="material-strip"><div><span class="material-icon scrap">◆</span><span><small>SCRAP</small><b>' + game.materials.scrap + '</b></span><small>Common salvage</small></div><div><span class="material-icon seals">⬢</span><span><small>SEALS</small><b>' + game.materials.seals + '</b></span><small>Rare refinement</small></div><div><span class="material-icon sigils">✦</span><span><small>SIGILS</small><b>' + game.materials.sigils + '</b></span><small>Ability engraving</small></div></section>';
 }
 function render() {
   const view = summarize(game);
-  const heroHealth = Math.max(0, Math.round(game.health));
-  const currentMax = view.healthMax;
-  root.innerHTML = '<div class="page">' +
-    '<header class="hero"><div class="brand"><div class="brand-glyph" aria-hidden="true">G<span>O</span>DSCAR</div>' +
-    '<p>THE LIVING ARSENAL <span class="separator">/</span> PLAYABLE SYSTEMS LAB</p></div>' +
-    '<a class="original-link" href="/">Original browser game</a></header>' +
-    '<div class="intro"><div><p class="eyebrow">A wider world. An unending fight.</p><h1>Build the fight that fights for you.</h1>' +
-    '<p>White weapons always attack. Find or forge more automatic powers, choose your path, and change direction without losing the road behind you.</p></div>' +
-    '<div class="world-sigil" aria-hidden="true"><span class="sigil-ring"></span><span class="sigil-core">✧</span></div></div>' +
-    '<section class="status-strip"><div><small>CHARACTER</small><b>Level ' + game.level + '</b><span>' + game.xp + '/' + view.xpNeeded + ' XP</span></div>' +
-    '<div><small>LIFE / SHIELD</small><b>' + heroHealth + '/' + currentMax + '</b><span>Shield ' + Math.round(game.shield) + "</span></div>" +
-    '<div><small>CRAFTING</small><b>' + game.materials.scrap + ' Scrap</b><span>' + game.materials.seals + ' Seals · ' + game.materials.sigils + ' Sigils</span></div>' +
-    '<div><small>CONTINUOUS COMBAT</small><b>' + game.kills + ' kills</b><span>' + formatTime(game.timeMs) + ' simulated · ' + game.deaths + ' recoveries</span></div></section>' +
-    (notice ? '<div class="notice" role="status">' + escapeHtml(notice) + '</div>' : "") +
-    '<div class="column-layout"><div class="column">' + weaponPanel(view) + huntPanel(view) + "</div>" +
-    '<div class="column">' + conduitPanel(view) + forgePanel() + "</div>" +
-    '<div class="column">' + inventoryPanel() + activityPanel() + "</div></div>" +
-    '<footer><p>Experimental V2 vertical slice. The original game is untouched. Offline catch-up is capped at 4h in this lab. All numbers, world names and balance are provisional.</p></footer>' +
-    "</div>";
+  root.innerHTML = '<div class="app-frame">' + topbar(view) +
+    (notice ? '<div class="notice global-notice" role="status">' + esc(notice) + '</div>' : "") +
+    (selectedTab === "battle" ? '<main class="main-layout"><div class="primary-column">' + battlePanel(view) + economy() + inventoryPanel() + '</div><aside class="side-column">' + buildPanel(view) + gearPanel() + forgePanel() + '</aside></main>' :
+     selectedTab === "build" ? '<main class="tab-layout"><div class="side-column">' + buildPanel(view) + gearPanel() + '</div><div class="primary-column">' + inventoryPanel() + economy() + '</div></main>' :
+     '<main class="tab-layout"><div class="primary-column">' + forgePanel() + economy() + '</div><div class="side-column">' + buildPanel(view) + gearPanel() + '</div></main>') +
+    '<footer class="site-footer"><span>GODSCAR · LIVING ARSENAL EXPERIMENT</span><span>Browser-local save · Offline catch-up capped at 4h · Balance provisional</span></footer></div>';
 }
-
 function send(command) {
   const error = action(game, command);
   notice = error || "";
@@ -149,19 +159,17 @@ function send(command) {
   render();
 }
 root.addEventListener("click", event => {
+  const tab = event.target.closest("[data-tab]");
+  if (tab) { selectedTab = tab.dataset.tab; render(); return; }
   const button = event.target.closest("[data-action]");
   if (!button || button.disabled) return;
-  const type = button.dataset.action;
-  const command = { type };
+  const command = { type: button.dataset.action };
   for (const key of ["id", "hunt", "focus", "skill"]) if (button.dataset[key]) command[key] = button.dataset[key];
   send(command);
 });
 root.addEventListener("change", event => {
   const control = event.target.closest("[data-change]");
-  if (!control) return;
-  const type = control.dataset.change;
-  if (type === "assign") send({ type: "assign", slot: Number(control.dataset.slot), skill: control.value || null });
-  else if (type === "support") send({ type: "support", skill: control.dataset.skill, support: control.value || null });
+  if (control?.dataset.change === "assign") send({ type: "assign", slot: Number(control.dataset.slot), skill: control.value || null });
 });
 window.addEventListener("pagehide", persist);
 setInterval(() => {
@@ -170,7 +178,7 @@ setInterval(() => {
   lastFrame = now;
   advance(game, elapsed);
   persist();
-  if (now - lastUiPaint >= 1000 && document.activeElement?.tagName !== "SELECT") {
+  if (now - lastUiPaint >= 900 && document.activeElement?.tagName !== "SELECT") {
     lastUiPaint = now;
     render();
   }
