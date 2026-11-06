@@ -1,5 +1,7 @@
 # Godscar design intent, owner direction, and how to clarify design
 
+> **2026-11-06 current direction:** The Living Arsenal is now the core of Godscar. The weapon's primary always attacks and loot, crafting and progression provide up to 5 other automatic abilities. Changing playstyles must remain possible without permanent dead-ends, but significant investments and risk matter. World identity should be brighter and more adventurous without losing the Godscar wound. Read [PROGRESSION-V2.md](PROGRESSION-V2.md) and [VISUAL-DIRECTION-V2.md](VISUAL-DIRECTION-V2.md). This supersedes older assumptions that the existing item system is final.
+
 This is an **intent document**, not a comprehensive approved game design document. Separate confirmed direction from ideas and current code behavior. The owner wants honest feasibility advice and design decisions that make sense to a future human contributor.
 
 ## Confirmed central experience

@@ -1,5 +1,12 @@
 # Godscar project changelog and handoff history
 
+## 2026-11-06 PT — Living Arsenal is the owner-approved foundation
+- **Owner direction:** Weapon innate autocast + 1–5 supplemental autonomous abilities, experimentation without permanent dead-ends, optional intentional risk, deliberate build investment and brighter adventurous fantasy. Old prototype saves/progress need not be migrated to the new design.
+- **Docs:** `docs/PROGRESSION-V2.md`, `docs/VISUAL-DIRECTION-V2.md`, `docs/{DECISIONS,DESIGN-INTENT,visual_identity,PROJECT-STATE,OPEN-QUESTIONS,CHANGELOG}.md`.
+- **Code/deployment:** Documentation-only on current approved browser branch. No existing gameplay changes, no new saved-game incompatibility. Prototype implementation is a separate next step.
+- **Next:** Implement and test small interactive vertical slice with white base, 1–5 ability capacity, craftable items and guaranteed baseline progression; assess gameplay with owner before expanding content.
+
+
 ## 2026-11-06 PT — Living Arsenal itemization redesign concept
 - **Why:** Owner requested a comprehensive rethink inspired by Path of Exile, Grim Dawn and Diablo, preserving automatic white-weapon attacks and adding 1–5 modifiable autonomous abilities from items, crafting, loot and progression.
 - **Change:** New `docs/proposals/LIVING-ARSENAL-ITEMIZATION-V2.md` with system definitions, weapon identities, ability sources, Conduits, modified skills/supports, white-to-rare crafting, named items, targeted drops, idle event rules, example build, migration risks, rollout and decision questions; `docs/PROJECT-STATE.md`, `docs/DECISIONS.md`, `docs/OPEN-QUESTIONS.md` updated for continuity.

@@ -4,6 +4,8 @@
 **Read this before every work session, and update it in the same commit as EACH change set.** This document is a snapshot; re-check HEAD, workflows, Railway and live site rather than treating old statuses as current.
 
 ## Product identity
+**2026-11-06 direction update:** Owner adopted the Living Arsenal as the core of the game and approved reworking mechanics without retaining prototype saves/progress. Permanent white-weapon attack + 1–5 gear/crafting/progression-derived automatic abilities, meaningful but recoverable investments, and a brighter adventurous tone. The original browser remains the stable playable baseline; V2 not yet integrated. Read `docs/PROGRESSION-V2.md` and `docs/VISUAL-DIRECTION-V2.md`.
+
 Godscar is a phone-first dark fantasy **continuous-combat idle ARPG**, potentially an online RPG in later phases. The current approved experience is Claude's original browser version, **not the custom Godot port**. The owner confirmed the live browser preview matches the direction they intended.
 
 ## Current source of truth
@@ -47,6 +49,7 @@ Godscar is a phone-first dark fantasy **continuous-combat idle ARPG**, potential
 5. Improve clarity and structure incrementally, preserving reproducible combat behavior.
 
 ## Latest completed activity
+- 2026-11-06 PT: owner confirmed Living Arsenal core, no-stuck progression and brightened world direction. Authored V2 progression + visual direction design specs with provisional milestones, economy and implementation tests. Legacy game source currently unaffected.
 - 2026-11-06 PT: proposed `docs/proposals/LIVING-ARSENAL-ITEMIZATION-V2.md` after owner requested a new item/crafting/loot system: white weapon's innate automated action plus up to five additional automatic abilities from gear, loot, crafting and progression. Design is **proposal only** except this confirmed direction. No code changes, no player migration, no new abilities implemented. Review unresolved design choices before coding.
 - 2026-11-05 PT: documented every implemented item/equipment subsystem in `docs/ITEMS-AND-EQUIPMENT.md` with an I01–I17 Keep/Change/Unsure review register, precise current behavior, and unverified implementation concerns. **No owner design decisions have been recorded from this review yet. No gameplay source changed.**
 - 2026-11-05 PT: hardened handoff CI to inspect each commit in ordinary multi-commit pushes; published GitHub Copilot onboarding on the active branch. No gameplay source changed.

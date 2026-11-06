@@ -1,5 +1,7 @@
 # Godscar visual identity
 
+> **2026-11-06 new owner direction:** Brighten Godscar overall; more adventurous landscape and approachable legibility, balancing dark fantasy and IdleArc-inspired accessibility. Keep the scar as a distinct corruption contrast, not the default hue of every screen. See [VISUAL-DIRECTION-V2.md](VISUAL-DIRECTION-V2.md). Existing logo selection remains historically approved, but any revision needs review.
+
 Status: **selected** (2026-10-30) by project owner.
 
 ## Official title treatment
