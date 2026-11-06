@@ -1,5 +1,14 @@
 # Godscar project changelog and handoff history
 
+## 2026-11-05 PT — Complete equipment system inventory for owner review
+- **What / why:** Extracted actual browser-code item mechanics into a human-readable, source-indexed reference covering all equipment slots, weapon bases, rarities, 28 affix keys, enchants, augments, Ascended sets, Jewels, drops, inventory, item comparison, crafting, forge, bosses and saves. Added I01–I17 owner review IDs with all decisions remaining UNSURE.
+- **Files:** `docs/ITEMS-AND-EQUIPMENT.md`, `docs/PROJECT-STATE.md`, `docs/CHANGELOG.md`, `docs/OPEN-QUESTIONS.md`.
+- **Game impact:** None; original browser source and UI untouched.
+- **Validation:** Compared documented rules to original source. Remote GitHub commit/CI/deployment must be separately verified; this documentation is not proof of mobile gameplay quality.
+- **Concerns flagged:** Inventory full auto-salvage, rarity distributions, extremely rare Jewels, potentially incorrect crafting level cap from locked-zone initial stages, and item comparison limits.
+- **Next:** Owner reviews any subset of I01–I17 and explicitly marks Keep / Change / Unsure; record confirmed decisions before editing mechanics.
+
+
 ## 2026-11-05 PT — Make handoff checks cover full pushes and connect GitHub Copilot
 - **What / why:** Tightened the handoff script so multi-commit pushes are checked commit-by-commit when GitHub supplies the previous SHA; added GitHub Copilot instructions on the active branch and linked onboarding from the preview README.
 - **Paths:** `scripts/check-handoff.mjs`, `.github/workflows/handoff.yml`, `.github/copilot-instructions.md`, `README-PREVIEW.md`, `docs/PROJECT-STATE.md`, `docs/CHANGELOG.md`.
