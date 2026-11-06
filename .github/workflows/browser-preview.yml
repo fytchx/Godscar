@@ -1,0 +1,47 @@
+name: Godscar original browser preview checks
+
+on:
+  push:
+    branches: [preview/browser]
+    paths:
+      - 'web/**'
+      - 'preview/**'
+      - 'package.json'
+      - '.github/workflows/browser-preview.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  original-game:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify original game logic tests
+        run: npm test
+      - name: Build the preserved browser version
+        run: npm run build
+      - name: Serve and smoke-test the full game page
+        shell: bash
+        run: |
+          set -euo pipefail
+          PORT=3105 node preview/server.mjs &
+          trap 'kill $! 2>/dev/null || true' EXIT
+          for i in $(seq 1 20); do
+            curl -fsS http://127.0.0.1:3105/health > /tmp/godscar-health.json && break
+            sleep 1
+          done
+          node -e "const h=require('/tmp/godscar-health.json');if(h.status!=='ok'||h.serverAuthoritative)process.exit(1)"
+          curl -fsS http://127.0.0.1:3105/ > /tmp/godscar-browser.html
+          node -e "const fs=require('fs');const s=fs.readFileSync('/tmp/godscar-browser.html','utf8');for(const k of ['GODSCAR SIM CORE','The Ashen Hollow','Scarbound Jewel','Fight','Forge']){if(!s.includes(k))throw Error('Missing original feature: '+k)};if(s.includes('/*__SIM__*/')||s.includes('/*__UI__*/'))throw Error('Unbuilt page')"
+      - name: Upload standalone original browser game
+        uses: actions/upload-artifact@v4
+        with:
+          name: Godscar-Original-Browser-Preview
+          path: web/dist/index.html
+          retention-days: 30
