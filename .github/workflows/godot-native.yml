@@ -26,5 +26,12 @@ jobs:
         run: godot --headless --path godot --editor --quit
       - name: Run native simulation smoke test
         run: godot --headless --path godot --script res://scripts/smoke_test.gd
-      - name: Validate main scene loads
-        run: godot --headless --path godot --quit-after 8
+      - name: Validate main scene loads with no engine errors
+        shell: bash
+        run: |
+          set -o pipefail
+          godot --headless --path godot --quit-after 8 2>&1 | tee scene.log
+          if grep -Eq '(^|[[:space:]])(ERROR:|SCRIPT ERROR:|Parse Error:)' scene.log; then
+            echo 'Godot logged a scene error.'
+            exit 1
+          fi
