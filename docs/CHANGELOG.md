@@ -1,5 +1,12 @@
 # Godscar project changelog and handoff history
 
+## 2026-11-06 PT — Compare charm damage before first kill
+- **Why:** At the original test checkpoint both builds had killed the same foe; this obscured the expected relative damage. Repositioned comparison at 2s, when both foes still exist.
+- **Paths:** `lab/arsenal/tests.mjs`, `docs/PROJECT-STATE.md`, `docs/CHANGELOG.md`.
+- **Game impact:** None; corrected the assertion scenario, not gameplay code.
+- **Verification:** New feature-branch CI required before merge.
+
+
 ## 2026-11-06 PT — Correct Aegis scenario in Living Arsenal automated test
 - **Why:** First defensive trigger regression was a false failure: the safe meadow monster was killed before making an attack, so the trigger was never exercised.
 - **Change:** Use a Rift Sentinel with sufficient life to hit the player and verify the pre-impact guard actually fires.

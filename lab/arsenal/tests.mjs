@@ -134,9 +134,12 @@ test("charm sharp modifier affects the weapon damage without changing its base",
   const g = createGame(2);
   const before = createGame(2);
   g.gear.charm.affixes.push("sharp");
-  advance(g, 2500);
-  advance(before, 2500);
-  assert.ok(g.enemy?.hp <= before.enemy?.hp || g.kills > before.kills);
+  // Compare after two hits while both foes are alive. By 2500ms both
+  // builds have killed the first foe, masking the actual damage gain.
+  advance(g, 2000);
+  advance(before, 2000);
+  assert.ok(g.enemy && before.enemy);
+  assert.ok(g.enemy.hp < before.enemy.hp);
   assert.equal(g.gear.weapon.base, "sword");
 });
 console.log("Living Arsenal systems lab tests complete.");
