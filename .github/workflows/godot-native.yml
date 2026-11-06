@@ -1,0 +1,30 @@
+name: Godscar Godot native smoke
+
+on:
+  push:
+    paths:
+      - 'godot/**'
+      - '.github/workflows/godot-native.yml'
+  pull_request:
+    paths:
+      - 'godot/**'
+  workflow_dispatch:
+
+jobs:
+  godot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Godot 4.4.1
+        run: |
+          curl -fsSL --retry 3 -o godot.zip https://github.com/godotengine/godot/releases/download/4.4.1-stable/Godot_v4.4.1-stable_linux.x86_64.zip
+          unzip -q godot.zip
+          chmod +x Godot_v4.4.1-stable_linux.x86_64
+          sudo mv Godot_v4.4.1-stable_linux.x86_64 /usr/local/bin/godot
+      - name: Import project headlessly
+        run: godot --headless --path godot --editor --quit
+      - name: Run native simulation smoke test
+        run: godot --headless --path godot --script res://scripts/smoke_test.gd
+      - name: Validate main scene loads
+        run: godot --headless --path godot --quit-after 8
