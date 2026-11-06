@@ -2,6 +2,11 @@
 
 This records what can be established from the repository and identifies where changes belong. See source for exact rules; avoid writing speculative architecture as fact.
 
+## Experimental Living Arsenal lab (feature branch only)
+New `lab/arsenal` isolates an early V2 proof-of-concept from the approved browser game. `catalog.mjs` owns small content tables; `engine.mjs` owns deterministic per-character event scheduling and validated actions; `ui.mjs` handles presentation and an independent browser-local test save. No existing `web/src` combat logic is reused by this lab yet, and that is a deliberate scope limitation, **not a statement that the rewrite is production-ready**. When feature branch is exercised, explicit `/lab/arsenal/` routes in `preview/server.mjs` serve it without replacing `/`.
+
+Before integration, evaluate reuse of old class/target/boss and offline rules against new combat events and measure mobile performance.
+
 ## Runtime and build
 ```text
 web/src/shell.html  (phone-first HTML/CSS)

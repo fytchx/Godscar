@@ -130,6 +130,7 @@ function gainExperience(game, amount) {
       const starters = { 2: "ember", 5: "aegis", 10: "hawk" };
       const skill = starters[game.level];
       if (skill && !game.conduits.includes(skill)) game.conduits[opened] = skill;
+      if (skill === "hawk") game.cooldowns.hawk = game.timeMs + 600;
     } else {
       log(game, "Level " + game.level + ". Character growth is permanent.", "milestone");
     }

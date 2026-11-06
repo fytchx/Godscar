@@ -161,7 +161,7 @@ setInterval(() => {
   lastFrame = now;
   advance(game, elapsed);
   persist();
-  if (now - lastUiPaint >= 1000 && !["SELECT", "BUTTON"].includes(document.activeElement?.tagName)) {
+  if (now - lastUiPaint >= 1000 && document.activeElement?.tagName !== "SELECT") {
     lastUiPaint = now;
     render();
   }

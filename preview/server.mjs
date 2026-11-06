@@ -3,6 +3,17 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 const gameHtml = readFileSync(join(process.cwd(), 'web', 'dist', 'index.html'));
+// Explicit allowlist: this new lab cannot escape its own directory.
+const labDirectory = join(process.cwd(), 'lab', 'arsenal');
+const labAssets = Object.freeze({
+  '/lab/arsenal/': ['index.html', 'text/html; charset=utf-8'],
+  '/lab/arsenal/index.html': ['index.html', 'text/html; charset=utf-8'],
+  '/lab/arsenal/styles.css': ['styles.css', 'text/css; charset=utf-8'],
+  '/lab/arsenal/catalog.mjs': ['catalog.mjs', 'text/javascript; charset=utf-8'],
+  '/lab/arsenal/engine.mjs': ['engine.mjs', 'text/javascript; charset=utf-8'],
+  '/lab/arsenal/ui.mjs': ['ui.mjs', 'text/javascript; charset=utf-8']
+});
+
 const port = Number.parseInt(process.env.PORT || '3000', 10);
 const responseHeaders = {
   'content-type': 'text/html; charset=utf-8',
@@ -26,6 +37,17 @@ const server = createServer((req, res) => {
   }
   if (url.pathname === '/' || url.pathname === '/index.html') {
     res.writeHead(200, responseHeaders).end(req.method === 'HEAD' ? undefined : gameHtml);
+    return;
+  }
+  if (url.pathname === '/lab') {
+    res.writeHead(302, { location: '/lab/arsenal/' }).end();
+    return;
+  }
+  if (Object.hasOwn(labAssets, url.pathname)) {
+    const [fileName, contentType] = labAssets[url.pathname];
+    const content = readFileSync(join(labDirectory, fileName));
+    res.writeHead(200, { ...responseHeaders, 'content-type': contentType })
+       .end(req.method === 'HEAD' ? undefined : content);
     return;
   }
   res.writeHead(404, { 'content-type': 'text/plain; charset=utf-8' }).end('Not found');

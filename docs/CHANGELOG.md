@@ -1,5 +1,14 @@
 # Godscar project changelog and handoff history
 
+## 2026-11-06 PT — Living Arsenal isolated playable lab (feature branch)
+- **Implemented:** A separate deterministic combat engine/catalog, new responsive V2 UI/style, 3 white weapons, 5 milestone-gated conduits, 5 skill definitions, 3 support tags, 2 hunt paths, basic gear swaps, intentional Magic/Rare forging and engraving, safe Scrap/XP income, protected storage. Added `/lab/arsenal/` via explicit allowlisted routes to the existing preview server, on feature branch only.
+- **Paths:** `lab/arsenal/{catalog,engine,ui}.mjs`, `index.html`, `styles.css`, `README.md`, `tests.mjs`, `preview/server.mjs`, `.github/workflows/living-arsenal-lab.yml`, `docs/PROJECT-STATE.md`, `docs/ARCHITECTURE.md`, `docs/CHANGELOG.md`.
+- **Scope:** This is a bounded proof of concept, **not** a full rebuild of the approved browser experience. No existing sim/UI file replaced, no existing saves touched; original root URL untouched. No real online authority, unique items, final balancing, full classes or world chapters.
+- **Validation:** New focused Node tests and route smoke CI to be confirmed on branch; existing browser tests must also pass. Rendering in a physical phone browser has not yet been proven.
+- **Deployment:** Source branch is not connected to Railway's active preview. Host only after branch/CI validation; do not claim this prototype is the default game.
+- **Next:** Test deterministic engine and interface; tune pacing and reconcile with original browser UI before considering adoption.
+
+
 ## 2026-11-06 PT — Living Arsenal is the owner-approved foundation
 - **Owner direction:** Weapon innate autocast + 1–5 supplemental autonomous abilities, experimentation without permanent dead-ends, optional intentional risk, deliberate build investment and brighter adventurous fantasy. Old prototype saves/progress need not be migrated to the new design.
 - **Docs:** `docs/PROGRESSION-V2.md`, `docs/VISUAL-DIRECTION-V2.md`, `docs/{DECISIONS,DESIGN-INTENT,visual_identity,PROJECT-STATE,OPEN-QUESTIONS,CHANGELOG}.md`.
