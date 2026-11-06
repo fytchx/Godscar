@@ -67,19 +67,11 @@ jobs:
 
       - name: Set unique Android build version
         shell: bash
-        env:
-          BUILD_NUMBER: ${{ github.run_number }}
         run: |
           set -euo pipefail
-          python3 - <<'PY'
-          from pathlib import Path
-          import os
-          file = Path("godot/export_presets.cfg")
-          data = file.read_text()
-          data = data.replace('version/code=1', f'version/code={1000 + int(os.environ["BUILD_NUMBER"])}')
-          data = data.replace('version/name="0.1.0-dev"', f'version/name="0.1.0-test.{os.environ["BUILD_NUMBER"]}"')
-          file.write_text(data)
-          PY
+          sed -i "s#version/code=1#version/code=$((1000 + GITHUB_RUN_NUMBER))#" godot/export_presets.cfg
+          sed -i "s#version/name=\"0.1.0-dev\"#version/name=\"0.1.0-test.${GITHUB_RUN_NUMBER}\"#" godot/export_presets.cfg
+          grep -E '^version/(code|name)=' godot/export_presets.cfg
 
       - name: Validate and import Godot project
         shell: bash
