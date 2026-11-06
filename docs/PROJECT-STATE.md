@@ -1,10 +1,10 @@
 # Project state and immediate handoff
 
-**Last documented:** 2026-11-05 (America/Los_Angeles). **Active branch:** `preview/browser`.
+**Last documented:** 2026-11-06 (UTC). **Active source branch:** `preview/browser`; current implementation work is isolated on `work/living-arsenal-browser-prototype` pending checks and PR.
 **Read this before every work session, and update it in the same commit as EACH change set.** This document is a snapshot; re-check HEAD, workflows, Railway and live site rather than treating old statuses as current.
 
 ## Product identity
-**2026-11-06 direction update:** Owner adopted the Living Arsenal as the core of the game and approved reworking mechanics without retaining prototype saves/progress. Permanent white-weapon attack + 1–5 gear/crafting/progression-derived automatic abilities, meaningful but recoverable investments, and a brighter adventurous tone. The original browser remains the stable playable baseline; V2 not yet integrated. Read `docs/PROGRESSION-V2.md` and `docs/VISUAL-DIRECTION-V2.md`.
+**2026-11-06 direction update:** Owner adopted the Living Arsenal as the core of the game and approved reworking mechanics without retaining prototype saves/progress. Permanent white-weapon attack + 1–5 gear/crafting/progression-derived automatic abilities, meaningful but recoverable investments, and a brighter adventurous tone. The original browser remains the stable baseline. An opt-in browser prototype at `/lab/arsenal/` now tests the systems loop independently; it is not integrated into the original simulation. Read `docs/PROGRESSION-V2.md` and `docs/VISUAL-DIRECTION-V2.md`.
 
 Godscar is a phone-first dark fantasy **continuous-combat idle ARPG**, potentially an online RPG in later phases. The current approved experience is Claude's original browser version, **not the custom Godot port**. The owner confirmed the live browser preview matches the direction they intended.
 
@@ -33,22 +33,31 @@ Godscar is a phone-first dark fantasy **continuous-combat idle ARPG**, potential
 - Loot from common through ascended, equipment, affixes, enchantments, augment mechanics, crafting, upgrades, salvage, socketed belts/Jewels, save migration and up to 24h offline catch-up.
 - Phone UI tabs: Fight, Gear, Bag, Build, Forge. Not a finished MMO; some future systems are explicitly not implemented.
 
+## Living Arsenal prototype status (experimental)
+- Browser route: `/lab/arsenal/`; no root-game replacement. Separate save key: `godscar.living-arsenal.lab.v2`.
+- Prototype now covers four weapon identities and weapon-bound arts; five automatic power slots; nine gear slots; five affixes; two-piece Warden set defense; three hunts including a marked boss; loot, inventory/reserve, salvage, weapon refinement, charm engraving, and up to four hours of offline catch-up.
+- Visual direction: compact illustrated battle field, fight ledger, responsive browser tabs, equipment/build/forge panes, authored CSS/inline SVG. No external artwork or final logo claims.
+- Current working branch: `work/living-arsenal-browser-prototype`, based on the approved browser preview branch. Source and handoff docs are locally updated. Syntax checks, 16 focused lab checks, original browser tests/build and local route smoke passed. Pull request CI and preview deployment are pending; Playwright visual review could not run because its browser executable is absent.
+- All balance, content breadth, progression thresholds, class identities, and loot pacing remain experimental. No physical phone visual check has been completed.
+
 ## Current risks and known gaps
-1. **Cloud saves:** Claude-hosted integration uses `window.claude`; Railway preview uses this browser origin's localStorage. Existing Claude progress will not appear automatically. Back up saves before experiments.
-2. **Server:** actions execute client-side in the preview, so progress is not cheat-proof. Server phase 1 remains an unconnected local scaffold; no real public account launch.
-3. **Visuals:** the approved identity is documented in `docs/visual_identity.md`, but the official raster logo kit is not verified as integrated. Don't imply final art quality.
-4. **Experience parity:** owner said the preview feels right, but later Claude-only changes may still be unknown.
-5. **Maintainability:** `web/src/sim.js` and `web/src/ui.js` are large source modules. Keep them understandable and avoid untested giant rewrites.
-6. **Branch confusion:** GitHub's default is still `main`. Root pointers there must direct new contributors to `preview/browser`.
+1. **Prototype acceptance:** Does the live loop feel substantial and legible on the owner’s phone? Test the deployed isolated route before deciding on deeper integration.
+2. **Cloud saves:** Claude-hosted integration uses `window.claude`; Railway preview uses this browser origin's localStorage. Existing Claude progress will not appear automatically. Back up saves before experiments.
+3. **Server:** actions execute client-side in the preview, so progress is not cheat-proof. Server phase 1 remains an unconnected local scaffold; no real public account launch.
+4. **Visuals:** the approved identity is documented in `docs/visual_identity.md`, but the official raster logo kit is not verified as integrated. Don't imply final art quality.
+5. **Experience parity:** owner said the preview feels right, but later Claude-only changes may still be unknown.
+6. **Maintainability:** `web/src/sim.js` and `web/src/ui.js` are large source modules. Keep them understandable and avoid untested giant rewrites.
+7. **Branch confusion:** GitHub's default is still `main`. Root pointers there must direct new contributors to `preview/browser`.
 
 ## Immediate priorities (not authorization for speculative changes)
 1. Keep original browser experience stable and backup/verify the owner’s character-save path.
 2. Compare source against any later Claude artifact or owner screenshots; document verified differences without speculation.
-3. Choose a small, valuable game/UI enhancement with the owner, define acceptance criteria, implement + test it **on the real browser code**, and let Railway redeploy.
+3. Finish checks and publish the isolated Living Arsenal prototype to the Godscar preview, then collect owner feedback on browser readability and whether the equipment/weapon loop feels meaningful.
 4. Plan server integration only with a credible migration, secrets, database and abuse-prevention strategy; no rushed multiplayer claims.
 5. Improve clarity and structure incrementally, preserving reproducible combat behavior.
 
 ## Latest completed activity
+- 2026-11-06 UTC: expanded the isolated browser prototype from a narrow proof into a broader playable loop: four distinct weapon families, nine equipment slots, gear affixes and a set bonus, three hunts including a named boss, equipment recovery, deliberate weapon refinement and charm engraving, responsive fight/build/forge UI. Separate save remains isolated. Pending local full checks, CI, PR and preview deployment; no device test yet.
 - 2026-11-06 PT: integrated the **opt-in** Living Arsenal V2 lab route `/lab/arsenal/` with the original browser preview, after isolated feature branch CI passed lab unit tests, original browser tests and route smoke tests. Original `/` game and its save key remain unchanged; lab is an experimental second engine/UI. New route needs post-deployment HTTP and real phone review; no full feature parity, online play or final balancing is claimed.
 - 2026-11-06 PT: corrected second lab test scenario to compare accessory damage before both characters finish the same enemy. Code mechanics unchanged. CI revalidation pending.
 - 2026-11-06 PT: fixed the new Aegis test's scenario: changed from a meadow mob that dies before attacking to a surviving Rift Sentinel that can cause a genuinely lethal blow. Code behavior unchanged. CI revalidation pending.

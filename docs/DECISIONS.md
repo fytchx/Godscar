@@ -2,6 +2,11 @@
 
 **How to use:** Add dated entries with **status (confirmed / proposed / rejected / unknown)**, reason and consequences. Do not convert a discussion, code comment, or AI suggestion into an owner-approved fact. When superseding, keep the old entry and point to the new one.
 
+## 2026-11-06 UTC — Confirmed: browser idle presentation for the Living Arsenal prototype
+- **Owner:** Reaffirmed that Godscar is a browser idle game and said “full send” on the substantial prototype direction. Grim Dawn is a strong equipment inspiration; the previously stated weapon-centered build identity remains core.
+- **Prototype interpretation:** Keep combat continuously automatic; make equipment, weapon-specific powers, loot and crafting the meaningful interactions. Present a persistent battle view and responsive browser management panels, not joystick/action controls.
+- **Status:** This authorizes a significant isolated prototype, not final production balance, artwork or system scope. The first deliverable is an opt-in route beside the existing browser game.
+
 ## 2026-11-06 PT — Confirmed: Living Arsenal is Godscar's core direction
 - **Owner:** Explicitly endorsed the Living Arsenal item/weapon/crafting/autocast concept as the foundation of the whole game. **Legacy prototype saves and progress do not need compatibility** when developing the new system. This is permission to design a new progression system and prototype, not proof that the system already exists.
 - **Confirmed principles:** (1) a weapon-specific innate automatic primary that never stops, (2) 1–5 additional automated powers earned through loot, crafting and progression, (3) a player must never be permanently stuck or trapped by a past choice, (4) meaningful costs, rewards for commitment and optional risks still matter, (5) changing to another playstyle must always be possible, and (6) Godscar's overall world/UI should become brighter, somewhere between Diablo-like dark fantasy and IdleArc readability.

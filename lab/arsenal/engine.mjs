@@ -1,6 +1,6 @@
-import { CONDUIT_LEVELS, WEAPONS, HUNTS, SKILLS, SUPPORTS, supportsFor } from "./catalog.mjs";
+import { CONDUIT_LEVELS, WEAPONS, HUNTS, SKILLS, SUPPORTS, SLOT_BASES, SLOT_LABELS, AFFIXES, supportsFor } from "./catalog.mjs";
 
-export const LAB_VERSION = 1;
+export const LAB_VERSION = 2;
 export const BAG_CAPACITY = 12;
 export const VAULT_CAPACITY = 5;
 const MAX_EVENT_COUNT = 250000;
@@ -19,21 +19,28 @@ function log(game, message, kind = "normal") {
 
 function item(game, slot, base, rarity = "white") {
   game.nextId += 1;
-  return { id: "a" + game.nextId, slot, base, rarity, quality: 0, affixes: [], engraving: null, locked: false };
+  return { id: "a" + game.nextId, slot, base, rarity, quality: 0, affixes: [], engraving: null, set: null, locked: false };
 }
 
 function enemyFor(game) {
   const hunt = HUNTS[game.hunt];
   const maxHp = hunt.hpBase + game.level * hunt.hpPerLevel;
-  return { name: hunt.enemy, maxHp, hp: maxHp, burn: null, bleed: null };
+  return { name: hunt.enemy, region: hunt.region, boss: !!hunt.boss, maxHp, hp: maxHp, burn: null, bleed: null };
+}
+
+function armorRating(game) {
+  const gear = Object.values(game.gear).filter(Boolean);
+  const base = gear.reduce((total, item) => total + item.affixes.filter(key => key === "ward").length * 3, 0);
+  const wardenPieces = gear.filter(item => item.set === "warden").length;
+  return base + (wardenPieces >= 2 ? 6 : 0);
 }
 
 function maximumHealth(game) {
   let bonus = 0;
   for (const equipment of Object.values(game.gear)) {
-    for (const affix of equipment?.affixes || []) if (affix === "vigor") bonus += 16;
+    for (const affix of equipment?.affixes || []) if (affix === "vigor") bonus += 22;
   }
-  return 90 + game.level * 11 + bonus;
+  return 100 + game.level * 12 + bonus;
 }
 
 function xpNeeded(level) {
@@ -47,20 +54,25 @@ function unlockedCount(game) {
 export function createGame(seed = 12345) {
   const game = {
     version: LAB_VERSION, rng: seed >>> 0, nextId: 0, timeMs: 0, level: 1, xp: 0,
-    health: 101, shield: 0, kills: 0, deaths: 0, hunt: "meadow",
-    huntKills: { meadow: 0, rift: 0 }, mastery: { sword: 0, dagger: 0, wand: 0 },
+    health: 112, shield: 0, kills: 0, deaths: 0, hunt: "meadow",
+    huntKills: { meadow: 0, rift: 0, crypt: 0 }, mastery: { sword: 0, dagger: 0, wand: 0, mace: 0 },
     materials: { scrap: 0, seals: 0, sigils: 0 },
-    gear: { weapon: null, charm: null }, bag: [], vault: [], lootPaused: false,
+    gear: { weapon: null, offhand: null, helm: null, chest: null, gloves: null, boots: null, belt: null, ring: null, charm: null }, bag: [], vault: [], lootPaused: false,
     conduits: [null, null, null, null, null], supports: {}, cooldowns: {},
-    primaryHits: 0, emberHits: 0, bloodHits: 0,
+    primaryHits: 0, weaponArtHits: 0, emberHits: 0, bloodHits: 0,
     nextPrimaryAt: 0, nextEnemyAt: 2300, nextRespawnAt: null, nextBurnAt: null, nextBleedAt: null,
     enemy: null, log: []
   };
   game.gear.weapon = item(game, "weapon", "sword");
-  game.gear.charm = item(game, "charm", "talisman");
-  game.bag.push(item(game, "weapon", "dagger"), item(game, "weapon", "wand"));
+  game.gear.charm = item(game, "charm", "Travel Talisman");
+  game.gear.chest = item(game, "chest", "Pilgrim Coat");
+  game.gear.helm = item(game, "helm", "Mourner's Hood");
+  game.gear.gloves = item(game, "gloves", "Grips of Cinder");
+  game.gear.boots = item(game, "boots", "Fenwalker Boots");
+  game.bag.push(item(game, "weapon", "dagger"), item(game, "weapon", "wand"), item(game, "weapon", "mace"));
+  game.bag.push(item(game, "offhand", "Graveward Shield"), item(game, "ring", "Cinder Ring"));
   game.enemy = enemyFor(game);
-  log(game, "Your white sword begins fighting automatically. Daggers and a fire wand are waiting in your bag.", "milestone");
+  log(game, "The Oathblade begins its measured rhythm. Its weapon art is already bound to the blade.", "milestone");
   return game;
 }
 
@@ -88,9 +100,13 @@ export function summarize(game) {
     weaponName: definition.name, attackName: definition.attack, damageType: definition.type,
     intervalMs: Math.round(definition.intervalMs *
       (weapon.affixes.includes("quick") ? 0.90 : 1) *
-      (game.gear.charm?.affixes.includes("quick") ? 0.95 : 1)),
+      (Object.values(game.gear).filter(Boolean).some(item => item.affixes.includes("quick")) ? 0.94 : 1)),
+    weaponArt: definition.art, weaponArtEvery: definition.artEvery,
     healthMax: maximumHealth(game), incoming: game.hunt, enemy: game.enemy,
-    canHuntRift: game.level >= HUNTS.rift.level
+    armor: armorRating(game),
+    canHuntRift: game.level >= HUNTS.rift.level, canHuntCrypt: game.level >= HUNTS.crypt.level,
+    xpPercent: Math.min(100, game.xp / xpNeeded(game.level) * 100),
+    masteryCount: game.mastery[weapon.base] || 0
   };
 }
 
@@ -99,8 +115,8 @@ function weaponDamage(game) {
   const base = WEAPONS[gear.base].damage;
   const familyMastery = game.mastery[gear.base] || 0;
   const masteryBonus = Math.min(3, Math.floor(familyMastery / 50)) * 0.02;
-  const sharpBonus = (gear.affixes.includes("sharp") ? 0.16 : 0) +
-    (game.gear.charm?.affixes.includes("sharp") ? 0.08 : 0);
+  const sharpBonus = Object.values(game.gear).filter(Boolean)
+    .reduce((total, item) => total + item.affixes.filter(key => key === "sharp").length * (item.slot === "weapon" ? 0.16 : 0.035), 0);
   return Math.round((base + game.level * 2) * (1 + gear.quality * 0.03) *
     (1 + masteryBonus + sharpBonus));
 }
@@ -150,14 +166,23 @@ function receiveDrop(game) {
     game.lootPaused = true;
     return;
   }
-  if (nextRandom(game) >= 0.19) return;
-  const base = ["sword", "dagger", "wand", "talisman"][Math.floor(nextRandom(game) * 4)];
-  const slot = base === "talisman" ? "charm" : "weapon";
+  const fortune = Math.min(0.09, Object.values(game.gear).filter(Boolean)
+    .reduce((total, item) => total + item.affixes.filter(key => key === "fortune").length * 0.03, 0));
+  if (nextRandom(game) >= 0.19 + fortune) return;
+  const dropSlots = ["weapon", "weapon", "helm", "chest", "gloves", "boots", "belt", "ring", "charm", "offhand"];
+  const slot = dropSlots[Math.floor(nextRandom(game) * dropSlots.length)];
+  const weaponBases = Object.keys(WEAPONS);
+  const base = slot === "weapon" ? weaponBases[Math.floor(nextRandom(game) * weaponBases.length)] :
+    (SLOT_BASES[slot] || ["Travel Talisman"])[Math.floor(nextRandom(game) * (SLOT_BASES[slot] || ["Travel Talisman"]).length)];
   const roll = nextRandom(game);
   const rarity = roll < 0.06 ? "rare" : roll < 0.31 ? "magic" : "white";
   const drop = item(game, slot, base, rarity);
-  if (rarity !== "white") drop.affixes.push("sharp");
+  if (rarity !== "white") {
+    const possible = slot === "weapon" ? ["sharp", "quick", "vigor"] : ["vigor", "ward", "sharp", "fortune"];
+    drop.affixes.push(possible[Math.floor(nextRandom(game) * possible.length)]);
+  }
   if (rarity === "rare" && slot === "charm" && nextRandom(game) < 0.5) drop.engraving = "frost";
+  if (rarity === "rare" && ["helm", "chest", "gloves", "boots"].includes(slot) && nextRandom(game) < 0.38) drop.set = "warden";
   const inBag = game.bag.length < BAG_CAPACITY;
   if (inBag) game.bag.push(drop);
   else if (rarity === "rare" && game.vault.length < VAULT_CAPACITY) {
@@ -176,7 +201,11 @@ function defeatEnemy(game) {
   game.huntKills[game.hunt]++;
   game.materials.scrap += 2; // Guaranteed earning floor, never RNG-gated.
   const hard = game.hunt === "rift";
-  if (hard) {
+  if (game.hunt === "crypt") {
+    game.materials.seals += 5;
+    game.materials.sigils += 2;
+    log(game, "The Bellkeeper falls. Five Seals and two Sigils are yours.", "milestone");
+  } else if (hard) {
     game.materials.seals += 1;
     if (game.huntKills.rift % 7 === 0) game.materials.sigils++;
   } else {
@@ -199,7 +228,20 @@ function processPrimary(game) {
   const damage = weaponDamage(game);
   game.primaryHits++;
   game.mastery[game.gear.weapon.base]++;
-  damageEnemy(game, damage, weapon.attack === "Arc Bolt" ? "Arc Bolt" : "primary");
+  damageEnemy(game, damage, "primary");
+  if (!game.enemy) return;
+  game.weaponArtHits++;
+  if (game.weaponArtHits >= weapon.artEvery) {
+    game.weaponArtHits = 0;
+    const artDamage = Math.round(damage * weapon.artDamage);
+    damageEnemy(game, artDamage, weapon.art);
+    if (game.enemy && game.gear.weapon.base === "dagger") {
+      applyDot(game, "bleed", Math.max(2, Math.round(artDamage * 0.18)), 5000);
+      log(game, "Red Reprise leaves a deep wound.", "skill");
+    } else {
+      log(game, weapon.art + " fires from the equipped weapon.", "skill");
+    }
+  }
   if (!game.enemy) return;
   if (weapon.type === "fire") applyDot(game, "burn", 2 + Math.floor(game.level / 5), 2000);
   const active = activeSkillIds(game);
@@ -229,7 +271,7 @@ function processEnemyAttack(game) {
   const hunt = HUNTS[game.hunt];
   game.nextEnemyAt = game.timeMs + hunt.intervalMs;
   if (!game.enemy) return;
-  const damage = hunt.damageBase + Math.floor(game.level * (game.hunt === "rift" ? 0.75 : 0.4));
+  const damage = hunt.damageBase + Math.floor(game.level * (game.hunt === "rift" ? 0.75 : game.hunt === "crypt" ? 1.2 : 0.4));
   // Defensive abilities may trigger before the hit lands. A low-life guard
   // should be able to prevent a lethal blow rather than activate after death.
   const unshielded = Math.max(0, damage - game.shield);
@@ -240,9 +282,10 @@ function processEnemyAttack(game) {
     game.cooldowns.aegis = game.timeMs + SKILLS.aegis.cooldownMs;
     log(game, "Aegis Pulse shields you automatically.", "skill");
   }
-  const absorbed = Math.min(game.shield, damage);
+  const mitigated = Math.max(1, damage - armorRating(game));
+  const absorbed = Math.min(game.shield, mitigated);
   game.shield -= absorbed;
-  game.health -= damage - absorbed;
+  game.health -= mitigated - absorbed;
   if (game.health <= 0) {
     game.deaths++;
     game.health = maximumHealth(game);
@@ -322,9 +365,11 @@ export function advance(game, durationMs) {
 }
 
 export function itemTitle(it) {
-  const name = it.slot === "charm" ? "Travel Talisman" : WEAPONS[it.base]?.name || it.base;
-  const prefix = { white: "White", magic: "Magic", rare: "Rare" }[it.rarity];
-  return prefix + " " + name + (it.engraving ? " of " + SKILLS[it.engraving].name : "");
+  const name = WEAPONS[it.base]?.name || it.base;
+  const prefix = { white: "Common", magic: "Magic", rare: "Rare" }[it.rarity] || "Common";
+  const set = it.set === "warden" ? " · Ashen Warden" : "";
+  const engraving = it.engraving ? " of " + SKILLS[it.engraving].name : "";
+  return prefix + " " + name + engraving + set;
 }
 
 export function action(game, command) {

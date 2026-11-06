@@ -1,42 +1,32 @@
-# The Living Arsenal playable systems lab
+# Godscar: The Living Arsenal
 
-**Status:** experimental V2 *vertical slice*, not a complete redesign or a release. Source: original Godscar browser repository, branch preview/browser.
+**Status:** experimental browser-first vertical slice, served at `/lab/arsenal/` from the separate Godscar preview. Open https://godscar-browser-preview-preview.up.railway.app/lab/arsenal/. The original browser game remains at `/`.
 
-Open at https://godscar-browser-preview-preview.up.railway.app/lab/arsenal/ from the same isolated Godscar browser preview. The original game remains available at `/`. It has **no connection to the current original browser save**, using its own localStorage key.
+This prototype explores a Grim Dawn-inspired equipment and loot loop inside a continuously running browser idle ARPG. It has its own event-driven simulation and browser-local save key, `godscar.living-arsenal.lab.v2`; it does not read, migrate, or overwrite the original game save.
 
-## Files
-- catalog.mjs: explicit, human-readable white-weapon, hunt, skill and support definitions
-- engine.mjs: pure seeded combat/event engine, level-up and resource rules, crafting and validated actions
-- ui.mjs: phone-first presentation and action dispatch, no combat formulas
-- styles.css: warmer fantasy palette, no new approved artwork/logo
-- tests.mjs: deterministic engine/progression and no-trap regression tests
+## Playable systems
 
-## Current implementation
-- Three White weapons with different always-on primary attacks and Fire Wand burn
-- Character level unlocks 1–5 extra conduits at provisional levels 2/5/10/18/30
-- Mastery skills: Ember Brand, Aegis Pulse, Spirit Hawk
-- Item-engraved skills: Frost Lance and Blood Mark
-- Supports: Lingering, Echo, Siphon with tag-validation and resource cost
-- Always available Greenward hunt and harder Ashen Crossing at level 5
-- Every kill earns XP and Scrap; tougher runs earn Seals and Sigils faster
-- Sword, Dagger and Wand mastery survives equipment switching; prototype reward +2% primary damage per 50 attacks, maximum +6%
-- White→Magic→Rare item refinement with chosen focus, charm engraving, salvage and item swapping
-- Separate bounded 12-slot bag + 5-slot Rare reserve. When both fill, new item rolls pause instead of silently destroying protected finds; XP/materials continue
-- Browser-local offline catch-up, capped at four hours for this lab; no global server tick or multiplayer authority
+- Four weapon families, each changing the automatic primary attack and granting a weapon-bound art: sword, dagger, wand, and mace. Weapon-family hit mastery persists through swaps and gives a small capped damage bonus.
+- Five automatic power conduits unlock at levels 2, 5, 10, 18, and 30. Mastery and charm-engraved powers can be assigned without pausing combat; three support effects modify compatible skills.
+- Nine equipment slots: main hand, off hand, helm, chest, gloves, boots, belt, ring, and charm. Gear affixes change damage, speed, health, armor, or find rate; two Ashen Warden pieces grant a set armor bonus.
+- Three selectable hunts: Greenward Verge, Ashen Crossing, and Bellkeeper's Crypt. The crypt is a named boss encounter with guaranteed crafting marks on victory.
+- Loot in white, magic, and rare tiers; equip, lock, salvage, and refine the equipped weapon with a chosen property. Engrave a charm to unlock additional automatic powers.
+- A 12-slot bag and a 5-slot rare reserve protect overflow. If both fill, equipment rolls pause while combat, XP, and materials continue.
+- Scrap, seals, and sigils come from combat and boss kills. Offline catch-up is capped at four hours for this experiment.
+- Browser layouts keep the fight visible on wide screens and reorganize tabs for narrower screens. The UI uses authored CSS and inline SVG scene art; no external image or font assets.
 
-## Not implemented / not to overclaim
-- Full PoE-like affix pool or endgame Unique items and boss campaigns
-- Classes, skill tree, advanced/mastery crafting, final region progression, respec tree
-- Real online server, account persistence, security, anti-cheat, balanced economy
-- Real gameplay integration with the original browser game's UI or simulation
-- Proven multi-hour offline mobile performance or polished artwork
-- Save migration (owner confirmed prototype progress may be reset; older original save stays untouched)
+## What this proves and what it does not
 
-## Reproduction
-Run:
-  node lab/arsenal/tests.mjs
-Run the original web tests separately:
-  npm test
-  npm run build
+This is a meaningful systems prototype, not a complete game or final balance pass. Content names, drop rates, scaling, unlock levels, skills, weapon numbers, art, and pacing remain provisional. It does not include final classes, a full campaign, a large affix pool, endgame uniques, a server-authoritative economy, accounts, multiplayer, or device-tested long-session performance. There is no simulated gear comparison score; inspect affixes and weapon behavior before equipping.
 
-For development, use the existing preview server after registering the /lab routes. Avoid touching Arcana.
+The original game's existing browser save is intentionally separate and untouched. Experimental progress is stored locally in this browser origin and will not transfer between Claude artifacts or other domains.
+
+## Run and verify
+
+```bash
+node lab/arsenal/tests.mjs
+npm test
+npm run build
+```
+
+The preview route is allowlisted by `preview/server.mjs`. The focused workflow smoke checks `/`, `/lab/arsenal/`, its engine module, and stylesheet.

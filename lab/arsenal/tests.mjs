@@ -27,7 +27,7 @@ test("different white weapons change primary and preserve mastery history", () =
   assert.equal(g.mastery.sword, swordHits);
   assert.ok(g.mastery.dagger > 0);
   assert.equal(action(g, { type: "equip", id: g.bag.find(i => i.base === "wand").id }), null);
-  assert.equal(summarize(g).damageType, "fire");
+  assert.equal(summarize(g).damageType, "arcane");
   runFor(g, 10);
   assert.ok(g.mastery.wand > 0);
 });
@@ -141,5 +141,40 @@ test("charm sharp modifier affects the weapon damage without changing its base",
   assert.ok(g.enemy && before.enemy);
   assert.ok(g.enemy.hp < before.enemy.hp);
   assert.equal(g.gear.weapon.base, "sword");
+});
+test("weapon family owns an automatic art unavailable to other weapon families", () => {
+  const g = createGame(71);
+  assert.equal(summarize(g).weaponArt, "Dawn Breaker");
+  runFor(g, 22);
+  assert.ok(g.log.some(entry => entry.message.includes("Dawn Breaker")));
+  const dagger = g.bag.find(item => item.base === "dagger");
+  assert.equal(action(g, { type: "equip", id: dagger.id }), null);
+  assert.equal(summarize(g).weaponArt, "Red Reprise");
+  const wand = g.bag.find(item => item.base === "wand");
+  assert.equal(action(g, { type: "equip", id: wand.id }), null);
+  assert.equal(summarize(g).weaponArt, "Starfall Sigil");
+});
+test("equipment slots affect defense and the Warden pair grants its set bonus", () => {
+  const g = createGame(72);
+  const before = summarize(g).armor;
+  const helm = { id: "warden-helm", slot: "helm", base: "Warden Helm", rarity: "rare", affixes: ["ward"], set: "warden", engraving: null, quality: 0 };
+  const chest = { id: "warden-chest", slot: "chest", base: "Warden Cuirass", rarity: "rare", affixes: ["ward"], set: "warden", engraving: null, quality: 0 };
+  g.bag.push(helm, chest);
+  assert.equal(action(g, { type: "equip", id: helm.id }), null);
+  assert.equal(action(g, { type: "equip", id: chest.id }), null);
+  assert.equal(summarize(g).armor, before + 12);
+});
+test("Bellkeeper hunt opens at level 8 and grants guaranteed crafting marks", () => {
+  const g = createGame(73);
+  g.level = 8;
+  assert.equal(action(g, { type: "hunt", hunt: "crypt" }), null);
+  assert.equal(g.enemy.boss, true);
+  g.gear.weapon.quality = 18;
+  g.gear.weapon.affixes.push("sharp");
+  g.health = 10000;
+  runFor(g, 100);
+  assert.ok(g.huntKills.crypt > 0);
+  assert.ok(g.materials.seals >= 5);
+  assert.ok(g.materials.sigils >= 2);
 });
 console.log("Living Arsenal systems lab tests complete.");

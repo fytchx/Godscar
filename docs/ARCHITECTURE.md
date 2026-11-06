@@ -2,10 +2,10 @@
 
 This records what can be established from the repository and identifies where changes belong. See source for exact rules; avoid writing speculative architecture as fact.
 
-## Experimental Living Arsenal lab (opt-in route)
-New `lab/arsenal` isolates an early V2 proof-of-concept from the approved browser game. `catalog.mjs` owns small content tables; `engine.mjs` owns deterministic per-character event scheduling and validated actions; `ui.mjs` handles presentation and an independent browser-local test save. No existing `web/src` combat logic is reused by this lab yet, and that is a deliberate scope limitation, **not a statement that the rewrite is production-ready**. When feature branch is exercised, explicit `/lab/arsenal/` routes in `preview/server.mjs` serve it without replacing `/`.
+## Experimental Living Arsenal browser prototype (opt-in route)
+`lab/arsenal/` is a separate browser idle-ARPG vertical slice served only at `/lab/arsenal/` by explicit allowlisted routes in `preview/server.mjs`. `catalog.mjs` defines four weapon families, automatic weapon arts, gear slots, affixes, skills, supports, and hunts. `engine.mjs` owns seeded event scheduling, combat, drops, gear actions, forging, progression, inventory protection, and capped offline catch-up. `ui.mjs` handles browser rendering, tabs, input, and a distinct `godscar.living-arsenal.lab.v2` local save. `styles.css` provides the browser layout and authored inline-SVG/CSS visual treatment. Focused behavior checks live in `tests.mjs`.
 
-Before integration, evaluate reuse of old class/target/boss and offline rules against new combat events and measure mobile performance.
+The loop remains automatic while players manage their build. This lab is experimental and runs beside, rather than inside, the original `web/src/` game. It has no server authority or shared save. The original route `/` and original save format remain untouched.
 
 ## Runtime and build
 ```text
