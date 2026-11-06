@@ -1,31 +1,31 @@
 # Godscar
 
-**Current direction: native Godot idle ARPG.** One champion, uninterrupted automatic combat, loot, build crafting, and progress while the player manages everything else.
+> **IMPORTANT: This GitHub default branch (`main`) is NOT the current playable Godscar direction.**
+>
+> The owner approved returning to **the original browser idle ARPG**. The authoritative current work, live preview and complete contributor handoff are on **[`preview/browser`](https://github.com/fytchx/Godscar/tree/preview/browser)**.
 
-## Install a test APK without opening Godot
+## Start here
 
-The [Godscar Android test APK workflow](https://github.com/fytchx/Godscar/actions/workflows/android-apk.yml) runs whenever a change to `godot/` is committed to `main`. Open the latest successful **Godscar Android test APK** run, download the **Godscar-Android-Test-...** artifact, extract its ZIP, and install `Godscar-test.apk` on an ARM64 Android device. Android may ask you to allow installation from the app you used to open the APK. This is a **debug-signed prototype**, not a Play Store release.
+- **[READ START-HERE.md on the active branch](https://github.com/fytchx/Godscar/blob/preview/browser/START-HERE.md)**
+- **[AI and human contributor rules](https://github.com/fytchx/Godscar/blob/preview/browser/AGENTS.md)**
+- **[Current project state](https://github.com/fytchx/Godscar/blob/preview/browser/docs/PROJECT-STATE.md)**
+- **[Human-readable coding standards](https://github.com/fytchx/Godscar/blob/preview/browser/docs/CODE-STANDARDS.md)**
+- **[Decisions, design intent and workflow](https://github.com/fytchx/Godscar/blob/preview/browser/docs/WORKFLOW.md)**
+- **[Play the original Godscar browser game](https://godscar-browser-preview-preview.up.railway.app/)**
 
-The build uses the package ID `com.fytchx.godscar` to avoid replacing the archived prototype. A debug keystore is cached in GitHub Actions so subsequent test builds can be installed over prior ones; if that cache or key is lost, Android will require uninstalling the older test APK. Back up any local save before uninstalling.
+### Why is there a Godot project here?
+An earlier AI-driven conversion reproduced only part of the browser game's functionality and substituted an incomplete interface. Despite build tests passing, **the owner rejected this version as unfaithful**. The `godot/` files here are retained as historical/experimental work, NOT the baseline for future features. Do not automatically export, rewrite, merge or deploy them.
 
-Future development can happen from this ChatGPT conversation: review/update the connected GitHub repository, commit changes to `godot/`, then get the new APK from the workflow. The APK is built by GitHub Actions, not by the chat itself. Test builds are retained 60 days; APK artifacts are accessible from GitHub's Actions UI.
+### Current game in one sentence
+A mobile-first dark-fantasy idle ARPG where your hero automatically fights forever while you manage loot, builds, spells, progression and bosses.
 
-## Open the new Godot project
+### Branch map
+- **`preview/browser`**: ACTIVE original browser game + isolated Railway preview; updates here automatically deploy.
+- `web`: preserved original browser reference.
+- `feature/server-phase1`: unconnected development-only server/API experiment.
+- `main`: incomplete Godot rewrite; not the intended gameplay baseline.
+- `archive/godot`, `dev`: older manual-movement action prototypes.
 
-Open **[godot/project.godot](godot/project.godot)** in Godot 4.3 or newer, or use the Godot Project Manager to import the `godot/` folder. Run the project to choose a class and begin.
+**If you are an AI connected to this repository:** immediately checkout `preview/browser`, read its `AGENTS.md`, `START-HERE.md`, project state, decisions, design intent, coding standards, architecture and workflow. Don't change the game from `main`. After every coherent update, commit source + project state + changelog together; test, verify deployment and give an honest handoff.
 
-- Native GDScript simulation: [godot/scripts/sim.gd](godot/scripts/sim.gd)
-- Native phone-first interface: [godot/scripts/main.gd](godot/scripts/main.gd)
-- Current data catalogue: [godot/scripts/catalog.gd](godot/scripts/catalog.gd)
-- Setup, limitations, and next steps: [godot/README.md](godot/README.md)
-- Automated native import, smoke and main-scene validation: [Godot CI](.github/workflows/godot-native.yml)
-
-### Which version is authoritative?
-
-The `web/` folder is **preserved as the original reference for the NEW game mechanics** and must remain until full rule-by-rule GDScript parity is verified. The GDScript port runs independently and is not yet feature-parity certified. Existing browser saves cannot be imported into the Godot build.
-
-The older manual-movement/active-skill Android prototype remains on `archive/godot` only for historical reference. **Do not incorporate it into the new idle game.** Nothing in that archive was merged into the new Godot project.
-
-### Production caveat
-
-Combat and save data in this build run on the client. The future online game needs a server-authoritative simulation and accounts before player progress can be trusted.
+Arcana (`fytchx/Arcana`) is a separate product and must not be modified or deployed as part of Godscar.
