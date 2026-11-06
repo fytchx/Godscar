@@ -3,3 +3,9 @@ web/test/shots/
 .DS_Store
 Thumbs.db
 .env
+
+# Build output / generated Godot cache
+**/.godot/
+build/
+# CI debug key must never be committed
+.ci_signing/
