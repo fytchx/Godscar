@@ -121,9 +121,12 @@ test("guard autocasts before lethal damage when ready", () => {
   const g = createGame(912);
   g.level = 5;
   g.conduits[1] = "aegis";
+  // Choose a foe that survives long enough to attack. The safe meadow
+  // enemy dies before its first hit, which would make this a false test.
+  assert.equal(action(g, { type: "hunt", hunt: "rift" }), null);
   g.health = 8;
   const startingDeaths = g.deaths;
-  advance(g, 2500);
+  advance(g, 1700);
   assert.equal(g.deaths, startingDeaths);
   assert.ok(g.log.some(entry => entry.message.includes("Aegis Pulse shields")));
 });

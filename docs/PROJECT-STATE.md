@@ -49,6 +49,7 @@ Godscar is a phone-first dark fantasy **continuous-combat idle ARPG**, potential
 5. Improve clarity and structure incrementally, preserving reproducible combat behavior.
 
 ## Latest completed activity
+- 2026-11-06 PT: fixed the new Aegis test's scenario: changed from a meadow mob that dies before attacking to a surviving Rift Sentinel that can cause a genuinely lethal blow. Code behavior unchanged. CI revalidation pending.
 - 2026-11-06 PT: lab correction on feature branch: browser-local offline catch-up (4h cap), pre-impact automatic guard, functional charm affix bonuses and bounded persistent weapon mastery bonus. Added regression tests. These are experimental, not approved balance values.
 - 2026-11-06 PT: on isolated branch `work/living-arsenal-lab` implemented **experimental, separate** Living Arsenal playable systems lab (`lab/arsenal`) for three white weapon attacks, 1–5 conduits, limited ability sources/supports, guaranteed earning floor, white→rare forging, protected loot reserve and brighter sample UI; server routes `/lab/arsenal/` only on this branch. This is NOT yet integrated into the original game or published on the active live preview. Run `node lab/arsenal/tests.mjs`. Exact balance and design details are provisional.
 - 2026-11-06 PT: owner confirmed Living Arsenal core, no-stuck progression and brightened world direction. Authored V2 progression + visual direction design specs with provisional milestones, economy and implementation tests. Legacy game source currently unaffected.

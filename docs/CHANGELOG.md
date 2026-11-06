@@ -1,5 +1,12 @@
 # Godscar project changelog and handoff history
 
+## 2026-11-06 PT — Correct Aegis scenario in Living Arsenal automated test
+- **Why:** First defensive trigger regression was a false failure: the safe meadow monster was killed before making an attack, so the trigger was never exercised.
+- **Change:** Use a Rift Sentinel with sufficient life to hit the player and verify the pre-impact guard actually fires.
+- **Files:** `lab/arsenal/tests.mjs`, `docs/PROJECT-STATE.md`, `docs/CHANGELOG.md`.
+- **Game impact:** No gameplay code changed. Test revalidation pending GitHub workflow completion.
+
+
 ## 2026-11-06 PT — Validate automatic defense, accessory effects, offline progress
 - **Files:** `lab/arsenal/{engine,ui,tests}.mjs`, `lab/arsenal/README.md`, `docs/PROJECT-STATE.md`, `docs/CHANGELOG.md`.
 - **Changes:** Aegis triggers before damage can kill the hero, accessory affixes affect the build, persisted local lab state catches up offline up to four hours, and weapon-family mastery grants a small capped prototype effect while persisting through swaps. Added regression tests.
