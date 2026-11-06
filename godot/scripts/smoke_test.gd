@@ -32,7 +32,7 @@ func _run() -> void:
 		var index: int = sim.g["bag"].size() - 1
 		_check(sim.action("equip", {"index": index}).is_empty(), "equip")
 		_check(sim.action("upgrade", {"slot": "weapon"}) != null, "upgrade returns a value")
-		var save_text := JSON.stringify(sim.g)
+		var save_text = JSON.stringify(sim.g)
 		_check(JSON.parse_string(save_text) is Dictionary, "JSON save encode/decode")
 		print("PASS %s: kills=%s lvl=%s" % [cls, sim.g["life_kills"], sim.g["level"]])
 	print("GODSCAR NATIVE SMOKE PASSED")
