@@ -19,14 +19,14 @@ func _draw() -> void:
 	draw_line(Vector2(0, h * 0.79), Vector2(w, h * 0.79), Color("#6f343d"), 2.0)
 	var pulse = sin(motion * 2.3) * 0.5 + 0.5
 	var mid = w * 0.5
-	var scar = PackedVector2Array([
+	var fissure = PackedVector2Array([
 		Vector2(mid - 10, 0), Vector2(mid + 3, h * 0.19),
 		Vector2(mid - 2, h * 0.43), Vector2(mid + 16, h * 0.68),
-		Vector2(mid - 6, h * 0.81), Vector2(mid + 10, h * 0.68),
-		Vector2(mid - 10, h * 0.45), Vector2(mid + 7, h * 0.21)
+		Vector2(mid - 6, h * 0.81)
 	])
-	draw_colored_polygon(scar, Color(0.73, 0.08 + pulse * 0.12, 0.15 + pulse * 0.13, 0.52))
-	draw_line(Vector2(mid - 10, 0), Vector2(mid - 3, h * 0.43), Color("#f04b58", 0.24 + pulse * 0.16), 3.0)
+	draw_polyline(fissure, Color(0.73, 0.08 + pulse * 0.12, 0.15 + pulse * 0.13, 0.23), 13.0)
+	draw_polyline(fissure, Color(0.94, 0.29, 0.35, 0.34 + pulse * 0.2), 3.0)
+
 	if sim == null or sim.g.is_empty():
 		return
 	var left = Vector2(w * 0.25, h * 0.62)
