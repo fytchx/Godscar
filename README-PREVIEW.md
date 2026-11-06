@@ -1,5 +1,7 @@
 # Godscar browser preview
 
+**Contributor onboarding:** read [START-HERE.md](START-HERE.md), [AGENTS.md](AGENTS.md) and [docs/PROJECT-STATE.md](docs/PROJECT-STATE.md) before making any change. The code and design must be clear to human readers, and each source change needs same-commit state/changelog updates.
+
 ## Live preview
 
 **Play in your phone's browser:** https://godscar-browser-preview-preview.up.railway.app/

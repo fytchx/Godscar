@@ -16,9 +16,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 2
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Verify source changes include state and changelog in same commit
+      - name: Check each pushed commit for durable handoff documentation
+        env:
+          BEFORE_SHA: ${{ github.event.before }}
         run: node scripts/check-handoff.mjs

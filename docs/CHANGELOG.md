@@ -1,5 +1,14 @@
 # Godscar project changelog and handoff history
 
+## 2026-11-05 PT — Make handoff checks cover full pushes and connect GitHub Copilot
+- **What / why:** Tightened the handoff script so multi-commit pushes are checked commit-by-commit when GitHub supplies the previous SHA; added GitHub Copilot instructions on the active branch and linked onboarding from the preview README.
+- **Paths:** `scripts/check-handoff.mjs`, `.github/workflows/handoff.yml`, `.github/copilot-instructions.md`, `README-PREVIEW.md`, `docs/PROJECT-STATE.md`, `docs/CHANGELOG.md`.
+- **Game impact:** None; original UI and simulation untouched.
+- **Validation:** GitHub workflow check to be verified after push, not yet a substitute for branch protection. Regular web tests also run.
+- **Known limits:** New-branch pushes and some PR merge contexts may only check HEAD. GitHub may accept pushes before CI evaluates them. This is a compliance signal, not a hard server-side ban.
+- **Next:** Start feature work only after confirming intended design and human acceptance criteria.
+
+
 This log records **completed and committed change sets**, not wishes. Most recent first. For every code/asset/config/test change, prepend an entry in the **same commit** as that change. Distinguish tests and deployment status from assumptions. Important old entries should not be deleted.
 
 ## 2026-11-05 PT — Durable GitHub handoff and human-readable standards
