@@ -1,6 +1,6 @@
 # Project state and immediate handoff
 
-**Last documented:** 2026-11-06 (UTC). **Active source branch:** `preview/browser`; current implementation work is isolated on `work/living-arsenal-browser-prototype` pending checks and PR.
+**Last documented:** 2026-11-06 (UTC). **Active source branch:** `preview/browser` at merge commit `377cc258188387f7a3372ebe233df09d14f308b4`.
 **Read this before every work session, and update it in the same commit as EACH change set.** This document is a snapshot; re-check HEAD, workflows, Railway and live site rather than treating old statuses as current.
 
 ## Product identity
@@ -37,7 +37,7 @@ Godscar is a phone-first dark fantasy **continuous-combat idle ARPG**, potential
 - Browser route: `/lab/arsenal/`; no root-game replacement. Separate save key: `godscar.living-arsenal.lab.v2`.
 - Prototype now covers four weapon identities and weapon-bound arts; five automatic power slots; nine gear slots; five affixes; two-piece Warden set defense; three hunts including a marked boss; loot, inventory/reserve, salvage, weapon refinement, charm engraving, and up to four hours of offline catch-up.
 - Visual direction: compact illustrated battle field, fight ledger, responsive browser tabs, equipment/build/forge panes, authored CSS/inline SVG. No external artwork or final logo claims.
-- Current working branch: `work/living-arsenal-browser-prototype`, based on the approved browser preview branch. Source and handoff docs are locally updated. Syntax checks, 16 focused lab checks, original browser tests/build and local route smoke passed. Pull request CI and preview deployment are pending; Playwright visual review could not run because its browser executable is absent.
+- Published on `preview/browser` by PR #3, merge commit `377cc258188387f7a3372ebe233df09d14f308b4`; Railway deployment `6dca9cc1-aac7-4cf0-b60d-c94157515b9d` reached SUCCESS. The public route and `/health` return the new release. Browser visual review and physical-phone play have not been completed; Playwright’s browser executable is absent in this environment.
 - All balance, content breadth, progression thresholds, class identities, and loot pacing remain experimental. No physical phone visual check has been completed.
 
 ## Current risks and known gaps
@@ -57,7 +57,7 @@ Godscar is a phone-first dark fantasy **continuous-combat idle ARPG**, potential
 5. Improve clarity and structure incrementally, preserving reproducible combat behavior.
 
 ## Latest completed activity
-- 2026-11-06 UTC: expanded the isolated browser prototype from a narrow proof into a broader playable loop: four distinct weapon families, nine equipment slots, gear affixes and a set bonus, three hunts including a named boss, equipment recovery, deliberate weapon refinement and charm engraving, responsive fight/build/forge UI. Separate save remains isolated. Pending local full checks, CI, PR and preview deployment; no device test yet.
+- 2026-11-06 UTC: expanded the isolated browser prototype from a narrow proof into a broader playable loop: four distinct weapon families, nine equipment slots, gear affixes and a set bonus, three hunts including a named boss, equipment recovery, deliberate weapon refinement and charm engraving, responsive fight/build/forge UI. All local checks, all three GitHub workflow checks, preview deployment and route/health HTTP verification passed. Separate save remains isolated; no phone visual test yet.
 - 2026-11-06 PT: integrated the **opt-in** Living Arsenal V2 lab route `/lab/arsenal/` with the original browser preview, after isolated feature branch CI passed lab unit tests, original browser tests and route smoke tests. Original `/` game and its save key remain unchanged; lab is an experimental second engine/UI. New route needs post-deployment HTTP and real phone review; no full feature parity, online play or final balancing is claimed.
 - 2026-11-06 PT: corrected second lab test scenario to compare accessory damage before both characters finish the same enemy. Code mechanics unchanged. CI revalidation pending.
 - 2026-11-06 PT: fixed the new Aegis test's scenario: changed from a meadow mob that dies before attacking to a surviving Rift Sentinel that can cause a genuinely lethal blow. Code behavior unchanged. CI revalidation pending.
