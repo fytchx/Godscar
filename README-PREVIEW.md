@@ -1,5 +1,22 @@
 # Godscar browser preview
 
+## Live preview
+
+**Play in your phone's browser:** https://godscar-browser-preview-preview.up.railway.app/
+
+Railway project: `Godscar Browser Preview`; environment: `preview`; GitHub source: `fytchx/Godscar`, branch: `preview/browser`.
+This service builds the original `web/src/*` files at startup and redeploys on new commits to the preview branch.
+
+### Verified source identity
+
+At the time this preview was created, GitHub reported the following matching blob SHAs on `web`, `feature/server-phase1`, and `preview/browser`:
+
+- `web/src/sim.js`: `ef6c206b11de6c88c25e9a31badc6c1ac1307c55`
+- `web/src/ui.js`: `e6994f1bde2a94e29f7a7351ba28273d3dd77fae`
+- `web/src/shell.html`: `b4a4825c4be9f8883bd44d64d8d9c272b47fe04d`
+
+The game page and `/health` endpoint were verified reachable after the first successful Railway deployment. A matching downloadable HTML build is published by [the browser preview tests](https://github.com/fytchx/Godscar/actions/workflows/browser-preview.yml) as a GitHub Actions artifact.
+
 This branch, `preview/browser`, restores **Claude's existing browser game without rewriting the game logic or interface**.
 
 * `web/src/sim.js` is the original deterministic simulation from the `web` branch.
