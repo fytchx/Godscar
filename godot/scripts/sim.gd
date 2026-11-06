@@ -60,7 +60,7 @@ func new_game(cls: String) -> void:
 		"push_retries": 1, "streak": 0, "deaths_here": 0,
 		"life_kills": 0, "life_deaths": 0, "life_bosses": 0, "offline_seconds": 0.0,
 		"kill_counts": {}, "t": 0.0, "last_seen": now(), "rng_state": 0,
-		"spell_bar": [], "last_boss": ""
+		"spell_bar": [], "spell_conditions": {}, "last_boss": ""
 	}
 	for key in D.MONSTERS:
 		var m: Dictionary = D.MONSTERS[key]
@@ -611,7 +611,7 @@ func primary_attack() -> void:
 			kill_monster()
 
 func spell_condition(sp: String) -> bool:
-	var cond: String = D.SPELLS[sp].get("cond", "always")
+	var cond: String = g.get("spell_conditions", {}).get(sp, D.SPELLS[sp].get("cond", "always"))
 	var hp_ratio: float = float(f["hp"]) / maxf(1.0, s["life"])
 	match cond:
 		"hp50": return hp_ratio < 0.5
@@ -866,7 +866,7 @@ func action(op: String, params: Dictionary = {}) -> String:
 			if item.get("locked", false):
 				return "Item is locked."
 			g["gold"] += salvage_value(item)
-			g["mats"]["shards"] = int(g["mats"].get("shards", 0)) + int(item.get("shards_in", 0)) / 2 + maxi(0, rank(item["rarity"]) - 1)
+			g["mats"]["shards"] = int(g["mats"].get("shards", 0)) + floori(float(item.get("shards_in", 0)) / 2.0) + maxi(0, rank(item["rarity"]) - 1)
 			g["bag"].remove_at(index)
 		"salvage_all":
 			for idx in range(g["bag"].size() - 1, -1, -1):
@@ -968,6 +968,96 @@ func action(op: String, params: Dictionary = {}) -> String:
 				g["mats"][ty] = int(g["mats"].get(ty, 0)) - int(recipe[2])
 			g["bag"].append(make_item(slot, ilvl, rarity))
 			note("Crafted a %s %s." % [rarity, slot])
+		"unequip":
+			var slot: String = str(params.get("slot", ""))
+			if slot == "weapon":
+				return "You must always carry a weapon."
+			if not g["equip"].has(slot):
+				return "Nothing equipped there."
+			if g["bag"].size() >= BAG_CAP:
+				return "Bag is full."
+			g["bag"].append(g["equip"][slot])
+			g["equip"].erase(slot)
+		"reforge":
+			var slot: String = str(params.get("slot", ""))
+			var index: int = int(params.get("index", -1))
+			if not g["equip"].has(slot):
+				return "Equip the item first."
+			var item: Dictionary = g["equip"][slot]
+			if index < 0 or index >= item["affixes"].size():
+				return "No such stat."
+			var cost = roundi(25.0 * pow(1.12, int(item["ilvl"])) * (1.0 + rank(item["rarity"])))
+			if int(g["gold"]) < cost:
+				return "Need %s gold to reforge." % cost
+			var new_stat: Dictionary = roll_affix(item)
+			if new_stat.is_empty():
+				return "No alternate affix can roll."
+			g["gold"] -= cost
+			item["affixes"][index] = new_stat
+		"inscribe":
+			var slot: String = str(params.get("slot", ""))
+			var spell: String = str(params.get("spell", ""))
+			if not g["equip"].has(slot) or not D.SPELLS.has(spell):
+				return "Item or spell unavailable."
+			var item: Dictionary = g["equip"][slot]
+			if rank(item["rarity"]) < 2 or item.has("spell"):
+				return "Needs a Rare+ item without a spell."
+			for cls in D.CLASSES:
+				if D.CLASSES[cls]["spell"] == spell:
+					return "Class spells cannot be inscribed."
+			var spell_type: String = str(D.SPELLS[spell].get("type", ""))
+			if spell_type.is_empty():
+				spell_type = "holy" if spell == "mend" else "shadow"
+			var cost = roundi(60.0 * pow(1.1, int(item["ilvl"])))
+			if int(g["gold"]) < cost or int(g["mats"].get(spell_type, 0)) < 3:
+				return "Need %s gold and 3 %s essence." % [cost, spell_type]
+			g["gold"] -= cost
+			g["mats"][spell_type] -= 3
+			item["spell"] = spell
+			item["name"] = item_name(item)
+		"add_socket":
+			if not g["equip"].has("belt"):
+				return "Equip a belt first."
+			var belt: Dictionary = g["equip"]["belt"]
+			if belt.get("socket", false):
+				return "Belt is already socketed."
+			var cost = roundi(2500.0 * pow(1.12, int(belt["ilvl"])))
+			if int(g["gold"]) < cost:
+				return "Need %s gold for a socket." % cost
+			for ty in D.TYPES:
+				if int(g["mats"].get(ty, 0)) < 5:
+					return "Requires five of every essence."
+			g["gold"] -= cost
+			for ty in D.TYPES:
+				g["mats"][ty] -= 5
+			belt["socket"] = true
+		"unsocket_jewel":
+			var belt: Dictionary = g["equip"].get("belt", {})
+			if not belt.has("jewel"):
+				return "No Jewel socketed."
+			var cost = roundi(150.0 * pow(1.1, int(g["level"])))
+			if int(g["gold"]) < cost:
+				return "Need %s gold to remove the Jewel." % cost
+			g["gold"] -= cost
+			g["jewels"].append(belt["jewel"])
+			belt.erase("jewel")
+			var offhand: Dictionary = g["equip"].get("offhand", {})
+			if offhand.get("slot", "") == "weapon":
+				g["bag"].append(offhand)
+				g["equip"].erase("offhand")
+		"bar_cond":
+			var slot: int = int(params.get("slot", -1))
+			var cond: String = str(params.get("cond", ""))
+			if slot < 3 or slot > 4 or not ["always", "hp70", "hp50", "hp30", "foeHigh"].has(cond):
+				return "Invalid utility condition."
+			var spell: Variant = g["spell_bar"][slot]
+			if spell == null:
+				return "Put a utility spell in that slot first."
+			if not g.has("spell_conditions"):
+				g["spell_conditions"] = {}
+			g["spell_conditions"][spell] = cond
+		"push_retries":
+			g["push_retries"] = clampi(int(params.get("count", 1)), 0, 2)
 		"ascend":
 			var slot: String = str(params.get("slot", ""))
 			if not g["asc"]["unlocked"] or not D.ARMOR_SLOTS.has(slot):
