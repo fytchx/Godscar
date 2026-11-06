@@ -7,10 +7,10 @@ const OFFLINE_CAP = 86400.0
 const BAG_CAP = 36
 var g: Dictionary = {}
 var f: Dictionary = {}
-var rng := RandomNumberGenerator.new()
+var rng = RandomNumberGenerator.new()
 var s: Dictionary = {}
 var events: Array[String] = []
-var dirty := false
+var dirty = false
 
 func note(message: String) -> void:
 	events.push_front(message)
@@ -67,7 +67,7 @@ func new_game(cls: String) -> void:
 		g["unlocked"][key] = int(D.ZONES[m["zone"]]["min_level"])
 	for slot in D.ARMOR_SLOTS:
 		g["asc"]["slots"][slot] = 0
-	var it := make_item("weapon", 1, "common", str(D.CLASSES[cls]["start_weapon"]))
+	var it = make_item("weapon", 1, "common", str(D.CLASSES[cls]["start_weapon"]))
 	it["name"] = "Rusted " + D.WEAPONS[it["base"]]["name"]
 	g["equip"]["weapon"] = it
 	f = empty_fight(0.0)
@@ -83,7 +83,7 @@ func empty_fight(t: float) -> Dictionary:
 func load_save() -> bool:
 	if not FileAccess.file_exists(SAVE_PATH):
 		return false
-	var file := FileAccess.open(SAVE_PATH, FileAccess.READ)
+	var file = FileAccess.open(SAVE_PATH, FileAccess.READ)
 	if file == null:
 		return false
 	var raw: Variant = JSON.parse_string(file.get_as_text())
@@ -97,7 +97,7 @@ func load_save() -> bool:
 	if int(g.get("rng_state", 0)) != 0:
 		rng.state = int(g["rng_state"])
 	_refresh()
-	var elapsed := clampf(now() - float(g.get("last_seen", now())), 0.0, OFFLINE_CAP)
+	var elapsed = clampf(now() - float(g.get("last_seen", now())), 0.0, OFFLINE_CAP)
 	if elapsed > 0.1:
 		advance(elapsed)
 		g["offline_seconds"] = float(g.get("offline_seconds", 0)) + elapsed
@@ -110,7 +110,7 @@ func save_game() -> void:
 		return
 	g["last_seen"] = now()
 	g["rng_state"] = rng.state
-	var file := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
+	var file = FileAccess.open(SAVE_PATH, FileAccess.WRITE)
 	if file != null:
 		file.store_string(JSON.stringify(g))
 	dirty = false
@@ -119,7 +119,7 @@ func _refresh() -> void:
 	if g.is_empty():
 		return
 	var c: Dictionary = D.CLASSES[g["cls"]]
-	var level := int(g["level"])
+	var level = int(g["level"])
 	var spec: Dictionary = {}
 	if int(g.get("spec", -1)) >= 0:
 		spec = c["specs"][int(g["spec"])]
@@ -149,7 +149,7 @@ func _refresh() -> void:
 		var it: Dictionary = g["equip"].get(slot, {})
 		if it.is_empty():
 			continue
-		var scale := gear(int(g["asc"]["base"]) + 2 * int(g["asc"]["slots"].get(it["slot"], 0))) / gear(int(it["ilvl"])) if it["rarity"] == "ascended" else 1.0 + 0.1 * int(it.get("plus", 0))
+		var scale = gear(int(g["asc"]["base"]) + 2 * int(g["asc"]["slots"].get(it["slot"], 0))) / gear(int(it["ilvl"])) if it["rarity"] == "ascended" else 1.0 + 0.1 * int(it.get("plus", 0))
 		if slot == "weapon":
 			var w: Dictionary = D.WEAPONS.get(it["base"], D.WEAPONS["sword"])
 			st["weapon_type"] = w["type"]
@@ -219,8 +219,8 @@ func _refresh() -> void:
 			pre[t] += pre["phys"] * 0.5
 			pre["phys"] *= 0.5
 	st["pre"] = pre
-	var global := (1.0 + 0.03 * (level - 1)) * (1.0 + st["dmg_pct"] / 100.0) * (1.0 + float(spec.get("damage", 0))) * (1.0 + 0.02 * float(p.get("might", 0))) * (1.3 if st["aug"].has("glass") else 1.0)
-	var elem_mult := 1.0 + st["elem_pct"] / 100.0 + 0.003 * st["attrs"]["INT"]
+	var global = (1.0 + 0.03 * (level - 1)) * (1.0 + st["dmg_pct"] / 100.0) * (1.0 + float(spec.get("damage", 0))) * (1.0 + 0.02 * float(p.get("might", 0))) * (1.3 if st["aug"].has("glass") else 1.0)
+	var elem_mult = 1.0 + st["elem_pct"] / 100.0 + 0.003 * st["attrs"]["INT"]
 	st["type_mult"] = {"phys": global * (1.0 + 0.003 * st["attrs"]["STR"])}
 	for t in D.ELEMS:
 		st["type_mult"][t] = global * elem_mult * (0.9 if st["evo"] == "sorcerer" else 1.0) * (1.2 if (t == "fire" or t == "holy") and int(st["sets"].get("vigil", 0)) >= 2 else 1.0)
@@ -264,10 +264,10 @@ func _refresh() -> void:
 
 func roll_rarity(zone: String) -> String:
 	var weights: Array = D.ZONES[zone]["weights"]
-	var total := 0.0
+	var total = 0.0
 	for w in weights:
 		total += float(w)
-	var value := r(0, total)
+	var value = r(0, total)
 	for idx in range(weights.size()):
 		value -= float(weights[idx])
 		if value <= 0:
@@ -280,7 +280,7 @@ func make_item(slot: String, ilvl: int, rarity: String = "", base: String = "") 
 		rarity = roll_rarity(zone)
 	var item: Dictionary = {"id": "i%s" % str(rng.randi()), "slot": slot, "ilvl": maxi(1, ilvl), "rarity": rarity,
 		"plus": 0, "affixes": [], "augments": [], "locked": false, "shards_in": 0}
-	var growth := gear(ilvl)
+	var growth = gear(ilvl)
 	if slot == "weapon":
 		item["base"] = base if D.WEAPONS.has(base) else choose(D.WEAPONS.keys())
 		item["dmg"] = 7.0 * growth * r(0.92, 1.08)
@@ -294,7 +294,7 @@ func make_item(slot: String, ilvl: int, rarity: String = "", base: String = "") 
 	else:
 		item["attr"] = [choose(D.ATTRS), r(3, 6) + ilvl * 0.35]
 	var counts: Array = D.AFFIX_COUNT[rarity]
-	var n := rng.randi_range(int(counts[0]), int(counts[1]))
+	var n = rng.randi_range(int(counts[0]), int(counts[1]))
 	for idx in range(n):
 		var a: Dictionary = roll_affix(item)
 		if not a.is_empty():
@@ -305,7 +305,7 @@ func make_item(slot: String, ilvl: int, rarity: String = "", base: String = "") 
 		var tier: float = {"epic": 1.0, "legendary": 1.3, "ascended": 1.5}.get(rarity, 1.0)
 		item["enchant"] = {"key": key, "value": r(float(bounds[0]), float(bounds[1])) * tier}
 	if rarity == "legendary":
-		var n_aug := 1 + int(r() < 0.45) + int(r() < 0.12)
+		var n_aug = 1 + int(r() < 0.45) + int(r() < 0.12)
 		for idx in range(n_aug):
 			var pool: Array = []
 			for aug in D.AUGMENTS:
@@ -319,7 +319,7 @@ func make_item(slot: String, ilvl: int, rarity: String = "", base: String = "") 
 	if slot == "belt" and rank(rarity) >= 4 and r() < 0.2:
 		item["socket"] = true
 	if zone == "hollow" and rank(rarity) >= 2 and r() < (0.27 if rank(rarity) >= 3 else 0.18):
-		var found := []
+		var found = []
 		for sp in D.SPELLS:
 			if not D.CLASSES.values().any(func(c): return c["spell"] == sp):
 				found.append(sp)
@@ -353,7 +353,7 @@ func roll_affix(item: Dictionary) -> Dictionary:
 	var available: Array = []
 	for key in D.AFFIXES:
 		if D.AFFIXES[key]["slots"].has(slot):
-			var used := false
+			var used = false
 			for old in item["affixes"]:
 				if old["key"] == key:
 					used = true
@@ -361,23 +361,23 @@ func roll_affix(item: Dictionary) -> Dictionary:
 				available.append(key)
 	for t in D.TYPES:
 		if ["weapon", "gloves", "ring", "amulet"].has(slot):
-			var key := "flat_" + t
+			var key = "flat_" + t
 			if not has_affix(item, key):
 				available.append(key)
 	for t in D.ELEMS:
 		if ["helm", "chest", "belt", "legs", "boots", "ring", "amulet", "offhand"].has(slot):
-			var key := "res_" + t
+			var key = "res_" + t
 			if not has_affix(item, key):
 				available.append(key)
 	for attr in D.ATTRS:
 		if slot != "weapon":
-			var key := "attr_" + attr
+			var key = "attr_" + attr
 			if not has_affix(item, key):
 				available.append(key)
 	if available.is_empty():
 		return {}
 	var key: String = choose(available)
-	var value := 0.0
+	var value = 0.0
 	if key.begins_with("flat_"):
 		value = r(1.5, 3.0) * gear(item["ilvl"])
 	elif key.begins_with("res_"):
@@ -401,7 +401,7 @@ func has_affix(item: Dictionary, key: String) -> bool:
 
 func spawn(key: String, level: int) -> Dictionary:
 	var m: Dictionary = D.MONSTERS.get(key, D.BOSSES.get(key, D.MONSTERS["husk"]))
-	var scale := monster_growth(level) * float(D.ZONES[m["zone"]]["tough"])
+	var scale = monster_growth(level) * float(D.ZONES[m["zone"]]["tough"])
 	return {"key": key, "level": level, "hp": m["hp"] * scale, "max": m["hp"] * scale,
 		"dmg": m["dmg"] * scale, "armor": m["armor"] * scale, "interval": m["interval"],
 		"type": m["type"], "res": m.get("res", {}), "regen": m.get("regen", 0.0),
@@ -413,15 +413,15 @@ func advance(duration: float) -> void:
 	if g.is_empty() or duration <= 0:
 		return
 	var finish: float = float(g["t"]) + duration
-	var guard := 0
+	var guard = 0
 	while float(g["t"]) < finish and guard < 750000:
 		guard += 1
 		if bool(g.get("boss_mode", false)) and (g.get("boss_won", false) or g.get("boss_died", false)):
 			break
 		var t: float = float(g["t"])
-		var next_t := finish
-		var what := ""
-		var spell := ""
+		var next_t = finish
+		var what = ""
+		var spell = ""
 		if float(f["dead_until"]) > t:
 			next_t = minf(finish, float(f["dead_until"]))
 			what = "revive"
@@ -488,7 +488,7 @@ func _hit(multiplier: float, forced_type: String = "", primary: bool = false, fo
 	if not extra.get("unevadable", false) and r(0, 100) < float(m["evade"]):
 		return 0.0
 	var crit: bool = force_crit or r(0, 100) < s["crit"]
-	var roll := r(0.85, 1.15) * multiplier * (s["crit_mult"] / 100.0 if crit else 1.0)
+	var roll = r(0.85, 1.15) * multiplier * (s["crit_mult"] / 100.0 if crit else 1.0)
 	if float(f["buffs"].get("warcry", 0)) > float(g["t"]):
 		roll *= 1.3
 	if primary:
@@ -501,14 +501,14 @@ func _hit(multiplier: float, forced_type: String = "", primary: bool = false, fo
 		pre["shadow"] += pre["phys"] * 0.4
 		pre["phys"] *= 0.6
 	elif not forced_type.is_empty():
-		var amount := 0.0
+		var amount = 0.0
 		for ty in D.TYPES:
 			amount += pre[ty]
 			pre[ty] = 0.0
 		pre[forced_type] = amount
-	var dealt := 0.0
-	var parts := {}
-	var raw := 0.0
+	var dealt = 0.0
+	var parts = {}
+	var raw = 0.0
 	for ty in D.TYPES:
 		if pre[ty] <= 0:
 			continue
@@ -524,7 +524,7 @@ func _hit(multiplier: float, forced_type: String = "", primary: bool = false, fo
 		if ty == "holy" and m["blighted"] and s["evo"] != "paladin":
 			damage *= 1.4
 		parts[ty] = damage
-	var extra_mult := 1.0
+	var extra_mult = 1.0
 	if float(m["shock_until"]) > float(g["t"]):
 		extra_mult *= 1.0 + float(m["shock_amt"])
 	if s["aug"].has("frostbite") and int(m["chill"]) > 0:
@@ -585,7 +585,7 @@ func primary_attack() -> void:
 	if f["monster"].is_empty():
 		return
 	var cls: Dictionary = D.CLASSES[g["cls"]]
-	var forced := ""
+	var forced = ""
 	match str(g["cls"]):
 		"paladin": forced = "deathknight" if s["evo"] == "paladin" else "paladin"
 		"sorcerer":
@@ -596,7 +596,7 @@ func primary_attack() -> void:
 			if s["evo"] == "rogue":
 				forced = "shadow"
 	var mult: float = float(cls["primary_mult"]) * (1.75 if s["aug"].has("heavy") else 1.0)
-	var repeats := 2 if r(0, 100) < s["double_cast"] else 1
+	var repeats = 2 if r(0, 100) < s["double_cast"] else 1
 	for rep in range(repeats):
 		for hit in range(int(cls["hits"])):
 			if f["monster"].is_empty():
@@ -631,7 +631,7 @@ func cast_spell(sp: String, triggered: bool = false) -> void:
 			return
 		var stay: bool = int(s["sets"].get("riftwalker", 0)) >= 4 and data.get("kind", "off") == "off" and r() < 0.25
 		f["cooldowns"][sp] = t + (0.5 if stay else float(data["cd"]) * (1.0 - s["cdr"] / 100.0))
-	var repeats := 2 if s["aug"].has("echo") and data.get("kind", "off") == "off" else 1
+	var repeats = 2 if s["aug"].has("echo") and data.get("kind", "off") == "off" else 1
 	for i in range(repeats):
 		if f["monster"].is_empty():
 			break
@@ -679,7 +679,7 @@ func monster_attack() -> void:
 		damage = maxf(damage * 0.25, damage - s["armor"] * (1.5 if ward else 1.0))
 	else:
 		damage *= 1.0 - minf(85.0, float(s["res"].get(m["type"], 0)) + (25.0 if ward else 0.0)) / 100.0
-	var shielded := minf(float(f["shield"]), damage)
+	var shielded = minf(float(f["shield"]), damage)
 	f["shield"] -= shielded
 	damage -= shielded
 	f["hp"] -= damage
@@ -711,8 +711,8 @@ func pulse() -> void:
 	if float(m["bleed_until"]) >= float(g["t"]):
 		m["hp"] -= float(m["bleed"])
 	if float(f["buffs"].get("hawk", 0)) > float(g["t"]):
-		var count := 2 if s["evo"] == "hunter" else 1
-		var mult := 0.45 if s["evo"] == "hunter" else 0.4
+		var count = 2 if s["evo"] == "hunter" else 1
+		var mult = 0.45 if s["evo"] == "hunter" else 0.4
 		for i in range(count):
 			_hit(mult * s["spell_mult"] * s["companion_mult"] * (s["evo_pot"] if s["evo"] == "hunter" else 1.0))
 			if s["evo"] == "hunter" and r() < 0.08:
@@ -760,7 +760,7 @@ func kill_monster() -> void:
 	var xp: int = roundi(8.0 * pow(1.12, stage - 1) * float(info["xp"]) * float(zone["reward"]) * (maxf(0.05, 1.0 - gap * 0.12) if gap > 0 else 1.0))
 	var gold: int = roundi(3.0 * pow(1.12, stage - 1) * float(info["gold"]) * float(zone["reward"]) * r(0.8, 1.2) * (1.0 + s["gold_find"] / 100.0))
 	g["gold"] += gold
-	var kill_key := "%s:%s" % [key, stage]
+	var kill_key = "%s:%s" % [key, stage]
 	g["kill_counts"][kill_key] = int(g["kill_counts"].get(kill_key, 0)) + 1
 	if r() < (0.45 if info["zone"] == "hollow" else 0.3):
 		g["mats"]["shards"] = int(g["mats"].get("shards", 0)) + (2 if info["zone"] == "hollow" and r() < 0.4 else 1)
@@ -830,7 +830,7 @@ func item_summary(item: Dictionary) -> String:
 func action(op: String, params: Dictionary = {}) -> String:
 	if g.is_empty():
 		return "Create a character first."
-	var error := ""
+	var error = ""
 	match op:
 		"equip":
 			var index: int = int(params.get("index", -1))
@@ -889,7 +889,7 @@ func action(op: String, params: Dictionary = {}) -> String:
 			var plus: int = int(item.get("plus", 0))
 			if plus >= 10:
 				return "Fully upgraded."
-			var cost := ceili(3.0 * pow(1.45, plus) * (1.0 + rank(item["rarity"]) * 0.3))
+			var cost = ceili(3.0 * pow(1.45, plus) * (1.0 + rank(item["rarity"]) * 0.3))
 			if int(g["mats"].get("shards", 0)) < cost:
 				return "Need %s Scar Shards." % cost
 			g["mats"]["shards"] -= cost
@@ -915,7 +915,7 @@ func action(op: String, params: Dictionary = {}) -> String:
 				return "Unknown specialization."
 			if index == int(g["spec"]):
 				return ""
-			var cost := 0 if int(g["spec"]) == -1 else roundi(40.0 * pow(1.12, int(g["level"])))
+			var cost = 0 if int(g["spec"]) == -1 else roundi(40.0 * pow(1.12, int(g["level"])))
 			if int(g["gold"]) < cost:
 				return "Need %s gold." % cost
 			g["gold"] -= cost
@@ -950,13 +950,13 @@ func action(op: String, params: Dictionary = {}) -> String:
 			if g["bag"].size() >= BAG_CAP:
 				return "Bag is full."
 			var ilvl: int = int(params.get("level", g["level"]))
-			var highest := 1
+			var highest = 1
 			for key in g["unlocked"]:
 				highest = maxi(highest, int(g["unlocked"][key]))
 			if ilvl < 1 or ilvl > highest + 4:
 				return "Item level outside unlocked progress."
 			var recipe: Array = {"common": [1, 0, 0], "uncommon": [2, 2, 0], "rare": [5, 6, 0], "epic": [15, 20, 2], "legendary": [60, 60, 4]}[rarity]
-			var gold := roundi(30.0 * pow(1.12, ilvl) * int(recipe[0]))
+			var gold = roundi(30.0 * pow(1.12, ilvl) * int(recipe[0]))
 			if int(g["gold"]) < gold or int(g["mats"].get("shards", 0)) < int(recipe[1]):
 				return "Not enough gold or Scar Shards."
 			for ty in D.TYPES:
@@ -973,7 +973,7 @@ func action(op: String, params: Dictionary = {}) -> String:
 			if not g["asc"]["unlocked"] or not D.ARMOR_SLOTS.has(slot):
 				return "Ascension sealed."
 			var level: int = int(g["asc"]["slots"][slot])
-			var cost := ceili(2.0 * pow(1.22, level))
+			var cost = ceili(2.0 * pow(1.22, level))
 			var mat: String = D.ASC_MATS[slot]
 			if int(g["mats"].get(mat, 0)) < cost:
 				return "Need %s %s." % [cost, mat]
@@ -1010,7 +1010,7 @@ func boss_fight(key: String) -> String:
 	if int(g["sigils"]) < 1:
 		return "Need a Boss Sigil."
 	g["sigils"] -= 1
-	var lvl := int(g["boss_unlocked"][key])
+	var lvl = int(g["boss_unlocked"][key])
 	var preview = get_script().new()
 	preview.g = g.duplicate(true)
 	preview.f = preview.g["fight"]
@@ -1036,8 +1036,8 @@ func boss_fight(key: String) -> String:
 	g["mats"]["shards"] = int(g["mats"].get("shards", 0)) + rng.randi_range(4, 7)
 	gain_xp(roundi(8.0 * pow(1.12, lvl - 1) * float(boss["xp"])))
 	for idx in range(2 if r() < 0.35 else 1):
-		var value := r()
-		var rarity := "legendary" if value < 0.04 else ("epic" if value < 0.35 else "rare")
+		var value = r()
+		var rarity = "legendary" if value < 0.04 else ("epic" if value < 0.35 else "rare")
 		receive_item(make_item(choose(D.DROP_SLOTS), lvl + int(zone["ilvl"]) + 2, rarity))
 	if key == "woundwarden":
 		if not g["asc"]["unlocked"]:
