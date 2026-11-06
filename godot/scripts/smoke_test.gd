@@ -32,6 +32,26 @@ func _run() -> void:
 		var index: int = sim.g["bag"].size() - 1
 		_check(sim.action("equip", {"index": index}).is_empty(), "equip")
 		_check(sim.action("upgrade", {"slot": "weapon"}) != null, "upgrade returns a value")
+		# Exercise newer item/socket/inscription paths independently of drop randomness.
+		sim.g["gold"] = 1000000
+		sim.g["mats"]["shards"] = 500
+		for ty in D.TYPES:
+			sim.g["mats"][ty] = 100
+		var belt: Dictionary = sim.make_item("belt", 1, "rare")
+		sim.g["bag"].append(belt)
+		_check(sim.action("equip", {"index": sim.g["bag"].size() - 1}).is_empty(), "equip belt")
+		_check(sim.action("add_socket").is_empty(), "socket equipped belt")
+		sim.g["jewels"].append({"id": "test-jewel", "cls": cls, "pot": 1.1})
+		_check(sim.action("socket_jewel", {"index": sim.g["jewels"].size() - 1}).is_empty(), "insert jewel")
+		_check(sim.s["evo"] == cls, "class evolution active")
+		_check(sim.action("unsocket_jewel").is_empty(), "remove jewel")
+		_check(sim.s["evo"] == "", "evolution removed")
+		var rare: Dictionary = sim.make_item("weapon", 1, "rare", D.CLASSES[cls]["start_weapon"])
+		sim.g["bag"].append(rare)
+		_check(sim.action("equip", {"index": sim.g["bag"].size() - 1}).is_empty(), "equip rare weapon")
+		_check(sim.action("reforge", {"slot": "weapon", "index": 0}).is_empty(), "reforge affix")
+		_check(sim.action("inscribe", {"slot": "weapon", "spell": "cinderburst"}).is_empty(), "inscribe spell")
+		_check(sim.s["available_spells"].has("cinderburst"), "inscribed spell available")
 		var save_text = JSON.stringify(sim.g)
 		_check(JSON.parse_string(save_text) is Dictionary, "JSON save encode/decode")
 		print("PASS %s: kills=%s lvl=%s" % [cls, sim.g["life_kills"], sim.g["level"]])
