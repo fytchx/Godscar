@@ -1,0 +1,24 @@
+name: Godscar handoff continuity
+
+on:
+  push:
+    branches: [preview/browser]
+  pull_request:
+    branches: [preview/browser]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  handoff:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify source changes include state and changelog in same commit
+        run: node scripts/check-handoff.mjs
