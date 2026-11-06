@@ -1,5 +1,13 @@
 # Godscar project changelog and handoff history
 
+## 2026-11-06 PT — Living Arsenal itemization redesign concept
+- **Why:** Owner requested a comprehensive rethink inspired by Path of Exile, Grim Dawn and Diablo, preserving automatic white-weapon attacks and adding 1–5 modifiable autonomous abilities from items, crafting, loot and progression.
+- **Change:** New `docs/proposals/LIVING-ARSENAL-ITEMIZATION-V2.md` with system definitions, weapon identities, ability sources, Conduits, modified skills/supports, white-to-rare crafting, named items, targeted drops, idle event rules, example build, migration risks, rollout and decision questions; `docs/PROJECT-STATE.md`, `docs/DECISIONS.md`, `docs/OPEN-QUESTIONS.md` updated for continuity.
+- **Impact:** Documentation only. No gameplay code, user saves, crafting actions or preview UI changed. No owner approval assumed for exact mechanics.
+- **Verification:** Proposal checked against known original browser architecture. CI and deployment results must be checked after GitHub commit; tests cannot validate an unimplemented design.
+- **Next:** Present core tradeoffs to owner, collect choices for skill sources / rarity / classes / crafting risk, then design a small isolated prototype with save protection.
+
+
 ## 2026-11-05 PT — Complete equipment system inventory for owner review
 - **What / why:** Extracted actual browser-code item mechanics into a human-readable, source-indexed reference covering all equipment slots, weapon bases, rarities, 28 affix keys, enchants, augments, Ascended sets, Jewels, drops, inventory, item comparison, crafting, forge, bosses and saves. Added I01–I17 owner review IDs with all decisions remaining UNSURE.
 - **Files:** `docs/ITEMS-AND-EQUIPMENT.md`, `docs/PROJECT-STATE.md`, `docs/CHANGELOG.md`, `docs/OPEN-QUESTIONS.md`.

@@ -47,6 +47,7 @@ Godscar is a phone-first dark fantasy **continuous-combat idle ARPG**, potential
 5. Improve clarity and structure incrementally, preserving reproducible combat behavior.
 
 ## Latest completed activity
+- 2026-11-06 PT: proposed `docs/proposals/LIVING-ARSENAL-ITEMIZATION-V2.md` after owner requested a new item/crafting/loot system: white weapon's innate automated action plus up to five additional automatic abilities from gear, loot, crafting and progression. Design is **proposal only** except this confirmed direction. No code changes, no player migration, no new abilities implemented. Review unresolved design choices before coding.
 - 2026-11-05 PT: documented every implemented item/equipment subsystem in `docs/ITEMS-AND-EQUIPMENT.md` with an I01–I17 Keep/Change/Unsure review register, precise current behavior, and unverified implementation concerns. **No owner design decisions have been recorded from this review yet. No gameplay source changed.**
 - 2026-11-05 PT: hardened handoff CI to inspect each commit in ordinary multi-commit pushes; published GitHub Copilot onboarding on the active branch. No gameplay source changed.
 - 2026-11-05 PT: created repository-wide AI/human contributor instructions, design and architecture context, human-readable code standards, handoff workflow, changelog and a CI documentation gate. **Documentation/guardrails only; no gameplay mechanics changed.** See the most recent `docs/CHANGELOG.md` entry.

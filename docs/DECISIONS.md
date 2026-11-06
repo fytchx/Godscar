@@ -2,6 +2,11 @@
 
 **How to use:** Add dated entries with **status (confirmed / proposed / rejected / unknown)**, reason and consequences. Do not convert a discussion, code comment, or AI suggestion into an owner-approved fact. When superseding, keep the old entry and point to the new one.
 
+## 2026-11-06 PT — Confirmed design direction, NOT a completed system
+- **Confirmed owner intent:** Completely rethink item and crafting mechanics. Even a white weapon should automatically perform a weapon-type-specific (and where appropriate element-specific) baseline attack. Gear, loot, crafting and progression should enable an additional 1–5 modifiable automatic skills/attacks/spells/DoTs, drawing broad inspiration from Path of Exile, Grim Dawn and Diablo.
+- **Not decided:** The proposed "Living Arsenal" architecture, number of rarity classes, support/Conduit terminology, item-skill ownership, crafting randomness, class interactions, balance and release sequence. See `docs/proposals/LIVING-ARSENAL-ITEMIZATION-V2.md`.
+- **Consequence:** Preserve the existing original browser game unchanged until the concept has been reviewed and a safe prototype/migration plan is approved.
+
 ## 2026-11-05 PT — Confirmed: original browser Godscar is the active direction
 - **Decision:** The owner opened the separately hosted original Godscar browser game and explicitly confirmed: "yesss. That's it." Continue the original browser version rather than the stripped-down Godot APK.
 - **Why:** An attempted Godot rebuild delivered a different experience, with missing UI/presentation/systems despite passing tests.
