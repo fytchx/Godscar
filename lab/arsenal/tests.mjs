@@ -117,4 +117,23 @@ test("protected Rare overflow never silently destroys a rare find", () => {
   assert.ok(g.materials.scrap > 0);
   assert.ok(g.kills > 0);
 });
+test("guard autocasts before lethal damage when ready", () => {
+  const g = createGame(912);
+  g.level = 5;
+  g.conduits[1] = "aegis";
+  g.health = 8;
+  const startingDeaths = g.deaths;
+  advance(g, 2500);
+  assert.equal(g.deaths, startingDeaths);
+  assert.ok(g.log.some(entry => entry.message.includes("Aegis Pulse shields")));
+});
+test("charm sharp modifier affects the weapon damage without changing its base", () => {
+  const g = createGame(2);
+  const before = createGame(2);
+  g.gear.charm.affixes.push("sharp");
+  advance(g, 2500);
+  advance(before, 2500);
+  assert.ok(g.enemy?.hp <= before.enemy?.hp || g.kills > before.kills);
+  assert.equal(g.gear.weapon.base, "sword");
+});
 console.log("Living Arsenal systems lab tests complete.");

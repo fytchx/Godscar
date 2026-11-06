@@ -1,5 +1,12 @@
 # Godscar project changelog and handoff history
 
+## 2026-11-06 PT — Validate automatic defense, accessory effects, offline progress
+- **Files:** `lab/arsenal/{engine,ui,tests}.mjs`, `lab/arsenal/README.md`, `docs/PROJECT-STATE.md`, `docs/CHANGELOG.md`.
+- **Changes:** Aegis triggers before damage can kill the hero, accessory affixes affect the build, persisted local lab state catches up offline up to four hours, and weapon-family mastery grants a small capped prototype effect while persisting through swaps. Added regression tests.
+- **Impact:** Lab-only; no change to original browser game, live Arcana, accounts or older saves.
+- **Verification:** New lab CI and web tests must pass on the feature branch after commit. Physical-device visual/long offline profiling is not yet completed.
+
+
 ## 2026-11-06 PT — Living Arsenal isolated playable lab (feature branch)
 - **Implemented:** A separate deterministic combat engine/catalog, new responsive V2 UI/style, 3 white weapons, 5 milestone-gated conduits, 5 skill definitions, 3 support tags, 2 hunt paths, basic gear swaps, intentional Magic/Rare forging and engraving, safe Scrap/XP income, protected storage. Added `/lab/arsenal/` via explicit allowlisted routes to the existing preview server, on feature branch only.
 - **Paths:** `lab/arsenal/{catalog,engine,ui}.mjs`, `index.html`, `styles.css`, `README.md`, `tests.mjs`, `preview/server.mjs`, `.github/workflows/living-arsenal-lab.yml`, `docs/PROJECT-STATE.md`, `docs/ARCHITECTURE.md`, `docs/CHANGELOG.md`.

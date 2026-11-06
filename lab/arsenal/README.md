@@ -19,10 +19,10 @@ Open at /lab/arsenal/ on the separately hosted Godscar browser preview after the
 - Supports: Lingering, Echo, Siphon with tag-validation and resource cost
 - Always available Greenward hunt and harder Ashen Crossing at level 5
 - Every kill earns XP and Scrap; tougher runs earn Seals and Sigils faster
-- Sword, Dagger and Wand mastery survives equipment switching
+- Sword, Dagger and Wand mastery survives equipment switching; prototype reward +2% primary damage per 50 attacks, maximum +6%
 - White→Magic→Rare item refinement with chosen focus, charm engraving, salvage and item swapping
 - Separate bounded 12-slot bag + 5-slot Rare reserve. When both fill, new item rolls pause instead of silently destroying protected finds; XP/materials continue
-- Limited catch-up; no global server tick or multiplayer authority
+- Browser-local offline catch-up, capped at four hours for this lab; no global server tick or multiplayer authority
 
 ## Not implemented / not to overclaim
 - Full PoE-like affix pool or endgame Unique items and boss campaigns

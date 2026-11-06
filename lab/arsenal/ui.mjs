@@ -14,13 +14,22 @@ function restore() {
     if (!raw) return createGame();
     const state = JSON.parse(raw);
     if (state?.version !== LAB_VERSION || !Array.isArray(state.conduits) || !state.gear?.weapon) return createGame();
+    // A separate local save and limited offline catch-up. Existing Godscar's
+    // save key is never opened or modified by this experimental page.
+    const elapsed = Math.max(0, Math.min(4 * 60 * 60 * 1000, Date.now() - (state.savedAtWallMs || Date.now())));
+    if (elapsed > 0) advance(state, elapsed);
     return state;
   } catch {
     return createGame();
   }
 }
 function persist() {
-  try { localStorage.setItem(SAVE_KEY, JSON.stringify(game)); } catch { notice = "Browser storage unavailable. This experiment may not persist."; }
+  try {
+    game.savedAtWallMs = Date.now();
+    localStorage.setItem(SAVE_KEY, JSON.stringify(game));
+  } catch {
+    notice = "Browser storage unavailable. This experiment may not persist.";
+  }
 }
 function escapeHtml(text) {
   return String(text).replace(/[&<>"']/g, character => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[character]));
@@ -44,7 +53,7 @@ function weaponPanel(view) {
     '<p class="muted">' + escapeHtml(weapon.description) + "</p>" +
     '<div class="tags">' + chip("Permanent: " + weapon.attack, "gold") + chip(weapon.type) +
     chip((view.intervalMs / 1000).toFixed(2) + "s interval") + chip(selected.rarity) + "</div>" +
-    '<p class="micro">Weapon mastery (persists when swapping): ' + Object.entries(game.mastery).map(([key, n]) => escapeHtml(WEAPONS[key].name) + " " + n).join(" · ") + "</p>";
+    '<p class="micro">Weapon mastery (persists when swapping): ' + Object.entries(game.mastery).map(([key, n]) => escapeHtml(WEAPONS[key].name) + " " + n).join(" · ") + '. Every 50 attacks grants +2% to that family’s primary (max +6%).</p>';
   const items = choices.map(i => '<div class="itemline"><span>' + escapeHtml(itemTitle(i)) + "</span>" +
     '<button data-action="equip" data-id="' + i.id + '">Equip</button></div>').join("");
   return panel("Your weapon", gear + '<h3>Try another style</h3>' + (items || '<p class="muted">No spare weapons in your bag.</p>'), "weapon");
@@ -129,7 +138,7 @@ function render() {
     '<div class="column-layout"><div class="column">' + weaponPanel(view) + huntPanel(view) + "</div>" +
     '<div class="column">' + conduitPanel(view) + forgePanel() + "</div>" +
     '<div class="column">' + inventoryPanel() + activityPanel() + "</div></div>" +
-    '<footer><p>Experimental V2 vertical slice. The original game is untouched. All numbers, world names and balance are provisional.</p></footer>' +
+    '<footer><p>Experimental V2 vertical slice. The original game is untouched. Offline catch-up is capped at 4h in this lab. All numbers, world names and balance are provisional.</p></footer>' +
     "</div>";
 }
 

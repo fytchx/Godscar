@@ -86,7 +86,9 @@ export function summarize(game) {
     level: game.level, xp: game.xp, xpNeeded: xpNeeded(game.level),
     unlocked: unlockedCount(game), activeSkills: activeSkillIds(game),
     weaponName: definition.name, attackName: definition.attack, damageType: definition.type,
-    intervalMs: Math.round(definition.intervalMs * (weapon.affixes.includes("quick") ? 0.90 : 1)),
+    intervalMs: Math.round(definition.intervalMs *
+      (weapon.affixes.includes("quick") ? 0.90 : 1) *
+      (game.gear.charm?.affixes.includes("quick") ? 0.95 : 1)),
     healthMax: maximumHealth(game), incoming: game.hunt, enemy: game.enemy,
     canHuntRift: game.level >= HUNTS.rift.level
   };
@@ -95,7 +97,12 @@ export function summarize(game) {
 function weaponDamage(game) {
   const gear = game.gear.weapon;
   const base = WEAPONS[gear.base].damage;
-  return Math.round((base + game.level * 2) * (1 + gear.quality * 0.03) * (gear.affixes.includes("sharp") ? 1.16 : 1));
+  const familyMastery = game.mastery[gear.base] || 0;
+  const masteryBonus = Math.min(3, Math.floor(familyMastery / 50)) * 0.02;
+  const sharpBonus = (gear.affixes.includes("sharp") ? 0.16 : 0) +
+    (game.gear.charm?.affixes.includes("sharp") ? 0.08 : 0);
+  return Math.round((base + game.level * 2) * (1 + gear.quality * 0.03) *
+    (1 + masteryBonus + sharpBonus));
 }
 
 function maybeHealFromHit(game, damage, support) {
@@ -222,26 +229,26 @@ function processEnemyAttack(game) {
   const hunt = HUNTS[game.hunt];
   game.nextEnemyAt = game.timeMs + hunt.intervalMs;
   if (!game.enemy) return;
-  let damage = hunt.damageBase + Math.floor(game.level * (game.hunt === "rift" ? 0.75 : 0.4));
-  if (game.shield) {
-    const absorbed = Math.min(game.shield, damage);
-    game.shield -= absorbed;
-    damage -= absorbed;
+  const damage = hunt.damageBase + Math.floor(game.level * (game.hunt === "rift" ? 0.75 : 0.4));
+  // Defensive abilities may trigger before the hit lands. A low-life guard
+  // should be able to prevent a lethal blow rather than activate after death.
+  const unshielded = Math.max(0, damage - game.shield);
+  if (activeSkillIds(game).includes("aegis") &&
+      game.health - unshielded <= maximumHealth(game) * 0.55 &&
+      game.timeMs >= (game.cooldowns.aegis || 0)) {
+    game.shield += 20 + game.level * 2;
+    game.cooldowns.aegis = game.timeMs + SKILLS.aegis.cooldownMs;
+    log(game, "Aegis Pulse shields you automatically.", "skill");
   }
-  game.health -= damage;
+  const absorbed = Math.min(game.shield, damage);
+  game.shield -= absorbed;
+  game.health -= damage - absorbed;
   if (game.health <= 0) {
     game.deaths++;
     game.health = maximumHealth(game);
     game.shield = 0;
     game.nextPrimaryAt = Math.max(game.nextPrimaryAt, game.timeMs + 3500);
     log(game, "Defeated, but not trapped. You recover and resume automatically.", "warning");
-  }
-  if (activeSkillIds(game).includes("aegis") &&
-      game.health <= maximumHealth(game) * 0.55 &&
-      game.timeMs >= (game.cooldowns.aegis || 0)) {
-    game.shield += 20 + game.level * 2;
-    game.cooldowns.aegis = game.timeMs + SKILLS.aegis.cooldownMs;
-    log(game, "Aegis Pulse shields you automatically.", "skill");
   }
 }
 
