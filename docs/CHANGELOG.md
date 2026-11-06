@@ -1,5 +1,44 @@
 # Godscar project changelog and handoff history
 
+## 2026-11-06 PT — Release opt-in Living Arsenal systems lab alongside original browser game
+- **Reason:** Owner endorsed Living Arsenal as new core and requested a tangible, reviewable implementation without the prior fidelity-losing wholesale rewrite.
+- **Change:** Merge feature branch `work/living-arsenal-lab` into active `preview/browser`; serve lab at `/lab/arsenal/` from the existing Godscar Railway preview. Original browser homepage remains served at `/`, untouched. Added lab link, expanded lab CI to active branch, and clarified source documentation.
+- **Verification:** Feature branch lab workflow and web tests passed before merge on commit `cc8eaee5d84b1f54fb0ab3a1c68133b85aab07e8`. Active branch CI and Railway deployment must be separately verified after merge.
+- **Player/data:** Experimental lab uses its own localStorage key; no migration or deletion of the original browser character. Lab has no production account/multiplayer or final content.
+- **Limitations:** New UI is not yet verified on a physical phone. Prototype supports 3 weapons, basic 1–5 autocast progression, basic forging and bounded 4h offline catch-up. Mastery numbers and level gates are provisional.
+- **Next:** Test lab with owner, validate the core fun loop and make decisions on class identity, skill permanence and late crafting risk before deepening integration.
+
+
+## 2026-11-06 PT — Compare charm damage before first kill
+- **Why:** At the original test checkpoint both builds had killed the same foe; this obscured the expected relative damage. Repositioned comparison at 2s, when both foes still exist.
+- **Paths:** `lab/arsenal/tests.mjs`, `docs/PROJECT-STATE.md`, `docs/CHANGELOG.md`.
+- **Game impact:** None; corrected the assertion scenario, not gameplay code.
+- **Verification:** New feature-branch CI required before merge.
+
+
+## 2026-11-06 PT — Correct Aegis scenario in Living Arsenal automated test
+- **Why:** First defensive trigger regression was a false failure: the safe meadow monster was killed before making an attack, so the trigger was never exercised.
+- **Change:** Use a Rift Sentinel with sufficient life to hit the player and verify the pre-impact guard actually fires.
+- **Files:** `lab/arsenal/tests.mjs`, `docs/PROJECT-STATE.md`, `docs/CHANGELOG.md`.
+- **Game impact:** No gameplay code changed. Test revalidation pending GitHub workflow completion.
+
+
+## 2026-11-06 PT — Validate automatic defense, accessory effects, offline progress
+- **Files:** `lab/arsenal/{engine,ui,tests}.mjs`, `lab/arsenal/README.md`, `docs/PROJECT-STATE.md`, `docs/CHANGELOG.md`.
+- **Changes:** Aegis triggers before damage can kill the hero, accessory affixes affect the build, persisted local lab state catches up offline up to four hours, and weapon-family mastery grants a small capped prototype effect while persisting through swaps. Added regression tests.
+- **Impact:** Lab-only; no change to original browser game, live Arcana, accounts or older saves.
+- **Verification:** New lab CI and web tests must pass on the feature branch after commit. Physical-device visual/long offline profiling is not yet completed.
+
+
+## 2026-11-06 PT — Living Arsenal isolated playable lab (feature branch)
+- **Implemented:** A separate deterministic combat engine/catalog, new responsive V2 UI/style, 3 white weapons, 5 milestone-gated conduits, 5 skill definitions, 3 support tags, 2 hunt paths, basic gear swaps, intentional Magic/Rare forging and engraving, safe Scrap/XP income, protected storage. Added `/lab/arsenal/` via explicit allowlisted routes to the existing preview server, on feature branch only.
+- **Paths:** `lab/arsenal/{catalog,engine,ui}.mjs`, `index.html`, `styles.css`, `README.md`, `tests.mjs`, `preview/server.mjs`, `.github/workflows/living-arsenal-lab.yml`, `docs/PROJECT-STATE.md`, `docs/ARCHITECTURE.md`, `docs/CHANGELOG.md`.
+- **Scope:** This is a bounded proof of concept, **not** a full rebuild of the approved browser experience. No existing sim/UI file replaced, no existing saves touched; original root URL untouched. No real online authority, unique items, final balancing, full classes or world chapters.
+- **Validation:** New focused Node tests and route smoke CI to be confirmed on branch; existing browser tests must also pass. Rendering in a physical phone browser has not yet been proven.
+- **Deployment:** Source branch is not connected to Railway's active preview. Host only after branch/CI validation; do not claim this prototype is the default game.
+- **Next:** Test deterministic engine and interface; tune pacing and reconcile with original browser UI before considering adoption.
+
+
 ## 2026-11-06 PT — Living Arsenal is the owner-approved foundation
 - **Owner direction:** Weapon innate autocast + 1–5 supplemental autonomous abilities, experimentation without permanent dead-ends, optional intentional risk, deliberate build investment and brighter adventurous fantasy. Old prototype saves/progress need not be migrated to the new design.
 - **Docs:** `docs/PROGRESSION-V2.md`, `docs/VISUAL-DIRECTION-V2.md`, `docs/{DECISIONS,DESIGN-INTENT,visual_identity,PROJECT-STATE,OPEN-QUESTIONS,CHANGELOG}.md`.

@@ -1,5 +1,10 @@
 # Godscar browser preview
 
+## New experimental Living Arsenal systems lab
+
+**[Open the Living Arsenal V2 lab](https://godscar-browser-preview-preview.up.railway.app/lab/arsenal/)**. This is a separate, opt-in implementation of the new owner-approved weapon-driven autocast progression concept. It does **not** replace the original game served at `/`, does not read its save data, and does not yet reproduce all old systems. Read [lab/arsenal/README.md](lab/arsenal/README.md) and [docs/PROGRESSION-V2.md](docs/PROGRESSION-V2.md) before editing or treating it as a release.
+
+
 **Contributor onboarding:** read [START-HERE.md](START-HERE.md), [AGENTS.md](AGENTS.md) and [docs/PROJECT-STATE.md](docs/PROJECT-STATE.md) before making any change. The code and design must be clear to human readers, and each source change needs same-commit state/changelog updates.
 
 ## Live preview

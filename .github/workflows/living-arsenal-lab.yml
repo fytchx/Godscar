@@ -1,0 +1,44 @@
+name: Living Arsenal systems lab checks
+
+on:
+  push:
+    branches: [work/living-arsenal-lab, preview/browser]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  lab:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '22' }
+      - name: Validate new Living Arsenal engine and source
+        run: |
+          node --check lab/arsenal/engine.mjs
+          node --check lab/arsenal/catalog.mjs
+          node --check lab/arsenal/ui.mjs
+          node lab/arsenal/tests.mjs
+      - name: Verify original browser gameplay still works
+        run: |
+          npm test
+          npm run build
+      - name: Serve original game and opt-in lab, then smoke check
+        shell: bash
+        run: |
+          set -euo pipefail
+          PORT=3106 node preview/server.mjs &
+          trap 'kill $! 2>/dev/null || true' EXIT
+          for i in $(seq 1 20); do
+            curl -fsS http://127.0.0.1:3106/health > /tmp/arsenal-health && break
+            sleep 1
+          done
+          curl -fsS http://127.0.0.1:3106/ > /tmp/godscar-original.html
+          grep -q GODSCAR /tmp/godscar-original.html
+          curl -fsS http://127.0.0.1:3106/lab/arsenal/ > /tmp/godscar-lab.html
+          grep -q "Living Arsenal Lab" /tmp/godscar-lab.html
+          curl -fsS http://127.0.0.1:3106/lab/arsenal/engine.mjs | grep -q "createGame"
+          curl -fsS http://127.0.0.1:3106/lab/arsenal/styles.css | grep -q "slate"
