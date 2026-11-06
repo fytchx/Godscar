@@ -2,7 +2,7 @@
   "name": "godscar-browser-preview",
   "private": true,
   "version": "0.1.0",
-  "type": "module",
+  "type": "commonjs",
   "description": "Preserved Godscar browser build hosted in an isolated preview service",
   "engines": {
     "node": ">=22"
