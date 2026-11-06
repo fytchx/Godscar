@@ -17,7 +17,7 @@ Open this folder in **Godot 4.3+** using **Import > project.godot**, then run th
 
 `web/src/sim.js` (SIM_VERSION 4) is the **reference implementation** for detailed rules. This Godot code is an initial **native port**, **not yet validated for feature/seed parity** with the browser implementation. It does not claim full equivalence.
 
-Differences still needing parity work: exact Mulberry32 RNG and deterministic projections, accurate ring/offhand edge cases, equipment socket creation/removal, reforge/inscription controls, all loot naming and class-evolution details, boss reward probabilities, six-essence crafting menus for all slots, full offline edge-case testing, and save migration from v3 browser saves. Visual art is placeholder vector work drawn natively rather than imported final art; the official logo kit has not been incorporated.
+Differences still needing parity work: exact JavaScript Mulberry32 RNG and reproducible outcome fixtures, original item-verdict and build-projection algorithm, some Warrior Titan's Grip off-hand edge cases, complete crafting base selections, item naming, full passive/spell trigger and resistance parity, boss reward probabilities, rarity/loot tuning, and importing/migrating existing browser saves. Godot currently has native reforge, inscription, socket creation/removal, conditional utility spells, and crafting by slot, but their interactions still need parity testing. Visual art is placeholder vector work drawn natively rather than imported final art; the official logo kit has not been incorporated.
 
 **Do not import a browser save into this Godot build.** The Godot save is independent and its version field is specific to this port. Browser code and saves have not been modified.
 
@@ -34,7 +34,7 @@ The root repository's Node tests still test the reference JavaScript implementat
 
 ## Next priorities
 
-1. Pass the native Godot smoke/parse checks, then phone-device testing.
+1. Maintain green Godot 4.4.1 headless import, smoke, and main-scene checks, then run phone-device testing.
 2. Build parity fixture tests comparing the reference JS outcomes with Godot using fixed content and test seeds.
 3. Finish missing inventory, forging and spell-condition screens.
 4. Replace vector placeholders with approved Godscar assets.
