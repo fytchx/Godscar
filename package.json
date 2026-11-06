@@ -1,0 +1,15 @@
+{
+  "name": "godscar-browser-preview",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Preserved Godscar browser build hosted in an isolated preview service",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "node preview/build.mjs",
+    "start": "npm run build && node preview/server.mjs",
+    "test": "node --check web/src/sim.js && node --check web/src/ui.js && node web/test/actions.js && node web/test/evo.js && node web/test/migrate.js"
+  }
+}
