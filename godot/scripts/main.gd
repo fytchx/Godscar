@@ -318,6 +318,11 @@ func _hero() -> void:
 				available.append(sp)
 		for sp in available:
 			_button(spells, "USE " + D.SPELLS[sp]["name"], _act.bind("bar", {"slot": idx, "spell": sp}), true)
+		if idx >= 3 and equipped != null:
+			_text(spells, "Cast condition:", 12, MUTED)
+			var conditions = _horizontal(spells)
+			for cond in ["always", "hp70", "hp50", "hp30", "foeHigh"]:
+				_button(conditions, cond, _act.bind("bar_cond", {"slot": idx, "cond": cond}), true)
 
 func _equipment() -> void:
 	var g: Dictionary = sim.g
@@ -331,6 +336,8 @@ func _equipment() -> void:
 			_text(row, slot.capitalize() + ": " + sim.item_summary(it), 12)
 			var b = _button(row, "UPGRADE", _act.bind("upgrade", {"slot": slot}), true)
 			b.disabled = it["rarity"] == "ascended" or int(it.get("plus", 0)) >= 10
+			if slot != "weapon":
+				_button(row, "REMOVE", _act.bind("unequip", {"slot": slot}), true)
 	var bag = _section("ITEM BAG  (%s/%s)" % [g["bag"].size(), Sim.BAG_CAP], "Drops are picked up automatically. Choose what to equip or salvage.")
 	for idx in range(g["bag"].size()):
 		var it: Dictionary = g["bag"][idx]
@@ -355,6 +362,31 @@ func _forge() -> void:
 		_text(row, rarity.capitalize(), 13)
 		_button(row, "WEAPON", _act.bind("craft", {"slot": "weapon", "rarity": rarity, "level": g["level"]}), true)
 		_button(row, "ARMOR", _act.bind("craft", {"slot": "chest", "rarity": rarity, "level": g["level"]}), true)
+	var extra = _section("CRAFT BY SLOT", "Common through Legendary recipes use the same loot anatomy.")
+	for slot in D.DROP_SLOTS:
+		_button(extra, "CRAFT RARE " + slot.to_upper(), _act.bind("craft", {"slot": slot, "rarity": "rare", "level": g["level"]}), true)
+	var refine = _section("REFORGE AFFIXES", "Reroll individual stats on your equipped gear using gold.")
+	for slot in D.SLOTS:
+		var item: Dictionary = g["equip"].get(slot, {})
+		if item.is_empty():
+			continue
+		for idx in range(item["affixes"].size()):
+			var aff: Dictionary = item["affixes"][idx]
+			_button(refine, "%s: %s → REROLL" % [slot.to_upper(), aff["key"]], _act.bind("reforge", {"slot": slot, "index": idx}), true)
+	var inscription = _section("INSCRIBE A SPELL", "Rare+ equipped gear can be inscribed with a found spell, using gold and three matching essences.")
+	for slot in D.SLOTS:
+		var item: Dictionary = g["equip"].get(slot, {})
+		if item.is_empty() or sim.rank(item["rarity"]) < 2 or item.has("spell"):
+			continue
+		_text(inscription, "Select a spell for your %s:" % item["name"], 13, GOLD)
+		for sp in D.SPELLS:
+			var is_class_spell = false
+			for cls in D.CLASSES:
+				if D.CLASSES[cls]["spell"] == sp:
+					is_class_spell = true
+			if not is_class_spell:
+				_button(inscription, "INSCRIBE " + D.SPELLS[sp]["name"], _act.bind("inscribe", {"slot": slot, "spell": sp}), true)
+		break
 	var mats = _section("MATERIALS")
 	for key in g["mats"]:
 		if int(g["mats"][key]) > 0 or key == "shards":
@@ -368,6 +400,13 @@ func _forge() -> void:
 			_text(row, "%s Lv%s" % [slot.capitalize(), g["asc"]["slots"][slot]], 13)
 			_button(row, "ASCEND (%s)" % D.ASC_MATS[slot], _act.bind("ascend", {"slot": slot}), true)
 	var jewels = _section("SCARBOUND JEWELS", "Class evolution requires a rare Jewel and a socketed belt.")
+	var belt: Dictionary = g["equip"].get("belt", {})
+	if not belt.is_empty():
+		if not belt.get("socket", false):
+			_button(jewels, "ADD SOCKET TO EQUIPPED BELT", _act.bind("add_socket"), true)
+		elif belt.has("jewel"):
+			_text(jewels, "Socketed: %s Jewel" % belt["jewel"]["cls"].capitalize(), 13, GOLD)
+			_button(jewels, "REMOVE SOCKETED JEWEL", _act.bind("unsocket_jewel"), true)
 	for idx in range(g["jewels"].size()):
 		var jewel: Dictionary = g["jewels"][idx]
 		_text(jewels, "%s Jewel · potency %s" % [jewel["cls"].capitalize(), jewel["pot"]], 13)
@@ -380,6 +419,9 @@ func _hunt() -> void:
 	_button(row, "STAGE −", _act.bind("stage", {"delta": -1}), true)
 	_button(row, "STAGE +", _act.bind("stage", {"delta": 1}), true)
 	_button(row, "AUTO-PUSH " + ("ON" if g["auto_push"] else "OFF"), _act.bind("auto_push", {"enabled": not g["auto_push"]}), true)
+	var retries = _section("AUTO-PUSH RETRIES", "Retreat one stage after the chosen number of deaths.")
+	for count in range(3):
+		_button(retries, "%s %s" % ["✓" if g["push_retries"] == count else "SET", count], _act.bind("push_retries", {"count": count}), true)
 	for zone in D.ZONES:
 		var data: Dictionary = D.ZONES[zone]
 		var area = _section(data["name"], data["text"])
