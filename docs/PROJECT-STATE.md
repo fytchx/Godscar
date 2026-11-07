@@ -38,7 +38,7 @@ Godscar is a phone-first dark fantasy **continuous-combat idle ARPG**, potential
 - Stage 1 changes this route into a static, clickable skeleton of Fight, Gear, Bag, Build, and Forge using current Godscar names and familiar UI patterns. It does not load the lab engine, write localStorage, or change gameplay.
 - Screens include the always-visible combat ribbon, current encounter and primary attack, 11 gear slots, bag item decision locations, weapon-centered Build screen, and Forge service entry points. Any sample values are labeled as preview-only.
 - Earlier standalone Living Arsenal engine, catalog, and tests remain in the repository but are not imported by this Stage 1 interface. They remain separate from the original game.
-- Change is in progress on a focused work branch; CI, preview deployment, and phone review must be confirmed before recording completion.
+- Stage 1 implementation is in PR #4, branch `work/godscar-ui-skeleton`, commit `0e2697f0fd85cc816f420dfa379ffaaa1112377f`. GitHub `test`, `lab`, and `handoff` checks passed. The PR is intentionally unmerged; public preview deployment and phone review are pending owner approval.
 - Next: have the owner review screen flow and navigation before advancing to Stage 2. Do not add combat/item mechanics during Stage 1.
 
 ## Current risks and known gaps
@@ -58,7 +58,7 @@ Godscar is a phone-first dark fantasy **continuous-combat idle ARPG**, potential
 5. Improve clarity and structure incrementally, preserving reproducible combat behavior.
 
 ## Latest activity
-- 2026-11-07 UTC: Stage 1 UI skeleton prepared on a focused branch; awaiting checks, preview deployment, and owner review.
+- 2026-11-07 UTC: Stage 1 UI skeleton prepared in PR #4; local checks and GitHub CI passed. Awaiting owner review before merge to the shared preview and phone testing.
 - 2026-11-06 UTC: expanded the isolated browser prototype from a narrow proof into a broader playable loop: four distinct weapon families, nine equipment slots, gear affixes and a set bonus, three hunts including a named boss, equipment recovery, deliberate weapon refinement and charm engraving, responsive fight/build/forge UI. All local checks, all three GitHub workflow checks, preview deployment and route/health HTTP verification passed. Separate save remains isolated; no phone visual test yet.
 - 2026-11-06 PT: integrated the **opt-in** Living Arsenal V2 lab route `/lab/arsenal/` with the original browser preview, after isolated feature branch CI passed lab unit tests, original browser tests and route smoke tests. Original `/` game and its save key remain unchanged; lab is an experimental second engine/UI. New route needs post-deployment HTTP and real phone review; no full feature parity, online play or final balancing is claimed.
 - 2026-11-06 PT: corrected second lab test scenario to compare accessory damage before both characters finish the same enemy. Code mechanics unchanged. CI revalidation pending.

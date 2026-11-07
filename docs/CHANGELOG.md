@@ -3,7 +3,7 @@
 - **Changed:** `/lab/arsenal/` now presents a phone-first layout preview using the familiar Fight / Gear / Bag / Build / Forge tabs, sticky combat ribbon, actual starting-game labels, 11 equipment slots, and entry points for equipment decisions. Clicks only navigate or reveal explanation text. Arcana is used as a mobile UI pattern reference; no Arcana assets/code are copied.
 - **Boundaries:** Static sample values are identified as preview data. Stage 1 does not import the old lab engine, write localStorage, simulate combat, or touch the original route/save. Earlier standalone engine files remain present but unused by this UI.
 - **Paths:** `lab/arsenal/{index.html,ui.mjs,styles.css,README.md}`, `.github/workflows/living-arsenal-lab.yml`, `docs/{PROJECT-STATE,ARCHITECTURE,DECISIONS,CHANGELOG}.md`.
-- **Verification:** Pending focused checks, original game tests/build, preview route smoke, CI and deployment.
+- **Verification:** Local `node --check lab/arsenal/ui.mjs`, focused lab tests, original `npm test`, `npm run build`, local route smoke and `git diff --check` passed. GitHub PR #4 `test`, `lab`, and `handoff` checks passed. Preview deployment and device review remain pending because the PR is unmerged.
 - **Next:** Owner reviews the screen flow and phone layout; then Stage 2 aligns the shell with actual simulation state before any mechanic expansion.
 
 # Godscar project changelog and handoff history
