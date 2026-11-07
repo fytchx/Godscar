@@ -23,6 +23,8 @@ jobs:
           node --check lab/arsenal/engine.mjs
           node --check lab/arsenal/catalog.mjs
           node --check lab/arsenal/ui.mjs
+          node --check lab/arsenal/art.mjs
+          node lab/arsenal/art-tests.mjs
           node lab/arsenal/tests.mjs
       - name: Verify original browser gameplay still works
         run: |
@@ -45,4 +47,5 @@ jobs:
           curl -fsS http://127.0.0.1:3106/lab/arsenal/ui.mjs > /tmp/godscar-lab-ui.mjs
           grep -q '"Fight", "Gear", "Bag", "Build", "Forge"' /tmp/godscar-lab-ui.mjs
           ! grep -Eq 'localStorage|engine\.mjs' /tmp/godscar-lab-ui.mjs
+          curl -fsS http://127.0.0.1:3106/lab/arsenal/art.mjs | grep -q 'combatIllustration'
           curl -fsS http://127.0.0.1:3106/lab/arsenal/styles.css | grep -q -- "--bg"

@@ -11,7 +11,8 @@ const labAssets = Object.freeze({
   '/lab/arsenal/styles.css': ['styles.css', 'text/css; charset=utf-8'],
   '/lab/arsenal/catalog.mjs': ['catalog.mjs', 'text/javascript; charset=utf-8'],
   '/lab/arsenal/engine.mjs': ['engine.mjs', 'text/javascript; charset=utf-8'],
-  '/lab/arsenal/ui.mjs': ['ui.mjs', 'text/javascript; charset=utf-8']
+  '/lab/arsenal/ui.mjs': ['ui.mjs', 'text/javascript; charset=utf-8'],
+  '/lab/arsenal/art.mjs': ['art.mjs', 'text/javascript; charset=utf-8']
 });
 
 const port = Number.parseInt(process.env.PORT || '3000', 10);

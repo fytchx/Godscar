@@ -1,3 +1,11 @@
+## 2026-11-07 UTC — Add gear-art placeholders and visible combat attacks
+- **Why:** Owner requested equipment artwork positions in Gear and Bag plus a fight scene showing attacks travelling toward a monster, with final artwork planned for later.
+- **Changed:** Added one original SVG silhouette for each of the 11 equipment slots, larger sample-item images in Bag, and a small looping hero sword slash/impact scene for Fight. The visual scene reacts to the selected enemy. Placeholder artwork and animation are labeled; they are not final assets or combat simulation.
+- **Boundary:** Presentation-only updates in the isolated `/lab/arsenal/` route. No changes to original game source, combat rules, game saves, or Arcana assets.
+- **Paths:** `lab/arsenal/{art.mjs,art-tests.mjs,ui.mjs,styles.css,README.md}`, `preview/server.mjs`, `.github/workflows/living-arsenal-lab.yml`, `docs/{PROJECT-STATE,ARCHITECTURE,DECISIONS,OPEN-QUESTIONS,CHANGELOG}.md`.
+- **Verification:** Local art checks, existing lab tests, `npm test`, `npm run build`, route smoke for the art module and page, and `git diff --check` passed. Remote CI/deployment pending.
+- **Next:** Review the visual hierarchy on a phone. Replace SVGs only after final item/character art is prepared; next design step is binding the screens to actual game state.
+
 ## 2026-11-07 UTC — Replaced the prototype presentation with Stage 1 interface skeleton
 - **Why:** Owner reported the prior prototype did not feel like Godscar or make the game flow understandable, and agreed to stage the redesign by designing the skeleton first.
 - **Changed:** `/lab/arsenal/` now presents a phone-first layout preview using the familiar Fight / Gear / Bag / Build / Forge tabs, sticky combat ribbon, actual starting-game labels, 11 equipment slots, and entry points for equipment decisions. Clicks only navigate or reveal explanation text. Arcana is used as a mobile UI pattern reference; no Arcana assets/code are copied.
