@@ -2,10 +2,10 @@
 
 This records what can be established from the repository and identifies where changes belong. See source for exact rules; avoid writing speculative architecture as fact.
 
-## Experimental Living Arsenal browser prototype (opt-in route)
-`lab/arsenal/` is a separate browser idle-ARPG vertical slice served only at `/lab/arsenal/` by explicit allowlisted routes in `preview/server.mjs`. `catalog.mjs` defines four weapon families, automatic weapon arts, gear slots, affixes, skills, supports, and hunts. `engine.mjs` owns seeded event scheduling, combat, drops, gear actions, forging, progression, inventory protection, and capped offline catch-up. `ui.mjs` handles browser rendering, tabs, input, and a distinct `godscar.living-arsenal.lab.v2` local save. `styles.css` provides the browser layout and authored inline-SVG/CSS visual treatment. Focused behavior checks live in `tests.mjs`.
+## Staged Living Arsenal interface preview (opt-in route)
+`lab/arsenal/` is served only at `/lab/arsenal/` by explicit allowlisted routes in `preview/server.mjs`. Stage 1 `index.html`, `styles.css`, and `ui.mjs` render a static, clickable five-tab layout map. `ui.mjs` owns only presentation state (active tab, selected gear slot/enemy, and expanded explanation); it does not import `engine.mjs`, access localStorage, simulate combat, or mutate a game save. The route uses the current game's labels and layout as its source, with preview-only sample values marked in the interface.
 
-The loop remains automatic while players manage their build. This lab is experimental and runs beside, rather than inside, the original `web/src/` game. It has no server authority or shared save. The original route `/` and original save format remain untouched.
+The earlier experimental `catalog.mjs`, `engine.mjs`, and `tests.mjs` remain separate and are not loaded by the Stage 1 interface. Neither the mock UI nor those files are integrated into original `web/src/`. The original route `/` and save format remain untouched. UI organization takes inspiration from Arcana's mobile navigation and panels; no Arcana assets or code are copied into Godscar.
 
 ## Runtime and build
 ```text

@@ -50,3 +50,10 @@
 
 ## Not decided
 - Final online architecture, production authentication/hosting, whether to change default branch, exact art pipeline, complete content roadmap, final balance, and how to import Claude-origin saves automatically. Track in `docs/OPEN-QUESTIONS.md`. An engineering experiment is not owner consent.
+
+
+## 2026-11-07 UTC — Confirmed: stage the Godscar interface before mechanics
+- **Decision:** Begin with a phone-first UI/UX skeleton that makes the five current game areas and their relationships immediately legible. Use the existing Fight, Gear, Bag, Build, and Forge structure and recognizable Godscar terminology.
+- **Interaction boundary:** Stage 1 is a static layout preview; clicking navigates screens and reveals explanations only. It must not invent gameplay, alter saves, or imply sample numbers are finalized.
+- **Visual reference:** Use Arcana as inspiration for clear mobile menus, panels, and navigation. Keep Godscar's own scar-crimson, ash, and forged-gold identity; do not copy Arcana assets or branding into the game.
+- **Sequence:** Review the shell first, refine it against current simulation state second, review on phone third, then design weapon-bound abilities and Grim Dawn-influenced itemization.
