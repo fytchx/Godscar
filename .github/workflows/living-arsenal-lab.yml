@@ -18,7 +18,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with: { node-version: '22' }
-      - name: Validate new Living Arsenal engine and source
+      - name: Validate Living Arsenal engine and interface preview
         run: |
           node --check lab/arsenal/engine.mjs
           node --check lab/arsenal/catalog.mjs
@@ -41,6 +41,8 @@ jobs:
           curl -fsS http://127.0.0.1:3106/ > /tmp/godscar-original.html
           grep -q GODSCAR /tmp/godscar-original.html
           curl -fsS http://127.0.0.1:3106/lab/arsenal/ > /tmp/godscar-lab.html
-          grep -q "The Living Arsenal" /tmp/godscar-lab.html
-          curl -fsS http://127.0.0.1:3106/lab/arsenal/engine.mjs | grep -q "createGame"
-          curl -fsS http://127.0.0.1:3106/lab/arsenal/styles.css | grep -q -- "--paper"
+          grep -q "Interface Skeleton" /tmp/godscar-lab.html
+          curl -fsS http://127.0.0.1:3106/lab/arsenal/ui.mjs > /tmp/godscar-lab-ui.mjs
+          grep -q '"Fight", "Gear", "Bag", "Build", "Forge"' /tmp/godscar-lab-ui.mjs
+          ! grep -Eq 'localStorage|engine\.mjs' /tmp/godscar-lab-ui.mjs
+          curl -fsS http://127.0.0.1:3106/lab/arsenal/styles.css | grep -q -- "--bg"
