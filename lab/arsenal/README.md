@@ -1,33 +1,32 @@
-# Godscar interface skeleton
+# Godscar interface and art-placeholder preview
 
-**Status:** Stage 1 phone-first layout preview at `/lab/arsenal/` on the isolated Godscar browser preview. The original game remains at `/`.
+**Status:** Phone-first preview at `/lab/arsenal/` on the isolated Godscar browser build. The original game remains at `/`.
 
-This route is a static, clickable map of the existing game flow. It uses the original five tabs—Fight, Gear, Bag, Build, Forge—and familiar starting-game terms: Warrior, Cleave, Sword, The Fallfields, Blighted Husk, Carrion Swarm, and Hollow Wisp. The persistent combat ribbon and screen organization follow the current browser game's structure, with compact mobile navigation patterns informed by Arcana.
+This route maps Godscar's existing **Fight, Gear, Bag, Build, Forge** flow. It is a UI preview, not a second game engine. It uses the Warrior / Sword / Cleave start and Fallfields enemies to keep the layout grounded in recognizable Godscar content.
 
-## What can be clicked
+## What is shown
 
-- The five bottom tabs switch between screen layouts.
-- Fight enemy rows switch the selected enemy shown in the layout.
-- Gear slots switch the selected slot and detail panel.
-- Bag item actions expand a small explanation of where item decisions belong.
-- Forge service rows open a short explanatory panel.
+- **Fight:** a compact illustrated scene with the Warrior facing the selected monster and a looping sword-slash/impact effect; combat bars, primary attack and encounter details remain easy to read.
+- **Gear:** all 11 existing equipment slots, each with a distinct authored SVG silhouette. Empty slots keep their art placement visible.
+- **Bag:** example loot cards with larger art silhouettes, rarity color and compare/equip/salvage controls shown as layout placeholders.
+- **Build:** weapon identity, primary/spell slots, specializations, passives, attributes and combat stats.
+- **Forge:** material summary and service entry points.
 
-These controls only change local presentation state. This version does not simulate combat, equip items, save progress, or change the original game. Sample values and preview-only interactions are labeled in the UI.
+The gear drawings and combat figures/effects are replaceable stand-ins, not final Godscar artwork. They reserve a known image area and show where visual combat feedback will live. They are original code-authored SVGs; no IdleArc assets or combat art are copied.
 
-## Screens in this stage
+## Interaction and data boundary
 
-- **Fight:** current encounter, always-active primary attack, enemy selection, hunt settings, and first-play explanation.
-- **Gear:** the game's 11 equipment slots and selected-item detail.
-- **Bag:** filters, item cards, compare/equip/salvage action locations.
-- **Build:** weapon identity, primary and spell slots, specializations, passives, attributes, and combat stats.
-- **Forge:** materials and service entry points for crafting, improving, reforging, and socketing.
+Tab navigation, gear-slot selection, enemy selection and expanding item cards change presentation only. The red slash is a repeating visual animation, not a combat event or damage effect. Numbers and item examples are labeled as sample/preview content. This interface does not import the older lab simulation, write browser storage, change equipment, or alter the original game/save.
+
+`art.mjs` owns the replaceable SVG stand-ins. `ui.mjs` composes those into the five screens. Keep this separation so real asset files or an approved sprite atlas can replace placeholders without rewriting screen layout.
 
 ## Staging plan
 
-1. Agree on a clear navigation and screen skeleton before designing new game mechanics.
-2. Refine the layouts against the existing simulation and actual state/data.
-3. Review the layout and core flow on a phone.
-4. Design and implement weapon-defined abilities and spells.
-5. Develop the Grim Dawn-influenced equipment and itemization rules.
+1. Agree on a clear navigation and screen skeleton before mechanics.
+2. Establish gear/inventory image space and visible attack feedback (this visual-preview update).
+3. Align layouts and labels with the current simulation and real item data.
+4. Review the flow on a phone.
+5. Design and implement weapon-defined abilities and spells.
+6. Develop the Grim Dawn-influenced equipment and itemization rules.
 
-Do not treat Stage 1's sample itemization, numbers, or service descriptions as final game rules. The earlier isolated systems prototype engine and its focused tests remain in this directory but are not imported by the Stage 1 interface. They are not part of the original game.
+Do not treat this stage's sample itemization, numbers, service descriptions, or SVG art as final game rules or artwork. The older standalone lab engine and its tests remain in this directory but are not loaded by the interface.

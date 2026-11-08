@@ -57,3 +57,9 @@
 - **Interaction boundary:** Stage 1 is a static layout preview; clicking navigates screens and reveals explanations only. It must not invent gameplay, alter saves, or imply sample numbers are finalized.
 - **Visual reference:** Use Arcana as inspiration for clear mobile menus, panels, and navigation. Keep Godscar's own scar-crimson, ash, and forged-gold identity; do not copy Arcana assets or branding into the game.
 - **Sequence:** Review the shell first, refine it against current simulation state second, review on phone third, then design weapon-bound abilities and Grim Dawn-influenced itemization.
+
+
+## 2026-11-07 UTC — Confirmed: placeholder equipment art and visible attack feedback
+- **Owner request:** Add gear artwork placement in Gear and Bag, and show attacks travelling toward a monster on Fight, in the readable spirit of IdleArc. The owner will create/commission final artwork later.
+- **Implementation boundary:** Use replaceable, code-authored SVG silhouettes and a small looping sword-slash/impact visual. Clearly label them as placeholders/visual-only; do not imply art is final or that the animation is a combat event. Keep actual damage/combat untouched.
+- **Consequence:** Keep art data in a replaceable module so approved item/character assets can swap in later without changing screen layout. Do not copy IdleArc's assets or exact presentation.

@@ -35,11 +35,11 @@ Godscar is a phone-first dark fantasy **continuous-combat idle ARPG**, potential
 
 ## Living Arsenal interface work (staged)
 - Browser route: `/lab/arsenal/`; the original game route `/` and original save are untouched.
-- Stage 1 changes this route into a static, clickable skeleton of Fight, Gear, Bag, Build, and Forge using current Godscar names and familiar UI patterns. It does not load the lab engine, write localStorage, or change gameplay.
-- Screens include the always-visible combat ribbon, current encounter and primary attack, 11 gear slots, bag item decision locations, weapon-centered Build screen, and Forge service entry points. Any sample values are labeled as preview-only.
+- The isolated route is a static, clickable shell of Fight, Gear, Bag, Build, and Forge using familiar Godscar names. Recent visual update adds authored SVG gear silhouettes and an animated, presentation-only combat scene. It does not load the lab engine, write localStorage, or change gameplay.
+- Screens include the always-visible combat ribbon, hero-to-monster attack visual, primary attack, all 11 gear-slot art placements, sample bag items with item art, weapon-centered Build screen, and Forge service entry points. Sample values and placeholder art are identified in the UI.
 - Earlier standalone Living Arsenal engine, catalog, and tests remain in the repository but are not imported by this Stage 1 interface. They remain separate from the original game.
 - Stage 1 was merged through PR #4 into `preview/browser` at `cda6a18412fe5b6a7b3558c495cb0844401b1d7f`; Railway deployment `4d80970c-5ae2-4377-bc07-55442735a1e6` reached SUCCESS. The public `/lab/arsenal/` route was verified in the browser, including the Fight, Gear, and Build screens. Physical-device review is still pending.
-- Next: have the owner review screen flow and navigation before advancing to Stage 2. Do not add combat/item mechanics during Stage 1.
+- Gear/inventory art placeholders and an animated combat visual are being added on `work/godscar-item-art-combat-ui`; local checks pass. Preview deployment and phone review are pending. The next integration step is to align these screens with current game state; no new item or combat mechanics are part of this UI step.
 
 ## Current risks and known gaps
 1. **Prototype acceptance:** Does the live loop feel substantial and legible on the owner’s phone? Test the deployed isolated route before deciding on deeper integration.
@@ -58,6 +58,7 @@ Godscar is a phone-first dark fantasy **continuous-combat idle ARPG**, potential
 5. Improve clarity and structure incrementally, preserving reproducible combat behavior.
 
 ## Latest activity
+- 2026-11-07 UTC: Added replaceable equipment SVGs to Gear/Bag and a visual-only attack animation to Fight on `work/godscar-item-art-combat-ui`; focused art checks, original game checks, build, and route smoke passed locally. Remote CI/deployment pending.
 - 2026-11-07 UTC: Stage 1 UI skeleton merged as PR #4; GitHub checks passed, Railway preview deployed successfully, and the live Fight/Gear/Build tab flow was browser-verified. Awaiting owner review on their phone before Stage 2.
 - 2026-11-06 UTC: expanded the isolated browser prototype from a narrow proof into a broader playable loop: four distinct weapon families, nine equipment slots, gear affixes and a set bonus, three hunts including a named boss, equipment recovery, deliberate weapon refinement and charm engraving, responsive fight/build/forge UI. All local checks, all three GitHub workflow checks, preview deployment and route/health HTTP verification passed. Separate save remains isolated; no phone visual test yet.
 - 2026-11-06 PT: integrated the **opt-in** Living Arsenal V2 lab route `/lab/arsenal/` with the original browser preview, after isolated feature branch CI passed lab unit tests, original browser tests and route smoke tests. Original `/` game and its save key remain unchanged; lab is an experimental second engine/UI. New route needs post-deployment HTTP and real phone review; no full feature parity, online play or final balancing is claimed.
