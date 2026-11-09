@@ -1,3 +1,8 @@
+## 2026-11-09 UTC — Keep displayed ability timers within range
+- **Why:** Browser review caught a negative timer value briefly appearing just before a sample cast reset.
+- **Changed:** Reset the illustration timer before rendering its next countdown value.
+- **Verification:** Confirmed the issue in the latest live build; verify the corrected counter after deployment. No test suite run.
+
 ## 2026-11-09 UTC — Animate automatic inscription timers
 - **Why:** The weapon and inscription timers are meant to explain the automatic combat flow, so static countdown numbers did not communicate that behavior.
 - **Changed:** The two sample timers now count down and restart; their illustrative cast events add their own colored combat entries and session damage. Timer bars follow the countdown. Values remain presentation-only.
