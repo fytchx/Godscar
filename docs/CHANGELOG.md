@@ -1,3 +1,8 @@
+## 2026-11-09 UTC — Separate direct hits from DoT session totals
+- **Why:** Live preview inspection showed that one spell's direct hit and burn tick shared a name, so the summary could label their combined damage as only a tick.
+- **Changed:** Session accounting now keeps each hit category separate (for example, Ember Brand direct damage versus Ember Brand burn ticks) while preserving icon, element color, hit count and ranking.
+- **Verification:** Checked the live damage dialog and corrected its tally keys in source. No test suite run; verify after the deployment completes.
+
 ## 2026-11-09 UTC — Wire the focused combat preview route
 - **Why:** The first preview deployment exposed that the new assets were not yet reachable through the HTTP server.
 - **Changed:** Added the combat assets to the server's explicit allowlist, routed `/lab` to `/lab/combat/`, and kept `/lab/arsenal/` separate. Removed temporary root-level asset entries from the preview source tree.
