@@ -1,3 +1,8 @@
+## 2026-11-09 UTC — Finish the Character overlay viewport fit
+- **Changed:** Anchored the full-screen overlay to the viewport, kept the reference bottom navigation above content, removed the extra sample key currency, and made closed item details fully invisible.
+- **Why:** The deployed browser review showed the equipment art and 12-slot layout, but the bottom edge needed a final viewport-fit pass.
+- **Verification:** Local route smoke and script syntax passed before this adjustment; redeploy and review the bottom navigation at phone size.
+
 ## 2026-11-09 UTC — Correct the Character screen to match its approved preview
 - **Why:** The first website implementation diverged from the approved phone mockup: it substituted a new equipment-card arrangement and omitted several visible sections. The owner correctly flagged that the site did not look like the shown design.
 - **Changed:** Replaced that improvised layout with the phone-first prototype structure: 12 visible equipment positions, stat deltas, Oathkeeper loadout card, four Character tabs, and bottom navigation. Uses the actual individual gear and UI illustrations from the current approved prototype pack. The view remains a same-origin overlay on the existing Fight screen; selecting Fight returns to the continuing combat view.
