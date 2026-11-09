@@ -1,3 +1,8 @@
+## 2026-11-09 UTC — Wire the focused combat preview route
+- **Why:** The first preview deployment exposed that the new assets were not yet reachable through the HTTP server.
+- **Changed:** Added the combat assets to the server's explicit allowlist, routed `/lab` to `/lab/combat/`, and kept `/lab/arsenal/` separate. Removed temporary root-level asset entries from the preview source tree.
+- **Verification:** Source fix committed; the active branch and public HTTP route are being checked after this deployment. No test suite run.
+
 ## 2026-11-09 UTC — Add a focused continuous-combat screen concept
 - **Why:** The broad interface skeleton did not make the combat flow feel familiar or immediately legible. The owner asked to focus on the Fight screen and confirmed the content, recap, damage accounting, layout controls and performance option.
 - **Changed:** Added `/lab/combat/` with player health/weapon/autocast information above a monster-centered scene; distinct sample physical, fire and poison hit/tick feedback; status indicators; per-hit feed; clickable ranked session damage with manual reset; XP/material/kill summary; and a launch recap modal that closes on outside tap. Added reorder/hide controls (combat fixed), locally saved layout/effects preferences, and a link to the wider systems preview. `/lab` redirects to the combat page.

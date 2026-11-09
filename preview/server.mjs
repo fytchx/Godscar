@@ -15,6 +15,14 @@ const labAssets = Object.freeze({
   '/lab/arsenal/art.mjs': ['art.mjs', 'text/javascript; charset=utf-8']
 });
 
+const combatDirectory = join(process.cwd(), 'lab', 'combat');
+const combatAssets = Object.freeze({
+  '/lab/combat/': ['index.html', 'text/html; charset=utf-8'],
+  '/lab/combat/index.html': ['index.html', 'text/html; charset=utf-8'],
+  '/lab/combat/styles.css': ['styles.css', 'text/css; charset=utf-8'],
+  '/lab/combat/main.mjs': ['main.mjs', 'text/javascript; charset=utf-8']
+});
+
 const port = Number.parseInt(process.env.PORT || '3000', 10);
 const responseHeaders = {
   'content-type': 'text/html; charset=utf-8',
@@ -41,12 +49,19 @@ const server = createServer((req, res) => {
     return;
   }
   if (url.pathname === '/lab') {
-    res.writeHead(302, { location: '/lab/arsenal/' }).end();
+    res.writeHead(302, { location: '/lab/combat/' }).end();
     return;
   }
   if (Object.hasOwn(labAssets, url.pathname)) {
     const [fileName, contentType] = labAssets[url.pathname];
     const content = readFileSync(join(labDirectory, fileName));
+    res.writeHead(200, { ...responseHeaders, 'content-type': contentType })
+       .end(req.method === 'HEAD' ? undefined : content);
+    return;
+  }
+  if (Object.hasOwn(combatAssets, url.pathname)) {
+    const [fileName, contentType] = combatAssets[url.pathname];
+    const content = readFileSync(join(combatDirectory, fileName));
     res.writeHead(200, { ...responseHeaders, 'content-type': contentType })
        .end(req.method === 'HEAD' ? undefined : content);
     return;

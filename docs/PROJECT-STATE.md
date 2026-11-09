@@ -61,7 +61,7 @@ Godscar is a phone-first dark fantasy **continuous-combat idle ARPG**, potential
 5. Improve clarity and structure incrementally, preserving reproducible combat behavior.
 
 ## Latest activity
-- 2026-11-09 UTC: Added the focused `/lab/combat/` interface concept and routed `/lab` to it. This is illustrative UI, not simulation-backed; original game and save remain untouched. Check the current deployment and gather phone feedback.
+- 2026-11-09 UTC: Added the focused `/lab/combat/` interface concept. `/lab` is routed to this screen. This is illustrative UI, not simulation-backed; original game and save remain untouched. Check the current deployment and gather phone feedback.
 - 2026-11-08 UTC: PR #5 merged to `preview/browser` at `772ebc07953c04b41c0541223bbbbd65a4c798fb`; GitHub `test`, `lab`, and `handoff` checks passed. Railway deployment `098ce66a-8515-4182-9e76-6cc0a0a3b773` reached SUCCESS, and the public route/art module were HTTP-verified. Phone review remains pending.
 - 2026-11-07 UTC: Stage 1 UI skeleton merged as PR #4; GitHub checks passed, Railway preview deployed successfully, and the live Fight/Gear/Build tab flow was browser-verified. Awaiting owner review on their phone before Stage 2.
 - 2026-11-06 UTC: expanded the isolated browser prototype from a narrow proof into a broader playable loop: four distinct weapon families, nine equipment slots, gear affixes and a set bonus, three hunts including a named boss, equipment recovery, deliberate weapon refinement and charm engraving, responsive fight/build/forge UI. All local checks, all three GitHub workflow checks, preview deployment and route/health HTTP verification passed. Separate save remains isolated; no phone visual test yet.
