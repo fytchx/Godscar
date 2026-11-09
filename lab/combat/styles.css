@@ -379,9 +379,9 @@ h1 { overflow: hidden; margin: 1px 0 0; font: 700 17px/1.1 "Rajdhani", sans-seri
 
 /* The approved phone-first Character prototype runs as a same-origin screen layer.
    Keeping it in an iframe isolates its design tokens while the combat clock continues. */
-.character-modal { width: 100vw; max-width: none; height: 100dvh; max-height: none; margin: 0; padding: 0; overflow: hidden; border: 0; background: #0b0e13; color: var(--text); }
+.character-modal { position: fixed; inset: 0; width: 100vw; max-width: none; height: 100dvh; max-height: none; margin: 0; padding: 0; overflow: hidden; border: 0; background: #0b0e13; color: var(--text); }
 .character-modal::backdrop { background: #05070bd9; }
-.character-frame { display: block; width: 100%; height: 100%; border: 0; background: #0b0e13; }
+.character-frame { position: absolute; inset: 0; display: block; width: 100%; height: 100%; border: 0; background: #0b0e13; }
 
 .layout-panel {
   position: fixed;
