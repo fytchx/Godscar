@@ -22,8 +22,14 @@ const combatAssets = Object.freeze({
   '/lab/combat/styles.css': ['styles.css', 'text/css; charset=utf-8'],
   '/lab/combat/main.mjs': ['main.mjs', 'text/javascript; charset=utf-8'],
   '/lab/combat/character.mjs': ['character.mjs', 'text/javascript; charset=utf-8'],
-  '/lab/combat/gear-atlas.png': ['gear-atlas.png', 'image/png']
+  '/lab/combat/character.html': ['character.html', 'text/html; charset=utf-8']
 });
+const characterAssetFiles = new Set([
+  'amulet.png', 'armor_rare.png', 'belt.png', 'boots.png', 'chest.png', 'gloves.png',
+  'health.png', 'helmet.png', 'leggings.png', 'offhand.png', 'pauldrons.png', 'ring1.png',
+  'ring2.png', 'role_melee.png', 'tab_crafting.png', 'tab_equipment.png', 'tab_inventory.png',
+  'tab_materials.png', 'weapon.png', 'weapon_epic.png', 'weapon_rare.png'
+]);
 
 const port = Number.parseInt(process.env.PORT || '3000', 10);
 const responseHeaders = {
@@ -64,7 +70,23 @@ const server = createServer((req, res) => {
   if (Object.hasOwn(combatAssets, url.pathname)) {
     const [fileName, contentType] = combatAssets[url.pathname];
     const content = readFileSync(join(combatDirectory, fileName));
-    res.writeHead(200, { ...responseHeaders, 'content-type': contentType })
+    const characterHeaders = fileName === 'character.html' ? {
+      'content-security-policy': "frame-ancestors 'self'; object-src 'none'; base-uri 'none'",
+      'x-frame-options': 'SAMEORIGIN'
+    } : {};
+    res.writeHead(200, { ...responseHeaders, ...characterHeaders, 'content-type': contentType })
+       .end(req.method === 'HEAD' ? undefined : content);
+    return;
+  }
+  const assetPrefix = '/lab/combat/character-assets/';
+  if (url.pathname.startsWith(assetPrefix)) {
+    const assetName = url.pathname.slice(assetPrefix.length);
+    if (!characterAssetFiles.has(assetName)) {
+      res.writeHead(404, { 'content-type': 'text/plain; charset=utf-8' }).end('Not found');
+      return;
+    }
+    const content = readFileSync(join(combatDirectory, 'character-assets', assetName));
+    res.writeHead(200, { ...responseHeaders, 'content-type': 'image/png' })
        .end(req.method === 'HEAD' ? undefined : content);
     return;
   }

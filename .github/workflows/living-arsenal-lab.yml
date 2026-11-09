@@ -54,8 +54,11 @@ jobs:
           curl -fsS http://127.0.0.1:3106/lab/combat/ > /tmp/godscar-combat.html
           grep -q 'id="characterMenu"' /tmp/godscar-combat.html
           grep -q 'id="arenaDps"' /tmp/godscar-combat.html
-          curl -fsS http://127.0.0.1:3106/lab/combat/character.mjs | grep -q 'function renderEquipment'
+          curl -fsS http://127.0.0.1:3106/lab/combat/character.html > /tmp/godscar-character.html
+          grep -q '12 / 12 slots' /tmp/godscar-character.html
+          grep -q 'Loadout · Oathkeeper' /tmp/godscar-character.html
+          grep -q 'data-screen="fight"' /tmp/godscar-character.html
           curl -fsS http://127.0.0.1:3106/lab/combat/main.mjs | grep -q 'formatCompactNumber'
-          curl -fsS http://127.0.0.1:3106/lab/combat/styles.css | grep -q -- '--character-slot-size'
-          curl -fsS http://127.0.0.1:3106/lab/combat/gear-atlas.png -o /tmp/godscar-character-atlas.png
-          test -s /tmp/godscar-character-atlas.png
+          curl -fsSI http://127.0.0.1:3106/lab/combat/character.html | grep -qi 'x-frame-options: SAMEORIGIN'
+          curl -fsS http://127.0.0.1:3106/lab/combat/character-assets/pauldrons.png -o /tmp/godscar-character-pauldrons.png
+          file /tmp/godscar-character-pauldrons.png | grep -q PNG
