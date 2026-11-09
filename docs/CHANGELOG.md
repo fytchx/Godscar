@@ -1,3 +1,10 @@
+## 2026-11-09 UTC — Add standalone Godscar concept art pack
+- **Why:** Owner requested matching concept art for combat biomes, weapons/equipment, and flashy combat/spell effects alongside the existing monster concepts.
+- **Changed:** Added `art/concepts/2026-11-09/` with WebP review copies of five vertical biome backdrops, 35 monster concepts, 10 weapon icons, 11 equipment/off-hand icons, and 12 transparent effect stills, plus README and manifest. Full-resolution PNG originals and reference sheets are preserved in the companion ZIP.
+- **Boundary:** Review concepts only; no animation frames, gameplay/UI integration, save changes, or active-preview deployment. Phone-scale review and owner acceptance remain pending.
+- **Verification:** Confirmed the pack archive extracts cleanly and includes the documented categories; no game test suite run because no game code changed.
+- **Next:** Review the concepts at phone combat size, then choose which individual assets (if any) to refine or integrate.
+
 ## 2026-11-09 UTC — Compress the combat HUD and add event effects
 - **Why:** Owner liked the first fight screen but asked to conserve vertical space and surface the combat information more compactly.
 - **Changed:** Removed the equipped-weapon card and recent-hit feed. Added a subtle Mace Swing auto-cast bar, moved three compact inscription timers into the arena's upper-left with right-fading progress bars, condensed XP/material/kill counts into one strip, and moved total DPS plus ranked direct/DoT damage into the session-details modal. Added per-event sharp melee flashes, fire embers, poison drops and red bleed drips. Updated the skin to a denser modern dark HUD.

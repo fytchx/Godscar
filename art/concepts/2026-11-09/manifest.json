@@ -1,0 +1,495 @@
+{
+  "title": "Godscar Art Asset Pack - First Pass",
+  "status": "Owner-directed concept pack for review; not integrated into the game runtime.",
+  "style": "Bold graphic pixel-art direction with chunky forms, deep outlines, controlled shading and zone-specific palettes.",
+  "limitations": [
+    "Still images only; no animation frames or runtime wiring.",
+    "Concept rasters are not final pixel-perfect sprite sheets; review at gameplay scale before production use.",
+    "Biome backgrounds are vertical combat-scene concepts with open central fight space."
+  ],
+  "biomes": [
+    {
+      "name": "Gallowfen - The Sunken Road",
+      "description": "Moonlit drowned marsh; flooded road, reeds, broken stone, cool blue-gray water.",
+      "file": "biomes/01_gallowfen_sunken_road.webp",
+      "size_px": [
+        941,
+        1672
+      ]
+    },
+    {
+      "name": "Cinderwake - The Ashen Causeway",
+      "description": "Scorched kiln valley; ash road, basalt ruins, muted ember vents.",
+      "file": "biomes/02_cinderwake_ashen_causeway.webp",
+      "size_px": [
+        941,
+        1672
+      ]
+    },
+    {
+      "name": "Thornhollow - The Root-Crowned Wilds",
+      "description": "Bright forest clearing; root-wrapped ruins, warm sunlight, green growth.",
+      "file": "biomes/03_thornhollow_root_crowned_wilds.webp",
+      "size_px": [
+        941,
+        1672
+      ]
+    },
+    {
+      "name": "Pale Bastion - The Broken Watch",
+      "description": "Moonlit fortress courtyard; slate paving, faded banners, cold stone.",
+      "file": "biomes/04_pale_bastion_broken_watch.webp",
+      "size_px": [
+        941,
+        1672
+      ]
+    },
+    {
+      "name": "Godscar - The Severed Meridian",
+      "description": "Broken highland and distant crimson-violet dimensional fissure.",
+      "file": "biomes/05_godscar_severed_meridian.webp",
+      "size_px": [
+        941,
+        1672
+      ]
+    }
+  ],
+  "weapons": [
+    {
+      "name": "Sword",
+      "file": "weapons/sword.webp",
+      "size_px": [
+        254,
+        665
+      ]
+    },
+    {
+      "name": "Mace",
+      "file": "weapons/mace.webp",
+      "size_px": [
+        315,
+        623
+      ]
+    },
+    {
+      "name": "Dagger",
+      "file": "weapons/dagger.webp",
+      "size_px": [
+        401,
+        580
+      ]
+    },
+    {
+      "name": "Greataxe",
+      "file": "weapons/greataxe.webp",
+      "size_px": [
+        345,
+        673
+      ]
+    },
+    {
+      "name": "Scythe",
+      "file": "weapons/scythe.webp",
+      "size_px": [
+        421,
+        679
+      ]
+    },
+    {
+      "name": "Wand",
+      "file": "weapons/wand.webp",
+      "size_px": [
+        434,
+        724
+      ]
+    },
+    {
+      "name": "Frost Rod",
+      "file": "weapons/frost_rod.webp",
+      "size_px": [
+        435,
+        724
+      ]
+    },
+    {
+      "name": "Storm Spear",
+      "file": "weapons/storm_spear.webp",
+      "size_px": [
+        434,
+        724
+      ]
+    },
+    {
+      "name": "Staff",
+      "file": "weapons/staff.webp",
+      "size_px": [
+        435,
+        724
+      ]
+    },
+    {
+      "name": "Bow",
+      "file": "weapons/bow.webp",
+      "size_px": [
+        434,
+        724
+      ]
+    }
+  ],
+  "equipment": [
+    {
+      "name": "Shield",
+      "file": "equipment/offhand/shield.webp",
+      "size_px": [
+        371,
+        510
+      ]
+    },
+    {
+      "name": "Spell Tome",
+      "file": "equipment/offhand/spell_tome.webp",
+      "size_px": [
+        408,
+        471
+      ]
+    },
+    {
+      "name": "Quiver",
+      "file": "equipment/offhand/quiver.webp",
+      "size_px": [
+        386,
+        504
+      ]
+    },
+    {
+      "name": "Helm",
+      "file": "equipment/armor/helm.webp",
+      "size_px": [
+        427,
+        486
+      ]
+    },
+    {
+      "name": "Chest Armor",
+      "file": "equipment/armor/chest.webp",
+      "size_px": [
+        476,
+        512
+      ]
+    },
+    {
+      "name": "Gauntlets",
+      "file": "equipment/armor/gloves.webp",
+      "size_px": [
+        503,
+        486
+      ]
+    },
+    {
+      "name": "Belt",
+      "file": "equipment/armor/belt.webp",
+      "size_px": [
+        411,
+        363
+      ]
+    },
+    {
+      "name": "Leg Armor",
+      "file": "equipment/armor/legs.webp",
+      "size_px": [
+        435,
+        554
+      ]
+    },
+    {
+      "name": "Boots",
+      "file": "equipment/armor/boots.webp",
+      "size_px": [
+        416,
+        449
+      ]
+    },
+    {
+      "name": "Ring",
+      "file": "equipment/jewelry/ring.webp",
+      "size_px": [
+        435,
+        414
+      ]
+    },
+    {
+      "name": "Amulet",
+      "file": "equipment/jewelry/amulet.webp",
+      "size_px": [
+        328,
+        520
+      ]
+    }
+  ],
+  "combat_effects": [
+    {
+      "name": "Sword Slash",
+      "file": "combat_effects/sword_slash.webp",
+      "size_px": [
+        362,
+        317
+      ]
+    },
+    {
+      "name": "Twin Dagger Cut",
+      "file": "combat_effects/twin_cut.webp",
+      "size_px": [
+        346,
+        281
+      ]
+    },
+    {
+      "name": "Heavy Impact",
+      "file": "combat_effects/impact_ring.webp",
+      "size_px": [
+        362,
+        350
+      ]
+    },
+    {
+      "name": "Ember Burst",
+      "file": "combat_effects/ember_burst.webp",
+      "size_px": [
+        352,
+        324
+      ]
+    },
+    {
+      "name": "Bleeding Slash",
+      "file": "combat_effects/bleed_slash.webp",
+      "size_px": [
+        362,
+        336
+      ]
+    },
+    {
+      "name": "Frost Lance",
+      "file": "combat_effects/frost_lance.webp",
+      "size_px": [
+        362,
+        224
+      ]
+    },
+    {
+      "name": "Spirit Hawk",
+      "file": "combat_effects/spirit_hawk.webp",
+      "size_px": [
+        358,
+        362
+      ]
+    },
+    {
+      "name": "Aegis Pulse",
+      "file": "combat_effects/aegis_pulse.webp",
+      "size_px": [
+        362,
+        340
+      ]
+    },
+    {
+      "name": "Starfall Sigil",
+      "file": "combat_effects/starfall_sigil.webp",
+      "size_px": [
+        362,
+        362
+      ]
+    },
+    {
+      "name": "Poison Splash",
+      "file": "combat_effects/poison_splash.webp",
+      "size_px": [
+        360,
+        334
+      ]
+    },
+    {
+      "name": "Lightning Strike",
+      "file": "combat_effects/lightning_strike.webp",
+      "size_px": [
+        347,
+        336
+      ]
+    },
+    {
+      "name": "Shadow Crescent",
+      "file": "combat_effects/shadow_crescent.webp",
+      "size_px": [
+        362,
+        344
+      ]
+    }
+  ],
+  "monsters": [
+    {
+      "zone": "Gallowfen - The Sunken Road",
+      "enemies": [
+        {
+          "name": "Drowned Thrall",
+          "file": "monsters/01_gallowfen/enemies/01_drowned_thrall.webp"
+        },
+        {
+          "name": "Mire Leech",
+          "file": "monsters/01_gallowfen/enemies/02_mire_leech.webp"
+        },
+        {
+          "name": "Gravejaw Stalker",
+          "file": "monsters/01_gallowfen/enemies/03_gravejaw_stalker.webp"
+        },
+        {
+          "name": "Lantern Wretch",
+          "file": "monsters/01_gallowfen/enemies/04_lantern_wretch.webp"
+        },
+        {
+          "name": "Bell-Ringer Husk",
+          "file": "monsters/01_gallowfen/enemies/05_bell_ringer_husk.webp"
+        },
+        {
+          "name": "Root-Snare Widow",
+          "file": "monsters/01_gallowfen/enemies/06_root_snare_widow.webp"
+        }
+      ],
+      "boss": {
+        "name": "The Drowned Bailiff",
+        "file": "monsters/01_gallowfen/boss/the_drowned_bailiff.webp"
+      }
+    },
+    {
+      "zone": "Cinderwake - The Ashen Causeway",
+      "enemies": [
+        {
+          "name": "Coalbound Drudge",
+          "file": "monsters/02_cinderwake/enemies/01_coalbound_drudge.webp"
+        },
+        {
+          "name": "Cinder Hound",
+          "file": "monsters/02_cinderwake/enemies/02_cinder_hound.webp"
+        },
+        {
+          "name": "Sootwing Harrier",
+          "file": "monsters/02_cinderwake/enemies/03_sootwing_harrier.webp"
+        },
+        {
+          "name": "Furnace Warden",
+          "file": "monsters/02_cinderwake/enemies/04_furnace_warden.webp"
+        },
+        {
+          "name": "Ash Cantor",
+          "file": "monsters/02_cinderwake/enemies/05_ash_cantor.webp"
+        },
+        {
+          "name": "Charred Husk",
+          "file": "monsters/02_cinderwake/enemies/06_charred_husk.webp"
+        }
+      ],
+      "boss": {
+        "name": "The Kiln Saint",
+        "file": "monsters/02_cinderwake/boss/the_kiln_saint.webp"
+      }
+    },
+    {
+      "zone": "Thornhollow - The Root-Crowned Wilds",
+      "enemies": [
+        {
+          "name": "Briarling",
+          "file": "monsters/03_thornhollow/enemies/01_briarling.webp"
+        },
+        {
+          "name": "Antler Mauler",
+          "file": "monsters/03_thornhollow/enemies/02_antler_mauler.webp"
+        },
+        {
+          "name": "Sporeback Toad",
+          "file": "monsters/03_thornhollow/enemies/03_sporeback_toad.webp"
+        },
+        {
+          "name": "Hollow Stag",
+          "file": "monsters/03_thornhollow/enemies/04_hollow_stag.webp"
+        },
+        {
+          "name": "Webmoss Weaver",
+          "file": "monsters/03_thornhollow/enemies/05_webmoss_weaver.webp"
+        },
+        {
+          "name": "Sap-Bound Keeper",
+          "file": "monsters/03_thornhollow/enemies/06_sap_bound_keeper.webp"
+        }
+      ],
+      "boss": {
+        "name": "Mother of the Thicket",
+        "file": "monsters/03_thornhollow/boss/mother_of_the_thicket.webp"
+      }
+    },
+    {
+      "zone": "Pale Bastion - The Broken Watch",
+      "enemies": [
+        {
+          "name": "Rustguard",
+          "file": "monsters/04_pale_bastion/enemies/01_rustguard.webp"
+        },
+        {
+          "name": "Penance Archer",
+          "file": "monsters/04_pale_bastion/enemies/02_penance_archer.webp"
+        },
+        {
+          "name": "Grave Scribe",
+          "file": "monsters/04_pale_bastion/enemies/03_grave_scribe.webp"
+        },
+        {
+          "name": "Chain Revenant",
+          "file": "monsters/04_pale_bastion/enemies/04_chain_revenant.webp"
+        },
+        {
+          "name": "Gargoyle Hound",
+          "file": "monsters/04_pale_bastion/enemies/05_gargoyle_hound.webp"
+        },
+        {
+          "name": "Reliquary Carrier",
+          "file": "monsters/04_pale_bastion/enemies/06_reliquary_carrier.webp"
+        }
+      ],
+      "boss": {
+        "name": "The Last Castellan",
+        "file": "monsters/04_pale_bastion/boss/the_last_castellan.webp"
+      }
+    },
+    {
+      "zone": "Godscar - The Severed Meridian",
+      "enemies": [
+        {
+          "name": "Rift-Struck Footman",
+          "file": "monsters/05_godscar/enemies/01_rift_struck_footman.webp"
+        },
+        {
+          "name": "Glass Maw",
+          "file": "monsters/05_godscar/enemies/02_glass_maw.webp"
+        },
+        {
+          "name": "Null Moth",
+          "file": "monsters/05_godscar/enemies/03_null_moth.webp"
+        },
+        {
+          "name": "Fracture Stalker",
+          "file": "monsters/05_godscar/enemies/04_fracture_stalker.webp"
+        },
+        {
+          "name": "Oathbreaker Echo",
+          "file": "monsters/05_godscar/enemies/05_oathbreaker_echo.webp"
+        },
+        {
+          "name": "Starved Herald",
+          "file": "monsters/05_godscar/enemies/06_starved_herald.webp"
+        }
+      ],
+      "boss": {
+        "name": "The Hollow Regent",
+        "file": "monsters/05_godscar/boss/the_hollow_regent.webp"
+      }
+    }
+  ],
+  "repo_delivery_format": "WebP review derivatives; source PNGs are in the companion concept pack."
+}
