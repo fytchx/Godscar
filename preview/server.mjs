@@ -20,7 +20,9 @@ const combatAssets = Object.freeze({
   '/lab/combat/': ['index.html', 'text/html; charset=utf-8'],
   '/lab/combat/index.html': ['index.html', 'text/html; charset=utf-8'],
   '/lab/combat/styles.css': ['styles.css', 'text/css; charset=utf-8'],
-  '/lab/combat/main.mjs': ['main.mjs', 'text/javascript; charset=utf-8']
+  '/lab/combat/main.mjs': ['main.mjs', 'text/javascript; charset=utf-8'],
+  '/lab/combat/character.mjs': ['character.mjs', 'text/javascript; charset=utf-8'],
+  '/lab/combat/gear-atlas.png': ['gear-atlas.png', 'image/png']
 });
 
 const port = Number.parseInt(process.env.PORT || '3000', 10);

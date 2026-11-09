@@ -26,6 +26,8 @@ jobs:
           node --check lab/arsenal/art.mjs
           node lab/arsenal/art-tests.mjs
           node lab/arsenal/tests.mjs
+          node --check lab/combat/main.mjs
+          node --check lab/combat/character.mjs
       - name: Verify original browser gameplay still works
         run: |
           npm test
@@ -49,3 +51,11 @@ jobs:
           ! grep -Eq 'localStorage|engine\.mjs' /tmp/godscar-lab-ui.mjs
           curl -fsS http://127.0.0.1:3106/lab/arsenal/art.mjs | grep -q 'combatIllustration'
           curl -fsS http://127.0.0.1:3106/lab/arsenal/styles.css | grep -q -- "--bg"
+          curl -fsS http://127.0.0.1:3106/lab/combat/ > /tmp/godscar-combat.html
+          grep -q 'id="characterMenu"' /tmp/godscar-combat.html
+          grep -q 'id="arenaDps"' /tmp/godscar-combat.html
+          curl -fsS http://127.0.0.1:3106/lab/combat/character.mjs | grep -q 'function renderEquipment'
+          curl -fsS http://127.0.0.1:3106/lab/combat/main.mjs | grep -q 'formatCompactNumber'
+          curl -fsS http://127.0.0.1:3106/lab/combat/styles.css | grep -q -- '--character-slot-size'
+          curl -fsS http://127.0.0.1:3106/lab/combat/gear-atlas.png -o /tmp/godscar-character-atlas.png
+          test -s /tmp/godscar-character-atlas.png

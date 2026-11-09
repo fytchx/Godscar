@@ -1,3 +1,10 @@
+## 2026-11-09 UTC — Add an Equipment-first Character overlay to the combat preview
+- **Why:** Owner wants the current combat screen to stay central while adding the first usable Character menu.
+- **Changed:** Added Equipment, Inventory, Crafting and Materials tabs in a full-screen overlay. Curated the current equipment/UI art into a sprite atlas; added appearance controls backed by separate CSS design tokens. The combat timer continues behind the menu. Added abbreviated session DPS at the arena's lower-right and muted the auto-attack cast line.
+- **Files:** `lab/combat/{index.html,styles.css,main.mjs,character.mjs,gear-atlas.png,README.md}`, `preview/server.mjs`, `.github/workflows/living-arsenal-lab.yml`, `docs/{PROJECT-STATE,ARCHITECTURE,DECISIONS,CHANGELOG}.md`.
+- **Data boundary:** Character gear, inventory, materials, recipes and stats remain sample UI content. Appearance preferences use an isolated namespace. No simulation, combat rules or game saves are changed.
+- **Validation:** Local `node --check` for the changed modules and an isolated local route/asset smoke passed. The original-game tests and full preview workflow are pending on the pull request; Railway deployment and phone review are still pending.
+
 ## 2026-11-09 UTC — Compress the combat HUD and add event effects
 - **Why:** Owner liked the first fight screen but asked to conserve vertical space and surface the combat information more compactly.
 - **Changed:** Removed the equipped-weapon card and recent-hit feed. Added a subtle Mace Swing auto-cast bar, moved three compact inscription timers into the arena's upper-left with right-fading progress bars, condensed XP/material/kill counts into one strip, and moved total DPS plus ranked direct/DoT damage into the session-details modal. Added per-event sharp melee flashes, fire embers, poison drops and red bleed drips. Updated the skin to a denser modern dark HUD.

@@ -3,6 +3,8 @@
 ## Focused combat screen preview
 `lab/combat/` is served through an explicit asset allowlist at `/lab/combat/`; `/lab` redirects there. Its HTML/CSS and `main.mjs` form a presentation-only screen concept, independent from `web/src/sim.js`. The UI keeps a slim weapon auto-attack cast bar above the arena and overlays fading inscription timers at its upper-left. Sample physical, fire, poison and bleed events drive transient slash/impact, ember, poison and blood-drop effects plus floating damage. XP/material/kill totals sit in a compact strip; a details dialog shows total DPS and ranked direct/DoT damage sources with manual reset. It does not claim authoritative combat results or load game saves. Layout order/visibility and reduced-effects preferences use isolated `godscar.combat-preview.*` localStorage keys. Assets are served only from `lab/combat/` by the preview server. The existing `/lab/arsenal/` and `/` routes remain separate.
 
+The combat route also serves a presentation-only Character menu from `character.mjs`. It opens as a full-screen dialog over the fight, so the existing combat timer keeps running while Equipment, Inventory, Crafting or Materials is viewed. The gear sprite atlas is served through the same explicit allowlist. Character item/stats content is sample data; only appearance controls persist, under `godscar.character-preview.*`. A compact abbreviated session damage-rate number is visible in the battlefield footer; detailed source totals remain in Session Details. Neither the menu nor its controls read or write the original game save.
+
 
 This records what can be established from the repository and identifies where changes belong. See source for exact rules; avoid writing speculative architecture as fact.
 
