@@ -1,3 +1,5 @@
+import "./character.mjs";
+
 const $ = (selector, root = document) => root.querySelector(selector);
 const panelIds = ["character", "weapon", "combat", "summary", "systems"];
 const panelLabels = {
@@ -56,6 +58,22 @@ function readArray(key, fallback) {
 }
 function formatNumber(value) {
   return Math.round(value).toLocaleString("en-US");
+}
+function formatCompactNumber(value) {
+  const units = [
+    [1_000_000_000_000, "T"],
+    [1_000_000_000, "B"],
+    [1_000_000, "M"],
+    [1_000, "K"]
+  ];
+  for (const [threshold, suffix] of units) {
+    if (value >= threshold) {
+      const amount = value / threshold;
+      const decimals = amount >= 100 ? 0 : amount >= 10 ? 1 : 2;
+      return amount.toFixed(decimals).replace(/(?:\.0+|(\.\d+?)0+)$/, "$1") + suffix;
+    }
+  }
+  return formatNumber(value);
 }
 function totalDamage() {
   return [...damageBySource.values()].reduce((total, source) => total + source.total, 0);
@@ -186,6 +204,7 @@ function updateProgressSummary() {
 }
 function updateSessionDetails() {
   $("#dps").textContent = formatNumber(currentDps());
+  $("#arenaDps").textContent = formatCompactNumber(currentDps());
   $("#detailXp").textContent = "+" + formatNumber(experience);
   $("#detailMats").textContent = "+" + formatNumber(materials) + " Grave Dust";
   $("#detailKills").textContent = formatNumber(kills);

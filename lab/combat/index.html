@@ -34,7 +34,7 @@
       <div class="character-line">
         <span class="class-mark">✦</span>
         <div class="character-name"><small>PALADIN <i>·</i> LEVEL 18</small><h1>Veyra of the Ashen Road</h1></div>
-        <span class="character-link">Character <b>↗</b></span>
+        <button id="openCharacter" class="character-link" type="button" aria-haspopup="dialog">Character <b>↗</b></button>
       </div>
       <div class="health-row"><span>VITALITY</span><strong id="healthText">1,840 / 1,840</strong></div>
       <div class="health-track"><i id="playerHealth"></i></div>
@@ -90,7 +90,7 @@
           <div class="health-row"><span id="monsterLabel">GRAVEJAW STALKER</span><strong id="monsterText">3,942 / 8,200</strong></div>
           <div class="health-track monster-track"><i id="monsterHealth"></i></div>
         </div>
-        <div class="arena-foot"><span id="waveLabel">GALLOWSFEN · WAVE 08</span></div>
+        <div class="arena-foot"><span id="waveLabel">GALLOWSFEN · WAVE 08</span><span id="arenaDps" class="arena-dps" title="Session damage per second" aria-label="Damage per second">0</span></div>
       </div>
     </section>
 
@@ -146,6 +146,43 @@
         <button id="resetDps" class="reset-button">Reset session</button>
         <button id="done" class="primary-button compact">Done</button>
       </div>
+    </div>
+  </dialog>
+
+  <dialog id="characterMenu" class="character-modal" aria-label="Character menu">
+    <div class="character-shell">
+      <header class="character-header">
+        <button id="closeCharacter" class="back-to-fight" type="button" aria-label="Return to fight">‹ <span>FIGHT</span></button>
+        <div class="character-heading"><small>CHARACTER MENU</small><h1>Veyra of the Ashen Road</h1></div>
+        <button id="openCharacterStyle" class="character-style-button" type="button" aria-label="Adjust character screen style">UI</button>
+      </header>
+      <section class="character-identity">
+        <span class="character-portrait">✦</span><div><strong>PALADIN</strong><small>LEVEL 18 · OATHBOUND</small></div><span class="character-level">LV 18</span>
+      </section>
+      <div class="character-resources" aria-label="Sample character resources">
+        <span>◉ <b>12.4K</b> Gold</span><span>✦ <b>318</b> Shards</span><span>⬡ <b>42</b> Cores</span>
+      </div>
+      <nav class="character-tabs" role="tablist" aria-label="Character sections">
+        <button class="character-tab active" role="tab" aria-selected="true" data-character-tab="equipment"><span class="character-sprite sprite-tab-equipment"></span>Equipment</button>
+        <button class="character-tab" role="tab" aria-selected="false" data-character-tab="inventory"><span class="character-sprite sprite-tab-inventory"></span>Inventory</button>
+        <button class="character-tab" role="tab" aria-selected="false" data-character-tab="crafting"><span class="character-sprite sprite-tab-crafting"></span>Crafting</button>
+        <button class="character-tab" role="tab" aria-selected="false" data-character-tab="materials"><span class="character-sprite sprite-tab-materials"></span>Materials</button>
+      </nav>
+      <main id="characterContent" class="character-content" role="tabpanel"></main>
+      <div class="character-preview-caption">PREVIEW · INVENTORY AND CRAFTING DATA ARE SAMPLE CONTENT</div>
+      <aside id="characterStyle" class="character-style-panel" hidden>
+        <div class="character-style-heading"><div><small>INTERFACE TUNING</small><strong>Adjust the character screen</strong></div><button id="closeCharacterStyle" type="button" aria-label="Close appearance settings">×</button></div>
+        <label>UI scale<input data-style="scale" type="range" min="0.85" max="1.15" step="0.01" value="1"><output>100%</output></label>
+        <label>Item size<input data-style="slotSize" type="range" min="60" max="100" step="1" value="88"><output>88px</output></label>
+        <label>Panel corners<input data-style="radius" type="range" min="8" max="24" step="1" value="14"><output>14px</output></label>
+        <label>Panel spacing<input data-style="gap" type="range" min="4" max="14" step="1" value="8"><output>8px</output></label>
+        <div class="accent-picker"><span>Accent</span><button data-accent="#d6b575" aria-label="Forged gold"></button><button data-accent="#72d2f2" aria-label="Frost blue"></button><button data-accent="#b77aff" aria-label="Arcane violet"></button><button data-accent="#d94e57" aria-label="Scar crimson"></button></div>
+        <button id="resetCharacterStyle" class="reset-style" type="button">Reset appearance</button>
+      </aside>
+      <section id="itemSheet" class="item-sheet" hidden role="dialog" aria-modal="true" aria-labelledby="itemTitle">
+        <div class="item-sheet-heading"><div><strong id="itemTitle"></strong><small id="itemRarity"></small></div><button id="closeItemSheet" type="button" aria-label="Close item details">×</button></div>
+        <p id="itemDescription"></p><small class="item-preview-note">Illustrative item preview · no game data is changed.</small>
+      </section>
     </div>
   </dialog>
 

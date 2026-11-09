@@ -1,5 +1,10 @@
 # Decisions log (owner decisions vs engineering observations)
 
+## 2026-11-09 UTC — Confirmed: keep Combat central and add Character as an overlay
+- **Owner direction:** Preserve the current continuous-combat screen as the main Godscar view. The Character button opens on Equipment, with Inventory, Crafting and Materials tabs. Combat remains visible underneath and continues while the player manages the character.
+- **Owner direction:** Keep the compact live damage-rate number at the battlefield's lower-right and make the weapon auto-attack progress line quieter.
+- **Implementation boundary:** The Character screen is a presentation preview with sample item data and isolated appearance preferences. It does not change simulation, inventory, crafting or save data.
+
 ## 2026-11-09 UTC — Confirmed: compact combat HUD refinement
 - **Owner direction:** Reduce vertical space. Remove the equipped-weapon card; use only a subtle weapon auto-attack cast bar. Move the active inscription list into the arena's upper-left as compact colored rows with a progress bar that fades at its right edge. Remove the recent-hits feed. Put XP, materials and monsters slain in one compact summary with a button to detailed session stats and damage breakdown; show total DPS inside that view.
 - **Owner direction:** Use a more modern dark-menu/gamer visual treatment. Show distinct event effects as hits happen, including a sharp flash for melee and visible dripping blood on bleed ticks.
