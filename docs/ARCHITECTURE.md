@@ -1,5 +1,9 @@
 # Architecture map for the original Godscar browser game
 
+## Focused combat screen preview
+`lab/combat/` is served through an explicit asset allowlist at `/lab/combat/`; `/lab` redirects there. Its HTML/CSS and `main.mjs` form a presentation-only screen concept, independent from `web/src/sim.js`. The script cycles illustrative attack hits, damage ticks, sample monster health and session DPS. It does not claim authoritative combat results or load game saves. Layout order/visibility and reduced-effects preferences use isolated `godscar.combat-preview.*` localStorage keys. Assets are served only from `lab/combat/` by the preview server. The existing `/lab/arsenal/` and `/` routes remain separate.
+
+
 This records what can be established from the repository and identifies where changes belong. See source for exact rules; avoid writing speculative architecture as fact.
 
 ## Staged Living Arsenal interface preview (opt-in route)

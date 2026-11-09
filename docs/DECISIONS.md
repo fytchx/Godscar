@@ -1,5 +1,11 @@
 # Decisions log (owner decisions vs engineering observations)
 
+## 2026-11-09 UTC — Confirmed: combat-screen priorities
+- **Owner direction:** Keep the browser-idle fight flowing. Put the player's name, health, weapon attack and automated ability timers above the combat scene. The monster gets the scene; do not show a player-character sprite. Show organized text for each attack and each DoT tick with an ability icon and damage-type/element color. Keep the monster name and health visible in the scene.
+- **Owner direction:** A compact DPS number opens a session damage breakdown ranked by source; it counts each attack/tick until the player manually resets it. Show XP, materials and monster kills below. Show an offline recap only on launch; tapping outside closes it. Allow whole UI sections to be reordered/hidden, keep combat fixed, persist layout locally, and provide reduced effects.
+- **Prototype boundary:** The separate `/lab/combat/` route demonstrates the presentation with sample values and animation only. It does not set balance, define game simulation rules or touch saves.
+
+
 **How to use:** Add dated entries with **status (confirmed / proposed / rejected / unknown)**, reason and consequences. Do not convert a discussion, code comment, or AI suggestion into an owner-approved fact. When superseding, keep the old entry and point to the new one.
 
 ## 2026-11-06 UTC — Confirmed: browser idle presentation for the Living Arsenal prototype

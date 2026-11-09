@@ -1,5 +1,9 @@
 # Godscar browser preview
 
+## Combat screen concept
+
+**[Open the focused combat screen](https://godscar-browser-preview-preview.up.railway.app/lab/combat/)**. It demonstrates the agreed fight-screen hierarchy, hit/tick feed, session damage, rewards, offline recap and customization controls. The data and combat animations are illustrative, not connected to the simulation or save. The short path `/lab` opens this screen.
+
 ## New experimental Living Arsenal systems lab
 
 **[Open the Living Arsenal V2 lab](https://godscar-browser-preview-preview.up.railway.app/lab/arsenal/)**. This is a separate, opt-in implementation of the new owner-approved weapon-driven autocast progression concept. It does **not** replace the original game served at `/`, does not read its save data, and does not yet reproduce all old systems. Read [lab/arsenal/README.md](lab/arsenal/README.md) and [docs/PROGRESSION-V2.md](docs/PROGRESSION-V2.md) before editing or treating it as a release.

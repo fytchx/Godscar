@@ -1,3 +1,11 @@
+## 2026-11-09 UTC — Add a focused continuous-combat screen concept
+- **Why:** The broad interface skeleton did not make the combat flow feel familiar or immediately legible. The owner asked to focus on the Fight screen and confirmed the content, recap, damage accounting, layout controls and performance option.
+- **Changed:** Added `/lab/combat/` with player health/weapon/autocast information above a monster-centered scene; distinct sample physical, fire and poison hit/tick feedback; status indicators; per-hit feed; clickable ranked session damage with manual reset; XP/material/kill summary; and a launch recap modal that closes on outside tap. Added reorder/hide controls (combat fixed), locally saved layout/effects preferences, and a link to the wider systems preview. `/lab` redirects to the combat page.
+- **Boundary:** All hit values, health changes, monster turnover, loot and offline gains are illustrative animation. The page is disconnected from `web/src/sim.js` and does not read or alter game saves. Original `/` and `/lab/arsenal/` stay available.
+- **Files:** `lab/combat/{index.html,styles.css,main.mjs}`, `preview/server.mjs`, project/design docs and `README-PREVIEW.md`.
+- **Verification:** No test suite was run. Verify the new page and its assets over HTTP after the preview deployment; real phone review remains outstanding.
+- **Next:** Get owner feedback on a phone. Refine the demonstrated layout, then specify the first interaction that will use live simulation state.
+
 ## 2026-11-08 UTC — Verify the gear-art and combat visual deployment
 - **PR:** #5 merged into `preview/browser` at `772ebc07953c04b41c0541223bbbbd65a4c798fb`.
 - **Deployment:** Railway deployment `098ce66a-8515-4182-9e76-6cc0a0a3b773` reached SUCCESS. Verified the public `/lab/arsenal/` route and `art.mjs` module over HTTP.

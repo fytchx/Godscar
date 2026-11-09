@@ -1,7 +1,10 @@
 # Project state and immediate handoff
 
-**Last documented:** 2026-11-08 (UTC). **Active source branch:** `preview/browser` (verify current commit before work).
+**Last documented:** 2026-11-09 (UTC). **Active source branch:** `preview/browser` (verify current commit before work).
 **Read this before every work session, and update it in the same commit as EACH change set.** This document is a snapshot; re-check HEAD, workflows, Railway and live site rather than treating old statuses as current.
+
+## Latest focused screen work
+The isolated `/lab/combat/` route is a new combat-screen concept centered on the always-running fight. It animates sample attacks, DoT ticks, monster turnover, session damage, rewards and an offline recap; it also offers locally saved panel layout and reduced-effects controls. This is presentation-only: no game simulation or save is read or changed. `/lab` redirects to the combat preview; `/lab/arsenal/` and the original game at `/` remain available. Deployment and phone review must be confirmed from the current change, not inferred from past entries.
 
 ## Product identity
 **2026-11-06 direction update:** Owner adopted the Living Arsenal as the core of the game and approved reworking mechanics without retaining prototype saves/progress. Permanent white-weapon attack + 1–5 gear/crafting/progression-derived automatic abilities, meaningful but recoverable investments, and a brighter adventurous tone. The original browser remains the stable baseline. An opt-in browser prototype at `/lab/arsenal/` now tests the systems loop independently; it is not integrated into the original simulation. Read `docs/PROGRESSION-V2.md` and `docs/VISUAL-DIRECTION-V2.md`.
@@ -53,11 +56,12 @@ Godscar is a phone-first dark fantasy **continuous-combat idle ARPG**, potential
 ## Immediate priorities (not authorization for speculative changes)
 1. Keep original browser experience stable and backup/verify the owner’s character-save path.
 2. Compare source against any later Claude artifact or owner screenshots; document verified differences without speculation.
-3. Finish checks and publish the isolated Living Arsenal prototype to the Godscar preview, then collect owner feedback on browser readability and whether the equipment/weapon loop feels meaningful.
+3. Collect owner feedback on `/lab/combat/` on a phone: attack/event readability, hierarchy, recap and layout controls. Decide what to connect to the real simulation after that review.
 4. Plan server integration only with a credible migration, secrets, database and abuse-prevention strategy; no rushed multiplayer claims.
 5. Improve clarity and structure incrementally, preserving reproducible combat behavior.
 
 ## Latest activity
+- 2026-11-09 UTC: Added the focused `/lab/combat/` interface concept and routed `/lab` to it. This is illustrative UI, not simulation-backed; original game and save remain untouched. Check the current deployment and gather phone feedback.
 - 2026-11-08 UTC: PR #5 merged to `preview/browser` at `772ebc07953c04b41c0541223bbbbd65a4c798fb`; GitHub `test`, `lab`, and `handoff` checks passed. Railway deployment `098ce66a-8515-4182-9e76-6cc0a0a3b773` reached SUCCESS, and the public route/art module were HTTP-verified. Phone review remains pending.
 - 2026-11-07 UTC: Stage 1 UI skeleton merged as PR #4; GitHub checks passed, Railway preview deployed successfully, and the live Fight/Gear/Build tab flow was browser-verified. Awaiting owner review on their phone before Stage 2.
 - 2026-11-06 UTC: expanded the isolated browser prototype from a narrow proof into a broader playable loop: four distinct weapon families, nine equipment slots, gear affixes and a set bonus, three hunts including a named boss, equipment recovery, deliberate weapon refinement and charm engraving, responsive fight/build/forge UI. All local checks, all three GitHub workflow checks, preview deployment and route/health HTTP verification passed. Separate save remains isolated; no phone visual test yet.
