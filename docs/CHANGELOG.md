@@ -1,3 +1,8 @@
+## 2026-11-09 UTC — Animate automatic inscription timers
+- **Why:** The weapon and inscription timers are meant to explain the automatic combat flow, so static countdown numbers did not communicate that behavior.
+- **Changed:** The two sample timers now count down and restart; their illustrative cast events add their own colored combat entries and session damage. Timer bars follow the countdown. Values remain presentation-only.
+- **Verification:** Checked the live preview’s interaction flow; verify the deployed timer update after this commit. No test suite run.
+
 ## 2026-11-09 UTC — Separate direct hits from DoT session totals
 - **Why:** Live preview inspection showed that one spell's direct hit and burn tick shared a name, so the summary could label their combined damage as only a tick.
 - **Changed:** Session accounting now keeps each hit category separate (for example, Ember Brand direct damage versus Ember Brand burn ticks) while preserving icon, element color, hit count and ranking.
