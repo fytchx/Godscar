@@ -2,7 +2,7 @@
 
 ## Combat screen concept
 
-**[Open the focused combat screen](https://godscar-browser-preview-preview.up.railway.app/lab/combat/)**. It demonstrates the agreed fight-screen hierarchy, hit/tick feed, session damage, rewards, offline recap and customization controls. The data and combat animations are illustrative, not connected to the simulation or save. The short path `/lab` opens this screen.
+**[Open the focused combat screen](https://godscar-browser-preview-preview.up.railway.app/lab/combat/)**. It demonstrates a compact combat HUD with a subtle weapon cast bar, inscription timers inside the arena, event-specific hit effects, a combined reward strip and a detailed session-stats dialog. Sample values and effects are not connected to the simulation or save. The short path `/lab` opens this screen.
 
 ## New experimental Living Arsenal systems lab
 

@@ -1,5 +1,11 @@
 # Decisions log (owner decisions vs engineering observations)
 
+## 2026-11-09 UTC — Confirmed: compact combat HUD refinement
+- **Owner direction:** Reduce vertical space. Remove the equipped-weapon card; use only a subtle weapon auto-attack cast bar. Move the active inscription list into the arena's upper-left as compact colored rows with a progress bar that fades at its right edge. Remove the recent-hits feed. Put XP, materials and monsters slain in one compact summary with a button to detailed session stats and damage breakdown; show total DPS inside that view.
+- **Owner direction:** Use a more modern dark-menu/gamer visual treatment. Show distinct event effects as hits happen, including a sharp flash for melee and visible dripping blood on bleed ticks.
+- **Implementation boundary:** This refines the earlier screen arrangement recorded below. All numbers, timer events and hit effects remain sample presentation; no game rules or saves change.
+
+
 ## 2026-11-09 UTC — Confirmed: combat-screen priorities
 - **Owner direction:** Keep the browser-idle fight flowing. Put the player's name, health, weapon attack and automated ability timers above the combat scene. The monster gets the scene; do not show a player-character sprite. Show organized text for each attack and each DoT tick with an ability icon and damage-type/element color. Keep the monster name and health visible in the scene.
 - **Owner direction:** A compact DPS number opens a session damage breakdown ranked by source; it counts each attack/tick until the player manually resets it. Show XP, materials and monster kills below. Show an offline recap only on launch; tapping outside closes it. Allow whole UI sections to be reordered/hidden, keep combat fixed, persist layout locally, and provide reduced effects.

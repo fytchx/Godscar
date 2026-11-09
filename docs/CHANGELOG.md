@@ -1,3 +1,11 @@
+## 2026-11-09 UTC — Compress the combat HUD and add event effects
+- **Why:** Owner liked the first fight screen but asked to conserve vertical space and surface the combat information more compactly.
+- **Changed:** Removed the equipped-weapon card and recent-hit feed. Added a subtle Mace Swing auto-cast bar, moved three compact inscription timers into the arena's upper-left with right-fading progress bars, condensed XP/material/kill counts into one strip, and moved total DPS plus ranked direct/DoT damage into the session-details modal. Added per-event sharp melee flashes, fire embers, poison drops and red bleed drips. Updated the skin to a denser modern dark HUD.
+- **Boundary:** Timers, values, monster changes and event effects are illustrative UI only; original game simulation and saves remain untouched. Layout and reduced-effects preferences keep their existing isolated local keys.
+- **Files:** `lab/combat/{index.html,styles.css,main.mjs,README.md}` and `docs/{PROJECT-STATE,ARCHITECTURE,DECISIONS,OPEN-QUESTIONS,CHANGELOG}.md`, plus `README-PREVIEW.md`.
+- **Verification:** No test suite run. Live browser interaction and phone viewport review will follow after deployment; sample combat is not gameplay acceptance.
+- **Next:** Owner reviews the compact screen on phone. Tune legibility and effect intensity from that feedback, then define a small step toward simulation-backed data.
+
 ## 2026-11-09 UTC — Keep displayed ability timers within range
 - **Why:** Browser review caught a negative timer value briefly appearing just before a sample cast reset.
 - **Changed:** Reset the illustration timer before rendering its next countdown value.
