@@ -16,11 +16,6 @@
   --bleed: #f05e6b;
   --ice: #72d2f2;
   --blue: #69aaff;
-  --character-scale: 1;
-  --character-gap: 8px;
-  --character-slot-size: 88px;
-  --character-radius: 14px;
-  --character-accent: #d6b575;
   --max-width: 510px;
   font-family: "Roboto Condensed", "Segoe UI", sans-serif;
   font-size: 14px;
@@ -39,7 +34,7 @@ a { color: inherit; text-decoration: none; }
   max-width: var(--max-width);
   min-height: 100dvh;
   margin: 0 auto;
-  padding: 0 0 14px;
+  padding: 0 0 calc(86px + env(safe-area-inset-bottom, 0px));
   background:
     radial-gradient(ellipse at 50% -16%, #28364a38, transparent 45%),
     var(--bg);
@@ -376,72 +371,17 @@ h1 { overflow: hidden; margin: 1px 0 0; font: 700 17px/1.1 "Rajdhani", sans-seri
 .footer span { color: var(--scar); }
 .footer b { margin-left: 5px; color: #9c7380; font-size: 6px; }
 
-/* Character screen design tokens are separate from the live combat HUD. */
-.character-modal { width: 100%; max-width: none; height: 100dvh; max-height: none; margin: 0; padding: 0; overflow: auto; border: 0; background: transparent; color: var(--text); }
-.character-modal::backdrop { background: #05070bc9; backdrop-filter: blur(4px); }
-.character-shell { position: relative; width: min(100%, 510px); min-height: 100%; margin: auto; padding: env(safe-area-inset-top, 0px) 10px calc(18px + env(safe-area-inset-bottom, 0px)); background: radial-gradient(ellipse at 50% -16%, #28364a38, transparent 45%), var(--bg); font-size: calc(14px * var(--character-scale)); }
-.character-header { position: sticky; z-index: 4; top: 0; min-height: 48px; display: grid; grid-template-columns: 66px 1fr 36px; align-items: center; gap: 8px; margin: 0 -10px; padding: 5px 10px; border-bottom: 1px solid var(--line); background: #0c1018ed; backdrop-filter: blur(12px); }
-.back-to-fight, .character-style-button { border: 1px solid #344054; border-radius: 7px; background: #121a26; color: #a7bad7; }
-.back-to-fight { min-height: 31px; font-size: 18px; line-height: 1; }
-.back-to-fight span { font-size: 8px; font-weight: 700; letter-spacing: .1em; vertical-align: 2px; }
-.character-heading { min-width: 0; text-align: center; }
-.character-heading small { display: block; color: #91a0b6; font-size: 8px; font-weight: 700; letter-spacing: .13em; }
-.character-heading h1 { margin: 2px 0 0; color: var(--text); font: 600 14px/1.2 "Rajdhani", sans-serif; }
-.character-style-button { min-height: 31px; color: var(--character-accent); font-size: 10px; font-weight: 800; }
-.character-identity { display: flex; align-items: center; gap: 10px; margin-top: 10px; padding: 9px 10px; border: 1px solid var(--line); border-radius: var(--character-radius); background: linear-gradient(120deg, #141a25, #10141c 75%); }
-.character-portrait { width: 40px; height: 40px; display: grid; place-items: center; border: 1px solid #704248; border-radius: 11px; background: #342127; color: #ffb77c; font-size: 20px; }
-.character-identity div { display: grid; gap: 2px; }
-.character-identity strong { color: #e6d8cf; font-size: 10px; letter-spacing: .1em; }
-.character-identity small { color: var(--muted); font-size: 9px; }
-.character-level, .character-count { margin-left: auto; padding: 5px 7px; border: 1px solid #5d4935; border-radius: 6px; background: #201c19; color: var(--character-accent); font-size: 9px; font-weight: 700; white-space: nowrap; }
-.character-resources { display: flex; justify-content: space-between; gap: 6px; margin-top: 7px; padding: 9px 8px; border: 1px solid var(--line); border-radius: var(--character-radius); background: #10151e; color: #c5cedb; font-size: 9px; }
-.character-resources span { white-space: nowrap; }
-.character-resources b { color: var(--character-accent); }
-.character-tabs { position: sticky; z-index: 3; top: 48px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 3px; margin: 8px -2px 0; padding: 4px; border-bottom: 1px solid var(--line); background: #0c1018f2; }
-.character-tab { min-width: 0; min-height: 41px; display: flex; align-items: center; justify-content: center; gap: 4px; padding: 5px 2px; border: 0; border-radius: 8px 8px 4px 4px; background: transparent; color: #94a0b3; font-size: 9px; font-weight: 700; }
-.character-tab.active { background: #202634; color: var(--character-accent); box-shadow: inset 0 -2px var(--character-accent); }
-.character-sprite { flex: none; width: 17px; height: 17px; display: inline-block; background-image: url('/lab/combat/gear-atlas.png'); background-size: 400% 400%; background-repeat: no-repeat; }
-.sprite-mace { background-position: 0% 0%; }.sprite-shield { background-position: 33.333% 0%; }.sprite-helm { background-position: 66.667% 0%; }.sprite-chest { background-position: 100% 0%; }
-.sprite-gloves { background-position: 0% 33.333%; }.sprite-belt { background-position: 33.333% 33.333%; }.sprite-legs { background-position: 66.667% 33.333%; }.sprite-boots { background-position: 100% 33.333%; }
-.sprite-ring { background-position: 0% 66.667%; }.sprite-ring-legendary { background-position: 33.333% 66.667%; }.sprite-amulet { background-position: 66.667% 66.667%; }.sprite-sword { background-position: 100% 66.667%; }
-.sprite-tab-equipment { background-position: 0% 100%; }.sprite-tab-inventory { background-position: 33.333% 100%; }.sprite-tab-crafting { background-position: 66.667% 100%; }.sprite-tab-materials, .sprite-materials { background-position: 100% 100%; }
-.character-content { padding: 0 1px; }
-.character-section-head { display: flex; align-items: center; gap: 8px; margin: 13px 1px 8px; }
-.character-section-head>div { display: grid; gap: 2px; }.character-section-head small { color: #8392a8; font-size: 8px; font-weight: 700; letter-spacing: .11em; }.character-section-head h2 { margin: 0; font: 600 18px/1.1 "Rajdhani", sans-serif; }
-.character-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; margin-bottom: var(--character-gap); }
-.character-stats>div { display: grid; gap: 3px; padding: 7px 8px; border: 1px solid var(--line-soft); border-radius: 9px; background: #10151e; }
-.character-stats small { color: #8e9bb0; font-size: 7px; font-weight: 700; letter-spacing: .07em; }.character-stats b { font-size: 12px; font-variant-numeric: tabular-nums; }
-.equipment-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--character-gap); }
-.equipment-slot { position: relative; min-width: 0; min-height: calc(var(--character-slot-size) + 34px); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; padding: 7px 4px 6px; overflow: hidden; border: 1px solid var(--line); border-radius: var(--character-radius); background: linear-gradient(145deg, #171e2a, #10151d); text-align: center; }
-.equipment-slot strong { width: 100%; overflow: hidden; color: #dfe5ee; font-size: 8px; text-overflow: ellipsis; white-space: nowrap; }
-.slot-name { color: #8997aa; font-size: 7px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; }
-.equipment-slot .slot-art { width: var(--character-slot-size); height: var(--character-slot-size); max-width: 100%; background-size: 400% 400%; filter: drop-shadow(0 3px 4px #0009); }
-.rarity-dot { position: absolute; top: 7px; left: 7px; width: 6px; height: 6px; border-radius: 50%; background: var(--epic); }
-.rarity-rare .rarity-dot { background: var(--ice); }.rarity-legendary .rarity-dot { background: var(--gold); }
-.character-footnote { margin: 9px 2px 2px; color: #718096; font-size: 8px; line-height: 1.4; }
-.character-filters { display: flex; gap: 6px; margin: 0 1px 9px; overflow-x: auto; scrollbar-width: none; }
-.filter-chip { flex: none; padding: 6px 9px; border: 1px solid #313b4c; border-radius: 99px; background: #111722; color: #a9b5c7; font-size: 9px; }
-.filter-chip.active { border-color: #6b5c3d; background: #26231e; color: var(--character-accent); }
-.inventory-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--character-gap); }
-.inventory-item { position: relative; min-width: 0; aspect-ratio: 1; display: grid; place-items: center; padding: 5px; border: 1px solid var(--line); border-radius: var(--character-radius); background: linear-gradient(145deg, #171e2a, #10151d); }
-.inventory-item.rarity-rare { border-color: #397b91; }.inventory-item.rarity-epic { border-color: #714a91; }.inventory-item.rarity-legendary { border-color: #8c6933; }
-.inventory-art { width: 72%; height: 72%; background-size: 400% 400%; filter: drop-shadow(0 3px 4px #0009); }
-.inventory-item small { position: absolute; right: 3px; bottom: 4px; left: 3px; overflow: hidden; color: #d6dde7; font-size: 7px; text-overflow: ellipsis; white-space: nowrap; }
-.item-count { position: absolute; top: 4px; right: 5px; color: #f3d188; font-size: 8px; font-weight: 700; }
-.character-intro { margin: 0 2px 10px; color: #a2adbe; font-size: 10px; }
-.recipe-card, .material-row { display: grid; grid-template-columns: 45px 1fr auto; align-items: center; gap: 9px; margin-bottom: 7px; padding: 9px; border: 1px solid var(--line); border-radius: var(--character-radius); background: #121822; }
-.recipe-art, .material-art { width: 42px; height: 42px; background-size: 400% 400%; }
-.recipe-copy, .material-row>div { min-width: 0; display: grid; gap: 3px; }.recipe-copy strong, .material-row strong { color: #e2e7ef; font-size: 10px; }.recipe-copy small, .material-row small { color: #97a4b7; font-size: 8px; line-height: 1.25; }.recipe-copy span { color: #c9b486; font-size: 8px; }
-.preview-recipe { padding: 7px; border: 1px solid #554830; border-radius: 7px; background: #28231b; color: var(--character-accent); font-size: 8px; font-weight: 700; }
-.material-row { grid-template-columns: 42px 1fr auto; }.material-row>b { color: #e1e6ed; font-size: 10px; font-variant-numeric: tabular-nums; }
-.character-preview-caption { padding: 10px 3px 3px; color: #667386; font-size: 7px; font-weight: 700; letter-spacing: .08em; text-align: center; }
-.character-style-panel { position: fixed; z-index: 9; right: 0; bottom: 0; left: 0; width: min(100%, 510px); margin: auto; padding: 14px 13px calc(16px + env(safe-area-inset-bottom, 0px)); border: 1px solid #394457; border-bottom: 0; border-radius: 15px 15px 0 0; background: #111722; box-shadow: 0 -18px 55px #000c; }
-.character-style-heading { display: flex; align-items: center; justify-content: space-between; margin-bottom: 7px; }.character-style-heading div { display: grid; gap: 2px; }.character-style-heading small { color: #8495ae; font-size: 8px; letter-spacing: .1em; }.character-style-heading strong { font-size: 11px; }.character-style-heading button, .item-sheet-heading button { width: 30px; height: 30px; border: 1px solid #394457; border-radius: 7px; background: #1b2431; color: #ced7e3; font-size: 17px; }
-.character-style-panel label { display: grid; grid-template-columns: 86px 1fr 42px; align-items: center; gap: 8px; margin: 9px 0; color: #b7c1d0; font-size: 9px; }.character-style-panel input { width: 100%; accent-color: var(--character-accent); }.character-style-panel output { color: var(--character-accent); text-align: right; }
-.accent-picker { display: flex; align-items: center; gap: 10px; margin-top: 10px; color: #b7c1d0; font-size: 9px; }.accent-picker button { width: 22px; height: 22px; border: 2px solid #ffffff80; border-radius: 50%; background: #d6b575; }.accent-picker button[data-accent="#d6b575"] { background: #d6b575; }.accent-picker button[data-accent="#72d2f2"] { background: #72d2f2; }.accent-picker button[data-accent="#b77aff"] { background: #b77aff; }.accent-picker button[data-accent="#d94e57"] { background: #d94e57; }
-.reset-style { margin-top: 10px; padding: 6px 8px; border: 1px solid #394457; border-radius: 6px; background: #1b2431; color: #c4cedc; font-size: 8px; }
-.item-sheet { position: fixed; z-index: 10; right: 7px; bottom: calc(10px + env(safe-area-inset-bottom, 0px)); left: 7px; width: auto; max-width: 496px; margin: auto; padding: 13px; border: 1px solid #66573a; border-radius: 13px; background: #151b25; box-shadow: 0 -12px 42px #000c; }
-.item-sheet-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; }.item-sheet-heading div { display: grid; gap: 3px; }.item-sheet-heading strong { font-size: 13px; }.item-sheet-heading small { color: var(--character-accent); font-size: 8px; text-transform: uppercase; }.item-sheet p { margin: 10px 0; color: #c2cbd7; font-size: 10px; }.item-preview-note { color: #758297; font-size: 8px; }
+.game-bottom-nav { position: fixed; z-index: 6; right: 0; bottom: 0; left: 0; width: min(100%, var(--max-width)); min-height: calc(62px + env(safe-area-inset-bottom, 0px)); display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px; margin: auto; padding: 5px 7px calc(5px + env(safe-area-inset-bottom, 0px)); border-top: 1px solid #283140; background: #0d1118f5; backdrop-filter: blur(12px); }
+.game-bottom-nav button { display: grid; align-content: center; justify-items: center; gap: 3px; border: 0; border-radius: 10px; background: transparent; color: #8994a5; font-size: 9px; font-weight: 700; }
+.game-bottom-nav button>span { font-size: 18px; line-height: 1; }
+.game-bottom-nav button.selected { color: var(--gold); background: #25232a; }
+.game-bottom-nav button[aria-disabled="true"] { opacity: .65; }
+
+/* The approved phone-first Character prototype runs as a same-origin screen layer.
+   Keeping it in an iframe isolates its design tokens while the combat clock continues. */
+.character-modal { width: 100vw; max-width: none; height: 100dvh; max-height: none; margin: 0; padding: 0; overflow: hidden; border: 0; background: #0b0e13; color: var(--text); }
+.character-modal::backdrop { background: #05070bd9; }
+.character-frame { display: block; width: 100%; height: 100%; border: 0; background: #0b0e13; }
 
 .layout-panel {
   position: fixed;

@@ -1,3 +1,10 @@
+## 2026-11-09 UTC — Correct the Character screen to match its approved preview
+- **Why:** The first website implementation diverged from the approved phone mockup: it substituted a new equipment-card arrangement and omitted several visible sections. The owner correctly flagged that the site did not look like the shown design.
+- **Changed:** Replaced that improvised layout with the phone-first prototype structure: 12 visible equipment positions, stat deltas, Oathkeeper loadout card, four Character tabs, and bottom navigation. Uses the actual individual gear and UI illustrations from the current approved prototype pack. The view remains a same-origin overlay on the existing Fight screen; selecting Fight returns to the continuing combat view.
+- **Files:** `lab/combat/{index.html,styles.css,character.mjs,character.html,character-assets/*}`, preview route allowlist, CI smoke checks and project docs.
+- **Boundary:** Character stats and item/crafting/material content are still illustrative. No game simulation or saves are changed.
+- **Verification:** Local browser review confirmed the first implementation diverged; rerun CI and verify the corrected page at a phone viewport after the new preview deploys.
+
 ## 2026-11-09 UTC — Add an Equipment-first Character overlay to the combat preview
 - **Why:** Owner wants the current combat screen to stay central while adding the first usable Character menu.
 - **Changed:** Added Equipment, Inventory, Crafting and Materials tabs in a full-screen overlay. Curated the current equipment/UI art into a sprite atlas; added appearance controls backed by separate CSS design tokens. The combat timer continues behind the menu. Added abbreviated session DPS at the arena's lower-right and muted the auto-attack cast line.

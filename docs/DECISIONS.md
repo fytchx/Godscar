@@ -1,5 +1,10 @@
 # Decisions log (owner decisions vs engineering observations)
 
+## 2026-11-09 UTC — Corrected: Character must match the approved phone preview
+- **Owner feedback:** The first site version did not look like the approved Character preview.
+- **Implementation:** Use the original prototype structure and actual individual art: 12 visible slots, stat deltas, Oathkeeper loadout, combat-role card, Character tabs, and the bottom navigation. Keep Fight as the existing parent combat view and place Character over it.
+- **Boundary:** Keep sample character/inventory values clearly illustrative; never write simulation or save state from this prototype screen.
+
 ## 2026-11-09 UTC — Confirmed: keep Combat central and add Character as an overlay
 - **Owner direction:** Preserve the current continuous-combat screen as the main Godscar view. The Character button opens on Equipment, with Inventory, Crafting and Materials tabs. Combat remains visible underneath and continues while the player manages the character.
 - **Owner direction:** Keep the compact live damage-rate number at the battlefield's lower-right and make the weapon auto-attack progress line quieter.
