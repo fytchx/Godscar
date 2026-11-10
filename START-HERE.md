@@ -1,47 +1,37 @@
 # START HERE | Godscar continuity guide
 
-Godscar's GitHub repository is the durable project memory. If you have never seen this game before, this file is enough to find the right branch and read the actual context **before** proposing changes.
+## Current direction
+The selected starting point is the illustrated combat screen paired with the phone-first Character menu shown in the approved references. Combat is the home view; Character opens to Equipment, with Inventory, Crafting, and Materials tabs. Preserve the pixel-art arena, monster focus, subtle auto-attack bar, small abbreviated DPS at lower right, and the screen's style controls.
 
-## DO THIS FIRST
-1. Confirm repo: **`fytchx/Godscar`**. The currently approved, faithful game is branch **[`preview/browser`](https://github.com/fytchx/Godscar/tree/preview/browser)**.
-2. The default branch `main` currently contains an incomplete **Godot remake that the owner rejected**. Do not begin development from its Godot code. If you landed on `main`, switch to `preview/browser`.
-3. Read, in order:
-   - [AGENTS.md](AGENTS.md) (mandatory operating rules)
-   - [docs/PROJECT-STATE.md](docs/PROJECT-STATE.md) (current verified status, next tasks and handoff)
-   - [docs/DECISIONS.md](docs/DECISIONS.md) (decisions and rejected directions)
-   - [docs/DESIGN-INTENT.md](docs/DESIGN-INTENT.md) (game's identity, what to clarify)
-   - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) (system map)
-   - [docs/CODE-STANDARDS.md](docs/CODE-STANDARDS.md) (human-readable implementations)
-   - [docs/WORKFLOW.md](docs/WORKFLOW.md) (how to commit, test and update the preview)
-   - [docs/CHANGELOG.md](docs/CHANGELOG.md) (most recent actual changes)
-   - [docs/OPEN-QUESTIONS.md](docs/OPEN-QUESTIONS.md) (what is still unconfirmed)
-4. Inspect relevant source code and tests. A document is not evidence that a feature really works. Verify current HEAD, CI and deployed revision separately.
+The website root **/** serves this presentation. Former **/lab**, **/lab/combat/**, and **/lab/arsenal/** pages redirect to root. They must not be treated as competing versions.
 
-## See the game before changing it
-**Live original browser game:** https://godscar-browser-preview-preview.up.railway.app/
+The current presentation still uses sample data. Do not attach the older engine, menus, saves, or balance values by default. The earlier **web/src/** simulation is preserved reference code, not the website's current UI. The custom Godot rewrite on **main** was rejected.
 
-This is a mobile-first dark-fantasy idle ARPG: combat NEVER stops as the player manages everything else. The owner specifically confirmed this browser version feels like the Godscar they were building with Claude; the rushed Godot/APK rewrite did not.
+## Before changing anything
+1. Confirm repository: [fytchx/Godscar](https://github.com/fytchx/Godscar).
+2. Confirm active preview branch: [preview/browser](https://github.com/fytchx/Godscar/tree/preview/browser); verify its commit and Railway deployment.
+3. Read [AGENTS.md](AGENTS.md), [docs/PROJECT-STATE.md](docs/PROJECT-STATE.md), [docs/DECISIONS.md](docs/DECISIONS.md), [docs/DESIGN-INTENT.md](docs/DESIGN-INTENT.md), [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md), [docs/CODE-STANDARDS.md](docs/CODE-STANDARDS.md), [docs/WORKFLOW.md](docs/WORKFLOW.md), [docs/CHANGELOG.md](docs/CHANGELOG.md), and [docs/OPEN-QUESTIONS.md](docs/OPEN-QUESTIONS.md).
+4. Inspect the actual current screen code and active branch. Do not infer that a mockup's sample numbers are game rules.
 
-**Source:** `web/src/sim.js` for combat, items, progression, deterministic simulation, bosses, actions, offline catch-up; `web/src/ui.js` for interaction; `web/src/shell.html` for structure/style; `preview/` for web preview packaging; `web/test/` for validation.
+## Current preview
+[Open Godscar](https://godscar-browser-preview-preview.up.railway.app/)
 
-## Branch map (verify before using)
-| Branch | Purpose | Safe to build on? |
-| --- | --- | --- |
-| `preview/browser` | **ACTIVE**, original Claude browser game and Railway preview | Yes, following workflow and auto-deploy caution |
-| `web` | Original saved browser baseline | Reference; don't casually rewrite |
-| `feature/server-phase1` | Server-authoritative API and account scaffold, locally incomplete | Research/isolated future development only |
-| `main` | Historic incomplete native Godot port and APK workflow | NO for current game development; documentation pointer only |
-| `archive/godot`, `dev` | Older joystick/manual-skill action prototypes and art | Historic research only, not current gameplay |
+The site presents combat + Character as the chosen starting surface. It is not yet a complete gameplay loop: sample combat, items, crafting, and materials are not simulation-backed. Earlier browser simulation source remains available for deliberate reuse after the target behavior is agreed.
 
-## Working philosophy
-Build what the owner *actually wants*, not what a model guesses would be impressive. Explain constraints, point out when an idea doesn't fit nonstop combat or current scope, and ask on ambiguous major design decisions. Favor incremental work, visible tests, clear documentation and code a human can maintain.
+## Version boundaries
 
-Every change needs a GitHub commit **and** a durable project-state/changelog update. Otherwise the next session cannot trust that work happened.
+| Area | Status |
+|---|---|
+| preview/browser | Active website preview: combat + Character direction at root |
+| web/src/* | Preserved earlier simulation/UI source; no longer served at root |
+| lab/combat/* | Current screen implementation and its explicit asset routes |
+| lab/arsenal/* | Historical experimental shell/engine; not served as a page |
+| main / Godot rewrite | Rejected direction; historical only |
+| Git history | Recovery/archive for prior versions; not another public site route |
 
-## What is not yet solved
-- This preview is not an online multiplayer service. Browser storage is local to each site origin.
-- Claude's optional cloud-save integration doesn't automatically sync to this domain. Use the game's existing **Build → Export/Import** save flow when available; never promise automatic transfer.
-- The server branch is not connected or production-safe. Original logo assets are documented but not confirmed integrated.
-- Confirm whether any later Claude-only artifact changes exist before claiming GitHub represents the very latest work.
-
-**First useful continuation:** inspect the live game with the owner, record any discrepancies from their latest Claude artifact, then plan and test precise incremental fixes.
+## Working rules
+- Keep the selected combat + Character direction visible while iterating.
+- Separate presentation changes from game-rule and save changes.
+- Never silently combine old engines, old screens, or old saves with the current prototype.
+- Keep code understandable and project-state/changelog updates in the same change.
+- Review the deployed commit and phone layout after preview changes; never call sample UI a connected game system.

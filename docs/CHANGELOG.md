@@ -1,3 +1,8 @@
+## 2026-11-09 UTC — Make the approved combat + Character screens the sole website entry point
+- **Why:** The owner clarified that the illustrated Fight screen and matching phone-first Character prototype are the selected starting direction. Older published routes were creating version confusion.
+- **Changed:** The preview root serves the selected combat screen; previous `/lab`, `/lab/combat/`, and `/lab/arsenal/` page routes redirect to `/`. Updated route smoke checks and project handoff docs. The earlier simulation and experimental Arsenal source remain recoverable but are no longer exposed as alternate website versions.
+- **Data boundary:** Combat, DPS, character, inventory, crafting, and material values remain illustrative. No old save is loaded, changed, or deleted.
+- **Validation:** CI checks run on the pull request; Railway preview deployment follows after merging to `preview/browser`. Physical-phone review remains needed.
 ## 2026-11-09 UTC — Finish the Character overlay viewport fit
 - **Changed:** Anchored the full-screen overlay to the viewport, kept the reference bottom navigation above content, removed the extra sample key currency, and made closed item details fully invisible.
 - **Why:** The deployed browser review showed the equipment art and 12-slot layout, but the bottom edge needed a final viewport-fit pass.

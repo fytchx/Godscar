@@ -1,4 +1,4 @@
-name: Living Arsenal systems lab checks
+name: Godscar current screen and prototype checks
 
 on:
   push:
@@ -18,7 +18,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with: { node-version: '22' }
-      - name: Validate Living Arsenal engine and interface preview
+      - name: Validate current screen and archived prototype modules
         run: |
           node --check lab/arsenal/engine.mjs
           node --check lab/arsenal/catalog.mjs
@@ -28,11 +28,11 @@ jobs:
           node lab/arsenal/tests.mjs
           node --check lab/combat/main.mjs
           node --check lab/combat/character.mjs
-      - name: Verify original browser gameplay still works
+      - name: Keep preserved simulation bundle buildable
         run: |
           npm test
           npm run build
-      - name: Serve original game and opt-in lab, then smoke check
+      - name: Serve the selected combat and Character direction
         shell: bash
         run: |
           set -euo pipefail
@@ -42,18 +42,14 @@ jobs:
             curl -fsS http://127.0.0.1:3106/health > /tmp/arsenal-health && break
             sleep 1
           done
-          curl -fsS http://127.0.0.1:3106/ > /tmp/godscar-original.html
-          grep -q GODSCAR /tmp/godscar-original.html
-          curl -fsS http://127.0.0.1:3106/lab/arsenal/ > /tmp/godscar-lab.html
-          grep -q "Interface Skeleton" /tmp/godscar-lab.html
-          curl -fsS http://127.0.0.1:3106/lab/arsenal/ui.mjs > /tmp/godscar-lab-ui.mjs
-          grep -q '"Fight", "Gear", "Bag", "Build", "Forge"' /tmp/godscar-lab-ui.mjs
-          ! grep -Eq 'localStorage|engine\.mjs' /tmp/godscar-lab-ui.mjs
-          curl -fsS http://127.0.0.1:3106/lab/arsenal/art.mjs | grep -q 'combatIllustration'
-          curl -fsS http://127.0.0.1:3106/lab/arsenal/styles.css | grep -q -- "--bg"
-          curl -fsS http://127.0.0.1:3106/lab/combat/ > /tmp/godscar-combat.html
-          grep -q 'id="characterMenu"' /tmp/godscar-combat.html
-          grep -q 'id="arenaDps"' /tmp/godscar-combat.html
+          curl -fsS http://127.0.0.1:3106/ > /tmp/godscar-current.html
+          grep -q 'id="characterMenu"' /tmp/godscar-current.html
+          grep -q 'id="arenaDps"' /tmp/godscar-current.html
+          grep -q 'COMBAT PREVIEW' /tmp/godscar-current.html
+          ! grep -q 'Interface Skeleton' /tmp/godscar-current.html
+          for retired_route in /lab /lab/combat/ /lab/arsenal/; do
+            curl -fsSI "http://127.0.0.1:3106$retired_route" | grep -qi 'location: /'
+          done
           curl -fsS http://127.0.0.1:3106/lab/combat/character.html > /tmp/godscar-character.html
           grep -q '12 / 12 slots' /tmp/godscar-character.html
           grep -q 'Loadout · Oathkeeper' /tmp/godscar-character.html
