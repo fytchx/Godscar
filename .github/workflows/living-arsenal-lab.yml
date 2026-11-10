@@ -45,13 +45,10 @@ jobs:
           curl -fsS http://127.0.0.1:3106/ > /tmp/godscar-original.html
           grep -q GODSCAR /tmp/godscar-original.html
           curl -fsS http://127.0.0.1:3106/lab/arsenal/ > /tmp/godscar-lab.html
-          grep -q "Living Arsenal Prototype" /tmp/godscar-lab.html
+          grep -q "Interface Skeleton" /tmp/godscar-lab.html
           curl -fsS http://127.0.0.1:3106/lab/arsenal/ui.mjs > /tmp/godscar-lab-ui.mjs
-          grep -q '"Fight","Character","Skills","Forge","Materials"' /tmp/godscar-lab-ui.mjs
-          grep -q 'from "./engine.mjs"' /tmp/godscar-lab-ui.mjs
-          grep -q 'localStorage' /tmp/godscar-lab-ui.mjs
-          grep -q 'data-hunt' /tmp/godscar-lab-ui.mjs
-          grep -q 'LIVE DPS' /tmp/godscar-lab-ui.mjs
+          grep -q '"Fight", "Gear", "Bag", "Build", "Forge"' /tmp/godscar-lab-ui.mjs
+          ! grep -Eq 'localStorage|engine\.mjs' /tmp/godscar-lab-ui.mjs
           curl -fsS http://127.0.0.1:3106/lab/arsenal/art.mjs | grep -q 'combatIllustration'
           curl -fsS http://127.0.0.1:3106/lab/arsenal/styles.css | grep -q -- "--bg"
           curl -fsS http://127.0.0.1:3106/lab/combat/ > /tmp/godscar-combat.html

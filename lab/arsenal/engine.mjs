@@ -128,7 +128,6 @@ function maybeHealFromHit(game, damage, support) {
 function damageEnemy(game, damage, source) {
   if (!game.enemy) return;
   const rounded = Math.max(1, Math.round(damage));
-  game.damageDealt = (game.damageDealt || 0) + rounded;
   game.enemy.hp -= rounded;
   if (source !== "primary") log(game, source + " deals " + rounded + " damage.");
   if (game.enemy.hp <= 0) defeatEnemy(game);
@@ -485,4 +484,3 @@ export function action(game, command) {
     default: return "Unknown action.";
   }
 }
-

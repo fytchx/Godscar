@@ -184,10 +184,3 @@ This log records **completed and committed change sets**, not wishes. Most recen
 ## Earlier — Incorrect Godot APK rewrite
 - **What happened:** An unfaithful native Godot version was committed to default `main` and packaged for Android. Basic automated tests passed but presentation and mechanics did not match the original game. The owner rejected it.
 - **Disposition:** Preserve history only; do not build current game features on this rewrite or claim it was faithful.
-
-## 2026-11-10 — Connect Living Arsenal prototype to gameplay
-
-- **What changed:** The isolated /lab/arsenal/ interface now drives the existing deterministic engine. Added interactive hunts, live combat and DPS, equipment and inventory actions, ability assignment/supports, crafting, materials, separate browser persistence, and bounded offline catch-up. Updated route smoke checks and the project handoff.
-- **Why:** Turn the owner-reviewed UI direction and existing systems engine into a coherent playable prototype while keeping the original game and save untouched.
-- **Validation:** node --check lab/arsenal/ui.mjs; node --check lab/arsenal/engine.mjs; node --test lab/arsenal/tests.mjs. 15 existing system tests passed. Preview deployment and phone review pending.
-- **Status and limits:** Balance, item names, progression numbers and nine-slot equipment model remain experimental. The 12-position Character art mockup is still a separate presentation concept. Browser-side simulation is not server-authoritative.
