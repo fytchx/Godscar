@@ -1,0 +1,32 @@
+Paladin slice counter recipes
+
+Counter | Source | Starting cost | Calibrated cost | Guaranteed item stat
+Wisp | 1 Ember Essence per 150 Wisp-family kills | 8 Ember Essence | 4 Ember Essence | Rare ring, fire resistance at top roll for item level
+Bellkeeper | 2 Dawn Essence per Bellkeeper win | 10 Dawn Essence | 10 Dawn Essence | Rare ring, dmgPct at top roll for item level
+
+Wisp calibration: 600 family kills for 4 Ember. Level-20 Rare fixtures produced the counter in 23–44 sim minutes across the five measured seeds. The starting cost of 8 took 44–83 minutes, outside the 15–45 minute target.
+
+Dawn farm: 5 Bellkeeper clears produced 10 Dawn in 28.58–53.12 sim minutes across the same level-20 Rare fixtures.
+
+Remeasured at SIM_VERSION 6 on slice/paladin commit 66248e25af580aad42dfde6ff7cd006fa37de1b8. Every row is a level-20 Paladin with Rare gear; Wisp rows farm stage 20. Ember drops are one per 150 Wisp-family kills. Dawn rows earn two per Bellkeeper win.
+
+Seed | Ember cost | Wisp-family kills | Minutes | Ember earned | Family kills remaining
+31 | 8 | 1207 | 49 | 8 | 7
+97 | 8 | 1201 | 53 | 8 | 1
+503 | 8 | 1221 | 60 | 8 | 21
+2026 | 8 | 1217 | 83 | 8 | 17
+1109 | 8 | 1225 | 44 | 8 | 25
+31 | 4 | 606 | 25 | 4 | 6
+97 | 4 | 609 | 28 | 4 | 9
+503 | 4 | 603 | 30 | 4 | 3
+2026 | 4 | 610 | 44 | 4 | 10
+1109 | 4 | 605 | 23 | 4 | 5
+
+Seed | Dawn cost | Wisp kills | Bellkeeper wins | Minutes | Dawn earned
+31 | 10 | 771 | 5 | 31.67 | 10
+97 | 10 | 761 | 5 | 34.80 | 10
+503 | 10 | 771 | 5 | 37.87 | 10
+2026 | 10 | 755 | 5 | 53.12 | 10
+1109 | 10 | 781 | 5 | 28.58 | 10
+
+Grave Knight: omitted. Stage-30 Rare-gear tests clear without a counter; armor penetration is not a counter. No Ash Essence recipe is assigned.

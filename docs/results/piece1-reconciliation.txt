@@ -1,0 +1,59 @@
+Piece 1 reconciliation
+Repository: fytchx/Godscar
+Branch: slice/paladin
+Sim/head checked: 95a3c671151eb95294b0e9908379e2246c79faa1
+Step 2 fixture source: da5eecf:web/test/vertical-slice-balance.js
+Current Sim: SIM_VERSION 6
+
+Grave Knight stage 30 fixture diff
+Both fixtures: Paladin level 30, Sword, Templar, same five seeds and
+passive allocation. Both target the same stage-30 Grave Knight.
+
+Step 2 control: Common gear, no weapon/armor affixes, Uncommon ring with
+life. Treatment injects armorPen=0.30 after stat calculation. Damage is
+physical only before attack conversion. Player armor across seeds:
+433.15, 469.14, 426.01, 440.94, 439.16.
+
+Piece 1 control: seeded Rare gear with generated affixes and a Rare ring
+using typical non-counter affixes. Piece 1 treatment replaces one ring
+affix with flat_holy=54.2784. Both control and treatment retain the Rare
+affixes on the other gear slots. Rare rolls add damage types besides
+physical, which bypass Knight armor. Player armor across seeds:
+515.05, 546.92, 444.13, 564.77, 512.14.
+
+Stage-30 Knight armor formula: 7 * 1.155^(30-1) = 457.0625. At 30% pen,
+armor is 319.9437. For seed 31 Common gear, a normal physical weapon hit
+before mitigation is 124.2078 * 2.4483723 = 304.1068. afterArmor is
+max(hit*0.25, hit-armor): at pen 0, max(76.0267, -152.9557)=76.0267;
+at pen 0.30, max(76.0267, -15.8369)=76.0267. Both are at the 25% floor.
+The armor floor explains why injected armorPen changes no damage.
+
+Knight raw results, current Sim, unchanged Step 2 fixture vs Piece 1:
+seed | Step 2 Common control damage/outcome | Piece 1 Rare control damage/outcome | Piece 1 Rare holy treatment damage/outcome
+31 | 2688.81 / death | 6114.92 / clear | 6405.97 / clear
+97 | 3071.23 / death | 6744.47 / clear | 6007.88 / clear
+503 | 2446.07 / death | 6567.86 / clear | 6085.23 / clear
+2026 | 2593.38 / death | 6105.72 / clear | 5968.76 / clear
+1109 | 3100.90 / death | 6502.16 / clear | 6452.16 / clear
+Piece 1 deaths: 0 in all ten attempts. Fixture mismatch explains the
+apparent conflict: Rare gear affix damage and survivability make even
+the no-counter build clear. The holy counter is not needed; Knight stays
+dropped.
+
+Wisp Step 2 reproduction
+Ran the exact da5eecf Step 2 harness against current Sim. Compared all 50
+Wisp JSON rows against docs/results/vertical-slice-step-2.txt: 0 changed.
+First no-counter failure by seed remains 31=25, 97=25, 503=30,
+2026=30, 1109=30. At those rows the counter outcomes remain respectively
+clear, clear, death, clear, death.
+
+Bellkeeper Step 2 reproduction
+Ran the exact da5eecf Step 2 harness against current Sim. Compared all 100
+Bellkeeper JSON rows against docs/results/vertical-slice-step-2.txt:
+0 changed.
+Rare-gear first no-counter failure by seed remains 31=25 timeout,
+97=20 timeout, 503=25 death, 2026=5 timeout, 1109=25 death.
+Damage-counter clear at first wall remains: 31=25, 97=20, 503=none,
+2026=5, 1109=none. First paired damage-counter clear remains level 5,
+seed 2026; no-counter timeout 150s, 31.67 DPS, 4751.01 damage;
+damage-counter clear 147s, 36.53 DPS, 5370.56 damage.

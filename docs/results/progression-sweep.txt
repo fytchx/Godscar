@@ -1,0 +1,378 @@
+12-hour progression sweep raw results
+SIM_VERSION 6; Paladin level 20 start; realistic Rare fixture; seeds 31, 2026; horizon 720 sim minutes.
+Optimizer uses the 5-minute check-in and decision rules from web/test/balance.js. Lazy uses 30-minute check-ins, allocates passives, equips at most one item by the existing score, crafts a Bellkeeper damage counter only when materials are held, and never farms deliberately.
+Harness guard: one boss attempt per check-in. The current balance.js while(sigils > 0) loop can retry a failed boss immediately because its refunded Sigil leaves sigils unchanged; repeated failures do not advance sim time.
+Stage rows show the highest target/unlocked stage reached on any monster at each 10-minute sample. Stall start is the last stage increase; detection is when 20 minutes without a higher stage is observed.
+Frontier deaths are deaths on the current monster stage at or above that monster’s unlocked frontier. Frontier retreats count such deaths that caused auto-push to step back.
+
+10-MINUTE STAGE SAMPLES:
+BOT optimizer SEED 31
+10 | highest wisp@24 | current wisp@24
+20 | highest wisp@27 | current wisp@27
+30 | highest wisp@27 | current colossus@22
+40 | highest wisp@27 | current colossus@24
+50 | highest wisp@27 | current colossus@23
+60 | highest wisp@27 | current colossus@25
+70 | highest wisp@27 | current colossus@25
+80 | highest colossus@29 | current colossus@29
+90 | highest colossus@32 | current colossus@31
+100 | highest colossus@37 | current colossus@37
+110 | highest colossus@40 | current colossus@39
+120 | highest colossus@42 | current colossus@40
+130 | highest colossus@45 | current colossus@43
+140 | highest colossus@47 | current colossus@46
+150 | highest colossus@47 | current colossus@47
+160 | highest colossus@49 | current colossus@49
+170 | highest colossus@49 | current colossus@47
+180 | highest colossus@52 | current colossus@49
+190 | highest colossus@52 | current colossus@50
+200 | highest colossus@54 | current colossus@52
+210 | highest colossus@56 | current colossus@55
+220 | highest colossus@58 | current colossus@57
+230 | highest colossus@62 | current colossus@60
+240 | highest colossus@62 | current colossus@59
+250 | highest colossus@62 | current colossus@60
+260 | highest colossus@65 | current colossus@64
+270 | highest colossus@67 | current colossus@66
+280 | highest colossus@67 | current colossus@66
+290 | highest colossus@68 | current colossus@66
+300 | highest colossus@68 | current colossus@66
+310 | highest colossus@69 | current colossus@68
+320 | highest colossus@69 | current colossus@68
+330 | highest colossus@70 | current colossus@68
+340 | highest colossus@70 | current colossus@67
+350 | highest colossus@70 | current colossus@68
+360 | highest colossus@70 | current colossus@68
+370 | highest colossus@70 | current colossus@68
+380 | highest colossus@70 | current colossus@69
+390 | highest colossus@70 | current colossus@69
+400 | highest colossus@70 | current colossus@69
+410 | highest colossus@70 | current colossus@69
+420 | highest colossus@72 | current colossus@71
+430 | highest colossus@73 | current colossus@71
+440 | highest colossus@73 | current colossus@71
+450 | highest colossus@74 | current colossus@72
+460 | highest colossus@76 | current colossus@74
+470 | highest colossus@78 | current colossus@76
+480 | highest colossus@78 | current colossus@77
+490 | highest colossus@80 | current colossus@78
+500 | highest colossus@80 | current colossus@79
+510 | highest colossus@86 | current colossus@85
+520 | highest colossus@86 | current colossus@83
+530 | highest colossus@86 | current colossus@84
+540 | highest colossus@86 | current colossus@84
+550 | highest colossus@86 | current colossus@83
+560 | highest colossus@86 | current colossus@84
+570 | highest colossus@86 | current colossus@85
+580 | highest colossus@87 | current colossus@85
+590 | highest colossus@87 | current colossus@84
+600 | highest colossus@87 | current colossus@85
+610 | highest colossus@87 | current colossus@84
+620 | highest colossus@87 | current colossus@83
+630 | highest colossus@87 | current colossus@85
+640 | highest colossus@87 | current colossus@85
+650 | highest colossus@87 | current colossus@85
+660 | highest colossus@87 | current colossus@84
+670 | highest colossus@87 | current colossus@85
+680 | highest colossus@88 | current colossus@86
+690 | highest colossus@88 | current colossus@85
+700 | highest colossus@88 | current colossus@85
+710 | highest colossus@88 | current colossus@85
+720 | highest colossus@88 | current colossus@85
+BOT optimizer SEED 2026
+10 | highest wisp@20 | current wisp@19
+20 | highest wisp@23 | current zealot@20
+30 | highest wisp@23 | current colossus@21
+40 | highest colossus@24 | current colossus@24
+50 | highest colossus@27 | current colossus@27
+60 | highest colossus@29 | current colossus@28
+70 | highest colossus@30 | current colossus@29
+80 | highest colossus@32 | current colossus@31
+90 | highest colossus@33 | current colossus@33
+100 | highest colossus@35 | current colossus@35
+110 | highest colossus@39 | current colossus@38
+120 | highest colossus@40 | current colossus@40
+130 | highest colossus@43 | current colossus@42
+140 | highest colossus@44 | current colossus@42
+150 | highest colossus@45 | current colossus@44
+160 | highest colossus@47 | current colossus@47
+170 | highest colossus@48 | current colossus@47
+180 | highest colossus@49 | current colossus@47
+190 | highest colossus@51 | current colossus@50
+200 | highest colossus@52 | current colossus@49
+210 | highest colossus@54 | current colossus@52
+220 | highest colossus@59 | current colossus@58
+230 | highest colossus@60 | current colossus@57
+240 | highest colossus@61 | current colossus@60
+250 | highest colossus@61 | current colossus@58
+260 | highest colossus@61 | current colossus@60
+270 | highest colossus@63 | current colossus@61
+280 | highest colossus@63 | current colossus@61
+290 | highest colossus@63 | current colossus@61
+300 | highest colossus@63 | current colossus@61
+310 | highest colossus@63 | current colossus@58
+320 | highest colossus@63 | current colossus@60
+330 | highest colossus@64 | current colossus@63
+340 | highest colossus@65 | current colossus@64
+350 | highest colossus@68 | current colossus@66
+360 | highest colossus@70 | current colossus@69
+370 | highest colossus@70 | current colossus@69
+380 | highest colossus@70 | current colossus@68
+390 | highest colossus@71 | current colossus@69
+400 | highest colossus@71 | current colossus@69
+410 | highest colossus@71 | current colossus@70
+420 | highest colossus@72 | current colossus@70
+430 | highest colossus@72 | current colossus@71
+440 | highest colossus@73 | current colossus@71
+450 | highest colossus@73 | current colossus@72
+460 | highest colossus@73 | current colossus@73
+470 | highest colossus@74 | current colossus@72
+480 | highest colossus@74 | current colossus@71
+490 | highest colossus@74 | current colossus@71
+500 | highest colossus@74 | current colossus@73
+510 | highest colossus@74 | current colossus@73
+520 | highest colossus@74 | current colossus@73
+530 | highest colossus@74 | current colossus@72
+540 | highest colossus@74 | current colossus@73
+550 | highest colossus@74 | current colossus@73
+560 | highest colossus@74 | current colossus@72
+570 | highest colossus@74 | current colossus@71
+580 | highest colossus@75 | current colossus@73
+590 | highest colossus@75 | current colossus@70
+600 | highest colossus@75 | current colossus@72
+610 | highest colossus@75 | current colossus@72
+620 | highest colossus@75 | current colossus@72
+630 | highest colossus@75 | current colossus@72
+640 | highest colossus@75 | current colossus@72
+650 | highest colossus@75 | current colossus@72
+660 | highest colossus@75 | current colossus@71
+670 | highest colossus@75 | current colossus@71
+680 | highest colossus@75 | current colossus@72
+690 | highest colossus@75 | current colossus@71
+700 | highest colossus@75 | current colossus@73
+710 | highest colossus@75 | current colossus@71
+720 | highest colossus@75 | current colossus@73
+BOT lazy SEED 31
+10 | highest wisp@25 | current wisp@25
+20 | highest wisp@26 | current wisp@25
+30 | highest wisp@26 | current wisp@25
+40 | highest wisp@27 | current wisp@25
+50 | highest wisp@27 | current wisp@25
+60 | highest wisp@27 | current wisp@26
+70 | highest wisp@29 | current wisp@27
+80 | highest wisp@29 | current wisp@28
+90 | highest wisp@29 | current wisp@28
+100 | highest wisp@30 | current wisp@29
+110 | highest wisp@30 | current wisp@29
+120 | highest wisp@30 | current wisp@29
+130 | highest wisp@30 | current wisp@29
+140 | highest wisp@30 | current wisp@28
+150 | highest wisp@30 | current wisp@28
+160 | highest wisp@30 | current wisp@28
+170 | highest wisp@30 | current wisp@28
+180 | highest wisp@31 | current wisp@29
+190 | highest wisp@31 | current wisp@29
+200 | highest wisp@31 | current wisp@29
+210 | highest wisp@31 | current wisp@29
+220 | highest wisp@31 | current wisp@30
+230 | highest wisp@32 | current wisp@30
+240 | highest wisp@32 | current wisp@30
+250 | highest wisp@32 | current wisp@30
+260 | highest wisp@32 | current wisp@29
+270 | highest wisp@32 | current wisp@30
+280 | highest wisp@32 | current wisp@31
+290 | highest wisp@32 | current wisp@31
+300 | highest wisp@32 | current wisp@30
+310 | highest wisp@33 | current wisp@31
+320 | highest wisp@33 | current wisp@31
+330 | highest wisp@33 | current wisp@31
+340 | highest wisp@33 | current wisp@30
+350 | highest wisp@33 | current wisp@31
+360 | highest wisp@33 | current wisp@31
+370 | highest wisp@33 | current wisp@32
+380 | highest wisp@33 | current wisp@32
+390 | highest wisp@33 | current wisp@31
+400 | highest wisp@33 | current wisp@31
+410 | highest wisp@33 | current wisp@31
+420 | highest wisp@33 | current wisp@31
+430 | highest wisp@33 | current wisp@31
+440 | highest wisp@33 | current wisp@32
+450 | highest wisp@33 | current wisp@32
+460 | highest wisp@34 | current wisp@32
+470 | highest wisp@34 | current wisp@33
+480 | highest wisp@34 | current wisp@33
+490 | highest wisp@34 | current wisp@33
+500 | highest wisp@34 | current wisp@32
+510 | highest wisp@34 | current wisp@32
+520 | highest wisp@34 | current wisp@33
+530 | highest wisp@34 | current wisp@33
+540 | highest wisp@34 | current wisp@33
+550 | highest wisp@34 | current wisp@32
+560 | highest wisp@34 | current wisp@32
+570 | highest wisp@34 | current wisp@32
+580 | highest wisp@34 | current wisp@32
+590 | highest wisp@34 | current wisp@33
+600 | highest wisp@34 | current wisp@33
+610 | highest wisp@34 | current wisp@33
+620 | highest wisp@34 | current wisp@33
+630 | highest wisp@34 | current wisp@32
+640 | highest wisp@35 | current wisp@33
+650 | highest wisp@35 | current wisp@34
+660 | highest wisp@35 | current wisp@32
+670 | highest wisp@35 | current wisp@32
+680 | highest wisp@35 | current wisp@33
+690 | highest wisp@35 | current wisp@33
+700 | highest wisp@35 | current wisp@33
+710 | highest wisp@35 | current wisp@33
+720 | highest wisp@35 | current wisp@32
+BOT lazy SEED 2026
+10 | highest wisp@20 | current wisp@19
+20 | highest wisp@21 | current wisp@20
+30 | highest wisp@21 | current wisp@19
+40 | highest wisp@21 | current wisp@20
+50 | highest wisp@21 | current wisp@19
+60 | highest wisp@21 | current wisp@19
+70 | highest wisp@21 | current wisp@20
+80 | highest wisp@22 | current wisp@20
+90 | highest wisp@22 | current wisp@21
+100 | highest wisp@22 | current wisp@21
+110 | highest wisp@23 | current wisp@21
+120 | highest wisp@23 | current wisp@21
+130 | highest wisp@24 | current wisp@22
+140 | highest wisp@24 | current wisp@22
+150 | highest wisp@24 | current wisp@22
+160 | highest wisp@24 | current wisp@23
+170 | highest wisp@24 | current wisp@23
+180 | highest wisp@25 | current wisp@23
+190 | highest wisp@26 | current wisp@24
+200 | highest wisp@26 | current wisp@24
+210 | highest wisp@26 | current wisp@24
+220 | highest wisp@26 | current wisp@24
+230 | highest wisp@26 | current wisp@24
+240 | highest wisp@26 | current wisp@24
+250 | highest wisp@26 | current wisp@24
+260 | highest wisp@26 | current wisp@24
+270 | highest wisp@26 | current wisp@24
+280 | highest wisp@26 | current wisp@25
+290 | highest wisp@26 | current wisp@25
+300 | highest wisp@26 | current wisp@26
+310 | highest wisp@26 | current wisp@24
+320 | highest wisp@26 | current wisp@24
+330 | highest wisp@26 | current wisp@24
+340 | highest wisp@26 | current wisp@24
+350 | highest wisp@26 | current wisp@24
+360 | highest wisp@26 | current wisp@24
+370 | highest wisp@27 | current wisp@26
+380 | highest wisp@28 | current wisp@26
+390 | highest wisp@28 | current wisp@27
+400 | highest wisp@28 | current wisp@25
+410 | highest wisp@28 | current wisp@26
+420 | highest wisp@28 | current wisp@26
+430 | highest wisp@28 | current wisp@26
+440 | highest wisp@28 | current wisp@26
+450 | highest wisp@28 | current wisp@26
+460 | highest wisp@28 | current wisp@26
+470 | highest wisp@28 | current wisp@27
+480 | highest wisp@28 | current wisp@26
+490 | highest wisp@28 | current wisp@27
+500 | highest wisp@28 | current wisp@26
+510 | highest wisp@28 | current wisp@27
+520 | highest wisp@28 | current wisp@26
+530 | highest wisp@28 | current wisp@27
+540 | highest wisp@28 | current wisp@27
+550 | highest wisp@28 | current wisp@26
+560 | highest wisp@28 | current wisp@26
+570 | highest wisp@28 | current wisp@26
+580 | highest wisp@28 | current wisp@26
+590 | highest wisp@28 | current wisp@26
+600 | highest wisp@28 | current wisp@26
+610 | highest wisp@28 | current wisp@27
+620 | highest wisp@28 | current wisp@26
+630 | highest wisp@28 | current wisp@27
+640 | highest wisp@30 | current wisp@28
+650 | highest wisp@30 | current wisp@28
+660 | highest wisp@30 | current wisp@28
+670 | highest wisp@30 | current wisp@28
+680 | highest wisp@30 | current wisp@27
+690 | highest wisp@30 | current wisp@28
+700 | highest wisp@30 | current wisp@27
+710 | highest wisp@30 | current wisp@28
+720 | highest wisp@30 | current wisp@28
+
+STALLS:
+BOT optimizer SEED 31
+{"beganMin":19.4,"detectedMin":39.52,"stage":"wisp@27","causes":[{"kind":"death","detail":"wisp@27: Slain by the Hollow Wisp. Recovering for 12s.","count":1},{"kind":"boss failure","detail":"woundwarden@20: death; boss HP removed 0%","count":2},{"kind":"death","detail":"zealot@22: Slain by the Ashbound Zealot. Recovering for 12s.","count":2},{"kind":"boss failure","detail":"woundwarden@20: timeout; boss HP removed 51.43%","count":1},{"kind":"death","detail":"colossus@22: Slain by the Cinder Colossus. Recovering for 12s.","count":1},{"kind":"boss failure","detail":"woundwarden@20: timeout; boss HP removed 79.81%","count":1},{"kind":"death","detail":"colossus@23: Slain by the Cinder Colossus. Recovering for 12s.","count":2},{"kind":"death","detail":"colossus@24: Slain by the Cinder Colossus. Recovering for 12s.","count":2}]}
+{"beganMin":230,"detectedMin":250,"stage":"colossus@62","causes":[{"kind":"boss failure","detail":"woundwarden@50: death; boss HP removed 0%","count":1},{"kind":"death","detail":"colossus@62: Slain by the Cinder Colossus. Recovering for 12s.","count":5},{"kind":"death","detail":"colossus@61: Slain by the Cinder Colossus. Recovering for 12s.","count":10},{"kind":"death","detail":"colossus@60: Slain by the Cinder Colossus. Recovering for 12s.","count":6},{"kind":"death","detail":"colossus@59: Slain by the Cinder Colossus. Recovering for 12s.","count":8},{"kind":"boss failure","detail":"woundwarden@52: death; boss HP removed 0%","count":1}]}
+{"beganMin":267.03,"detectedMin":287.03,"stage":"colossus@67","causes":[{"kind":"death","detail":"colossus@66: Slain by the Cinder Colossus. Recovering for 12s.","count":16},{"kind":"death","detail":"colossus@65: Slain by the Cinder Colossus. Recovering for 12s.","count":2},{"kind":"boss failure","detail":"woundwarden@56: death; boss HP removed 0%","count":4},{"kind":"death","detail":"colossus@67: Slain by the Cinder Colossus. Recovering for 12s.","count":4}]}
+{"beganMin":324.32,"detectedMin":345,"stage":"colossus@70","causes":[{"kind":"death","detail":"colossus@68: Slain by the Cinder Colossus. Recovering for 12s.","count":12},{"kind":"boss failure","detail":"woundwarden@60: death; boss HP removed 0%","count":4},{"kind":"death","detail":"colossus@67: Slain by the Cinder Colossus. Recovering for 12s.","count":1},{"kind":"death","detail":"colossus@69: Slain by the Cinder Colossus. Recovering for 12s.","count":10}]}
+{"beganMin":422.07,"detectedMin":442.33,"stage":"colossus@73","causes":[{"kind":"death","detail":"colossus@72: Slain by the Cinder Colossus. Recovering for 12s.","count":12},{"kind":"death","detail":"colossus@71: Slain by the Cinder Colossus. Recovering for 12s.","count":11},{"kind":"boss failure","detail":"woundwarden@62: death; boss HP removed 0%","count":2},{"kind":"death","detail":"colossus@73: Slain by the Cinder Colossus. Recovering for 12s.","count":2}]}
+{"beganMin":509.03,"detectedMin":529.03,"stage":"colossus@86","causes":[{"kind":"death","detail":"colossus@86: Slain by the Cinder Colossus. Recovering for 12s.","count":1},{"kind":"boss failure","detail":"woundwarden@66: death; boss HP removed 0%","count":1},{"kind":"death","detail":"colossus@84: Slain by the Cinder Colossus. Recovering for 12s.","count":20},{"kind":"death","detail":"colossus@85: Slain by the Cinder Colossus. Recovering for 12s.","count":4},{"kind":"death","detail":"colossus@83: Slain by the Cinder Colossus. Recovering for 12s.","count":4},{"kind":"boss failure","detail":"woundwarden@68: death; boss HP removed 0%","count":2}]}
+{"beganMin":579.03,"detectedMin":599.03,"stage":"colossus@87","causes":[{"kind":"death","detail":"colossus@86: Slain by the Cinder Colossus. Recovering for 12s.","count":4},{"kind":"boss failure","detail":"woundwarden@70: death; boss HP removed 0%","count":4},{"kind":"death","detail":"colossus@85: Slain by the Cinder Colossus. Recovering for 12s.","count":19},{"kind":"death","detail":"colossus@84: Slain by the Cinder Colossus. Recovering for 12s.","count":6}]}
+{"beganMin":672.35,"detectedMin":693.03,"stage":"colossus@88","causes":[{"kind":"death","detail":"colossus@87: Slain by the Cinder Colossus. Recovering for 12s.","count":8},{"kind":"death","detail":"colossus@86: Slain by the Cinder Colossus. Recovering for 12s.","count":17},{"kind":"boss failure","detail":"woundwarden@82: death; boss HP removed 0%","count":4},{"kind":"death","detail":"colossus@85: Slain by the Cinder Colossus. Recovering for 12s.","count":4},{"kind":"death","detail":"colossus@84: Slain by the Cinder Colossus. Recovering for 12s.","count":1}]}
+BOT optimizer SEED 2026
+{"beganMin":14.12,"detectedMin":34.5,"stage":"wisp@23","causes":[{"kind":"death","detail":"zealot@20: Slain by the Ashbound Zealot. Recovering for 12s.","count":3},{"kind":"boss failure","detail":"woundwarden@20: death; boss HP removed 0%","count":1},{"kind":"death","detail":"zealot@21: Slain by the Ashbound Zealot. Recovering for 12s.","count":2},{"kind":"boss failure","detail":"woundwarden@20: timeout; boss HP removed 21.85%","count":1},{"kind":"death","detail":"colossus@21: Slain by the Cinder Colossus. Recovering for 12s.","count":1},{"kind":"boss failure","detail":"woundwarden@20: timeout; boss HP removed 27.51%","count":1}]}
+{"beganMin":239.07,"detectedMin":259.07,"stage":"colossus@61","causes":[{"kind":"boss failure","detail":"woundwarden@56: death; boss HP removed 0%","count":4},{"kind":"death","detail":"colossus@61: Slain by the Cinder Colossus. Recovering for 12s.","count":5},{"kind":"death","detail":"colossus@60: Slain by the Cinder Colossus. Recovering for 12s.","count":8},{"kind":"death","detail":"colossus@59: Slain by the Cinder Colossus. Recovering for 12s.","count":9},{"kind":"death","detail":"colossus@58: Slain by the Cinder Colossus. Recovering for 12s.","count":5}]}
+{"beganMin":267.12,"detectedMin":288.07,"stage":"colossus@63","causes":[{"kind":"death","detail":"colossus@60: Slain by the Cinder Colossus. Recovering for 12s.","count":9},{"kind":"boss failure","detail":"woundwarden@56: death; boss HP removed 0%","count":1},{"kind":"death","detail":"colossus@63: Slain by the Cinder Colossus. Recovering for 12s.","count":2},{"kind":"death","detail":"colossus@62: Slain by the Cinder Colossus. Recovering for 12s.","count":8},{"kind":"death","detail":"colossus@61: Slain by the Cinder Colossus. Recovering for 12s.","count":11},{"kind":"boss failure","detail":"woundwarden@58: death; boss HP removed 0%","count":2}]}
+{"beganMin":354.03,"detectedMin":374.03,"stage":"colossus@70","causes":[{"kind":"death","detail":"colossus@70: Slain by the Cinder Colossus. Recovering for 12s.","count":1},{"kind":"death","detail":"colossus@69: Slain by the Cinder Colossus. Recovering for 12s.","count":12},{"kind":"boss failure","detail":"woundwarden@60: death; boss HP removed 0%","count":4},{"kind":"death","detail":"colossus@68: Slain by the Cinder Colossus. Recovering for 12s.","count":10},{"kind":"death","detail":"colossus@67: Slain by the Cinder Colossus. Recovering for 12s.","count":1}]}
+{"beganMin":383.03,"detectedMin":403.07,"stage":"colossus@71","causes":[{"kind":"death","detail":"colossus@70: Slain by the Cinder Colossus. Recovering for 12s.","count":18},{"kind":"boss failure","detail":"woundwarden@60: death; boss HP removed 0%","count":4},{"kind":"death","detail":"colossus@69: Slain by the Cinder Colossus. Recovering for 12s.","count":5},{"kind":"death","detail":"colossus@71: Slain by the Cinder Colossus. Recovering for 12s.","count":2}]}
+{"beganMin":433.03,"detectedMin":453.03,"stage":"colossus@73","causes":[{"kind":"death","detail":"colossus@72: Slain by the Cinder Colossus. Recovering for 12s.","count":15},{"kind":"death","detail":"colossus@71: Slain by the Cinder Colossus. Recovering for 12s.","count":8},{"kind":"death","detail":"colossus@70: Slain by the Cinder Colossus. Recovering for 12s.","count":1},{"kind":"boss failure","detail":"woundwarden@60: death; boss HP removed 0%","count":1},{"kind":"boss failure","detail":"woundwarden@62: death; boss HP removed 0%","count":2}]}
+{"beganMin":463.03,"detectedMin":483.03,"stage":"colossus@74","causes":[{"kind":"death","detail":"colossus@72: Slain by the Cinder Colossus. Recovering for 12s.","count":11},{"kind":"death","detail":"colossus@71: Slain by the Cinder Colossus. Recovering for 12s.","count":9},{"kind":"boss failure","detail":"woundwarden@62: death; boss HP removed 0%","count":2},{"kind":"death","detail":"colossus@73: Slain by the Cinder Colossus. Recovering for 12s.","count":4},{"kind":"death","detail":"colossus@70: Slain by the Cinder Colossus. Recovering for 12s.","count":6},{"kind":"boss failure","detail":"woundwarden@64: death; boss HP removed 0%","count":1}]}
+{"beganMin":577.03,"detectedMin":597.2,"stage":"colossus@75","causes":[{"kind":"death","detail":"colossus@74: Slain by the Cinder Colossus. Recovering for 12s.","count":4},{"kind":"death","detail":"colossus@73: Slain by the Cinder Colossus. Recovering for 12s.","count":13},{"kind":"boss failure","detail":"woundwarden@64: death; boss HP removed 0%","count":4},{"kind":"death","detail":"colossus@72: Slain by the Cinder Colossus. Recovering for 12s.","count":7},{"kind":"death","detail":"colossus@71: Slain by the Cinder Colossus. Recovering for 12s.","count":6},{"kind":"death","detail":"colossus@70: Slain by the Cinder Colossus. Recovering for 12s.","count":1}]}
+BOT lazy SEED 31
+{"beganMin":32.12,"detectedMin":53,"stage":"wisp@27","causes":[{"kind":"death","detail":"wisp@26: Slain by the Hollow Wisp. Recovering for 12s.","count":11}]}
+{"beganMin":69.12,"detectedMin":90,"stage":"wisp@29","causes":[{"kind":"death","detail":"wisp@28: Slain by the Hollow Wisp. Recovering for 12s.","count":9}]}
+{"beganMin":96.1,"detectedMin":117,"stage":"wisp@30","causes":[{"kind":"death","detail":"wisp@29: Slain by the Hollow Wisp. Recovering for 12s.","count":12},{"kind":"death","detail":"wisp@28: Slain by the Hollow Wisp. Recovering for 12s.","count":2}]}
+{"beganMin":178,"detectedMin":198,"stage":"wisp@31","causes":[{"kind":"death","detail":"wisp@30: Slain by the Hollow Wisp. Recovering for 12s.","count":4},{"kind":"death","detail":"wisp@29: Slain by the Hollow Wisp. Recovering for 12s.","count":9}]}
+{"beganMin":224,"detectedMin":244.45,"stage":"wisp@32","causes":[{"kind":"death","detail":"wisp@31: Slain by the Hollow Wisp. Recovering for 12s.","count":7},{"kind":"death","detail":"wisp@30: Slain by the Hollow Wisp. Recovering for 12s.","count":7}]}
+{"beganMin":309.65,"detectedMin":330,"stage":"wisp@33","causes":[{"kind":"death","detail":"wisp@32: Slain by the Hollow Wisp. Recovering for 12s.","count":11},{"kind":"death","detail":"wisp@31: Slain by the Hollow Wisp. Recovering for 12s.","count":4}]}
+{"beganMin":453.7,"detectedMin":474,"stage":"wisp@34","causes":[{"kind":"death","detail":"wisp@33: Slain by the Hollow Wisp. Recovering for 12s.","count":14}]}
+{"beganMin":633.75,"detectedMin":654,"stage":"wisp@35","causes":[{"kind":"death","detail":"wisp@33: Slain by the Hollow Wisp. Recovering for 12s.","count":5},{"kind":"death","detail":"wisp@34: Slain by the Hollow Wisp. Recovering for 12s.","count":8}]}
+BOT lazy SEED 2026
+{"beganMin":12,"detectedMin":32.18,"stage":"wisp@21","causes":[{"kind":"death","detail":"wisp@20: Slain by the Hollow Wisp. Recovering for 12s.","count":7},{"kind":"death","detail":"wisp@19: Slain by the Hollow Wisp. Recovering for 12s.","count":6}]}
+{"beganMin":72,"detectedMin":92.23,"stage":"wisp@22","causes":[{"kind":"death","detail":"wisp@21: Slain by the Hollow Wisp. Recovering for 12s.","count":18},{"kind":"death","detail":"wisp@20: Slain by the Hollow Wisp. Recovering for 12s.","count":1}]}
+{"beganMin":124.23,"detectedMin":145,"stage":"wisp@24","causes":[{"kind":"death","detail":"wisp@23: Slain by the Hollow Wisp. Recovering for 12s.","count":11},{"kind":"death","detail":"wisp@22: Slain by the Hollow Wisp. Recovering for 12s.","count":9}]}
+{"beganMin":187.47,"detectedMin":208,"stage":"wisp@26","causes":[{"kind":"death","detail":"wisp@25: Slain by the Hollow Wisp. Recovering for 12s.","count":16},{"kind":"death","detail":"wisp@24: Slain by the Hollow Wisp. Recovering for 12s.","count":1}]}
+{"beganMin":374,"detectedMin":394.05,"stage":"wisp@28","causes":[{"kind":"death","detail":"wisp@27: Slain by the Hollow Wisp. Recovering for 12s.","count":15},{"kind":"boss failure","detail":"bellkeeper@23: death; boss HP removed 0%","count":1}]}
+{"beganMin":639.42,"detectedMin":660,"stage":"wisp@30","causes":[{"kind":"death","detail":"wisp@29: Slain by the Hollow Wisp. Recovering for 12s.","count":12}]}
+
+DEATH/AUTO-PUSH TOTALS:
+optimizer seed 31 | deaths 856 (746 monster + 110 boss) | deaths/hour 71.333 | frontier deaths 131 | frontier retreats 55 | boss failures 112 | kills 17335
+optimizer seed 2026 | deaths 888 (783 monster + 105 boss) | deaths/hour 74 | frontier deaths 114 | frontier retreats 40 | boss failures 115 | kills 17049
+lazy seed 31 | deaths 459 (447 monster + 12 boss) | deaths/hour 38.25 | frontier deaths 33 | frontier retreats 13 | boss failures 12 | kills 11362
+lazy seed 2026 | deaths 547 (534 monster + 13 boss) | deaths/hour 45.583 | frontier deaths 32 | frontier retreats 12 | boss failures 13 | kills 12439
+
+FIRST FRONTIER DEATHS:
+BOT optimizer SEED 31
+{"minute":12.96,"target":"zealot@20","text":"Slain by the Ashbound Zealot. Recovering for 12s.","deathsHere":0}
+{"minute":18.16,"target":"wisp@26","text":"Slain by the Hollow Wisp. Recovering for 12s.","deathsHere":0}
+{"minute":19.62,"target":"wisp@27","text":"Slain by the Hollow Wisp. Recovering for 12s.","deathsHere":0}
+{"minute":22.73,"target":"zealot@22","text":"Slain by the Ashbound Zealot. Recovering for 12s.","deathsHere":0}
+{"minute":24.47,"target":"zealot@22","text":"Slain by the Ashbound Zealot. Recovering for 12s.","deathsHere":1}
+{"minute":29.84,"target":"colossus@22","text":"Slain by the Cinder Colossus. Recovering for 12s.","deathsHere":0}
+BOT optimizer SEED 2026
+{"minute":0.47,"target":"wisp@20","text":"Slain by the Hollow Wisp. Recovering for 12s.","deathsHere":0}
+{"minute":1.15,"target":"wisp@20","text":"Slain by the Hollow Wisp. Recovering for 12s.","deathsHere":1}
+{"minute":8.97,"target":"wisp@20","text":"Slain by the Hollow Wisp. Recovering for 12s.","deathsHere":0}
+{"minute":9.76,"target":"wisp@20","text":"Slain by the Hollow Wisp. Recovering for 12s.","deathsHere":1}
+{"minute":15.01,"target":"zealot@20","text":"Slain by the Ashbound Zealot. Recovering for 12s.","deathsHere":0}
+{"minute":17.44,"target":"zealot@20","text":"Slain by the Ashbound Zealot. Recovering for 12s.","deathsHere":1}
+BOT lazy SEED 31
+{"minute":8.61,"target":"wisp@25","text":"Slain by the Hollow Wisp. Recovering for 12s.","deathsHere":0}
+{"minute":10.2,"target":"wisp@25","text":"Slain by the Hollow Wisp. Recovering for 12s.","deathsHere":1}
+{"minute":27.2,"target":"wisp@26","text":"Slain by the Hollow Wisp. Recovering for 12s.","deathsHere":0}
+{"minute":28.43,"target":"wisp@26","text":"Slain by the Hollow Wisp. Recovering for 12s.","deathsHere":1}
+{"minute":30.41,"target":"wisp@26","text":"Slain by the Hollow Wisp. Recovering for 12s.","deathsHere":0}
+{"minute":63.82,"target":"wisp@28","text":"Slain by the Hollow Wisp. Recovering for 12s.","deathsHere":0}
+BOT lazy SEED 2026
+{"minute":0.47,"target":"wisp@20","text":"Slain by the Hollow Wisp. Recovering for 12s.","deathsHere":0}
+{"minute":1.15,"target":"wisp@20","text":"Slain by the Hollow Wisp. Recovering for 12s.","deathsHere":1}
+{"minute":7.36,"target":"wisp@20","text":"Slain by the Hollow Wisp. Recovering for 12s.","deathsHere":0}
+{"minute":8.09,"target":"wisp@20","text":"Slain by the Hollow Wisp. Recovering for 12s.","deathsHere":1}
+{"minute":65.1,"target":"wisp@21","text":"Slain by the Hollow Wisp. Recovering for 12s.","deathsHere":0}
+{"minute":65.85,"target":"wisp@21","text":"Slain by the Hollow Wisp. Recovering for 12s.","deathsHere":1}
+
+DEATHS-PER-HOUR CHECK:
+optimizer seed 31: 131/856 deaths (15.3%) were ordinary combat deaths at the auto-push frontier; 55 caused a step-back. Boss deaths are separate.
+optimizer seed 2026: 114/888 deaths (12.8%) were ordinary combat deaths at the auto-push frontier; 40 caused a step-back. Boss deaths are separate.
+lazy seed 31: 33/459 deaths (7.2%) were ordinary combat deaths at the auto-push frontier; 13 caused a step-back. Boss deaths are separate.
+lazy seed 2026: 32/547 deaths (5.9%) were ordinary combat deaths at the auto-push frontier; 12 caused a step-back. Boss deaths are separate.

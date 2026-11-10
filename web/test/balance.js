@@ -1,5 +1,77 @@
 // Headless balance run (v3). The bot plays only through doAction, like a client would.
 const S = require('../src/sim.js');
+
+function clone(value) { return JSON.parse(JSON.stringify(value)); }
+
+function knightAblation() {
+  const seeds = [31, 97, 503, 2026, 1109], level = 30;
+  const typicalRing = ['life', 'res_shadow', 'res_frost', 'goldFind'];
+  const roll = (key, rng) => {
+    const affix = S.AFFIXES[key];
+    return [key, affix.roll(rng, Math.pow(1.105, level - 1), level)];
+  };
+  function fixture(seed) {
+    const game = S.newGame('paladin', 0, seed);
+    game.hero.level = level;
+    game.hero.points = level - 1;
+    const order = ['might', 'vitality', 'swiftness', 'precision'];
+    while (game.hero.points > 0) {
+      const key = order[game.hero.points % order.length];
+      game.hero.passives[key] = (game.hero.passives[key] || 0) + 1;
+      game.hero.points--;
+    }
+    game.hero.spec = 0;
+    const rng = { s: (seed ^ 0x5f3759df) >>> 0 };
+    for (const slot of ['weapon', 'helm', 'chest', 'gloves', 'belt', 'legs', 'boots', 'amulet']) {
+      game.equip[slot] = S.makeItem(rng, slot, level, {
+        rarity: 'rare', ...(slot === 'weapon' ? { base: 'sword' } : {})
+      });
+    }
+    const ring = S.makeItem(rng, 'ring', level, { rarity: 'rare' });
+    const ringRng = { s: (seed ^ 0x13579 ^ (level * 0x45d9f3b)) >>> 0 };
+    ring.affixes = typicalRing.map(key => roll(key, ringRng));
+    game.equip.ring1 = ring;
+    S.refresh(game);
+    return game;
+  }
+  function attempt(game) {
+    game.t = 0;
+    game.target = { key: 'knight', level };
+    game.autoPush = false;
+    game.fight = { hp: null, mon: null, pNext: 0, pulseNext: 1, respawnAt: 0,
+      deadUntil: 0, cd: {}, shield: 0, buffs: {}, cycle: 0, critCastAt: -99 };
+    const out = S.emptyOut(); out.killTimes = [];
+    const deaths = [];
+    for (let elapsed = 0.1; elapsed <= 150; elapsed += 0.1) {
+      S.advance(game, elapsed, out, (_message, kind) => { if (kind === 'death') deaths.push(game.t); });
+      const killed = out.killTimes[0], died = deaths[0];
+      if (killed != null || died != null) {
+        const outcome = died != null && (killed == null || died < killed) ? 'death' : 'clear';
+        return { outcome, seconds: Number((outcome === 'clear' ? killed : died).toFixed(2)),
+          damage: Number(out.dmgDealt.toFixed(2)), taken: Number(out.dmgTaken.toFixed(2)), deaths: out.deaths };
+      }
+    }
+    return { outcome: 'timeout', seconds: 150, damage: Number(out.dmgDealt.toFixed(2)), taken: Number(out.dmgTaken.toFixed(2)), deaths: out.deaths };
+  }
+  for (const seed of seeds) {
+    const base = fixture(seed), control = clone(base), treatment = clone(base);
+    const controlAffixRng = { s: (seed ^ 0x13579 ^ (level * 0x45d9f3b)) >>> 0 };
+    const counterRng = { s: (seed ^ 0x24680 ^ (level * 0x45d9f3b)) >>> 0 };
+    const controlAffixes = typicalRing.map(key => roll(key, controlAffixRng));
+    const counterValue = 3 * Math.pow(1.105, level - 1);
+    control.equip.ring1.affixes = controlAffixes;
+    treatment.equip.ring1.affixes = [['flat_holy', counterValue], ...controlAffixes.slice(0, 3)];
+    S.refresh(control); S.refresh(treatment);
+    console.log(JSON.stringify({ seed, stage: level, counter: 'flat_holy', counterValue: Number(counterValue.toFixed(4)),
+      noCounter: attempt(control), withCounter: attempt(treatment) }));
+  }
+}
+
+if (process.argv[2] === '--knight-ablation') {
+  knightAblation();
+  process.exit(0);
+}
+
 const cls = process.argv[2] || 'warrior';
 const hours = +(process.argv[3] || 6);
 const quiet = process.argv[4] === 'q';
@@ -41,7 +113,9 @@ for (let m = 0; m < hours * 60; m++) {
   if (g.asc.unlocked) for (const s of S.ARMOR_SLOTS) while (!act({ type: 'ascend', slot: s }));
   while (g.sigils > 0) {
     const bk = g.zones.hollow ? 'woundwarden' : 'bellkeeper';
-    act({ type: 'boss', key: bk, level: g.bossUnlocked[bk] }); bossTries++; if (g.lastBoss.res.win) bossWins++;
+    const error = act({ type: 'boss', key: bk, level: g.bossUnlocked[bk] });
+    if (error) break;
+    bossTries++; if (g.lastBoss.res.win) bossWins++; else break;
   }
   const b = bestTarget();
   act({ type: 'target', key: b.k, level: b.L });
