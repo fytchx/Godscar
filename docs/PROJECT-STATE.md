@@ -1,13 +1,13 @@
 # Project state and immediate handoff
 
-**Last documented:** 2026-11-09 (UTC). **Active source branch:** `preview/browser` (verify current commit before work).
+**Last documented:** 2026-11-10 (UTC). **Target preview branch:** `preview/browser`; current implementation branch: `feature/playable-living-arsenal-20261110`.
 **Read this before every work session, and update it in the same commit as EACH change set.** This document is a snapshot; re-check HEAD, workflows, Railway and live site rather than treating old statuses as current.
 
 ## Latest focused screen work
-The isolated `/lab/combat/` route is a compact combat-screen concept centered on the monster arena. The equipped-weapon card and recent-hit feed are removed; the auto-attack cast bar is muted, active inscriptions use fading progress bars in the arena's upper-left, and an abbreviated live session damage-rate number sits at the lower-right. Attack/DoT hits create distinct sample slash, ember, poison and blood-drip effects. XP, materials and kills share a compact summary strip; detailed DPS and ranked per-source damage remain behind its details button. The Character button opens the approved phone-first Character mockup as an Equipment-first full-screen overlay with Inventory, Crafting and Materials tabs. It has the shown 12 gear positions, Oathkeeper loadout card, and Fight/Character/World/Skills/Menu bottom navigation; Fight closes the overlay while the parent combat timer continues. Individual current-pack art is used instead of a newly assembled sprite sheet. Offline recap, saved layout and reduced-effects controls remain. Nothing is wired to game simulation or saves. `/lab` redirects to the preview; `/lab/arsenal/` and the original `/` remain separate.
+The isolated /lab/combat/ route remains the visual combat and 12-position Character mockup. /lab/arsenal/ now imports the deterministic Living Arsenal engine: auto-attacks, hunts, HP, XP, loot, equipment, ability sources, crafting and resources update together. Character contains Equipment, Inventory, Crafting and Materials tabs; Skills is separate. A shortened live DPS number appears on Combat. This prototype has its own browser save and up to four hours of offline catch-up. The original / game route and save remain untouched. Names, balance values and the nine-slot engine model are experimental; the 12 positions shown by the separate Character art mockup are not all mechanically implemented.
 
 ## Product identity
-**2026-11-06 direction update:** Owner adopted the Living Arsenal as the core of the game and approved reworking mechanics without retaining prototype saves/progress. Permanent white-weapon attack + 1–5 gear/crafting/progression-derived automatic abilities, meaningful but recoverable investments, and a brighter adventurous tone. The original browser remains the stable baseline. An opt-in browser prototype at `/lab/arsenal/` now tests the systems loop independently; it is not integrated into the original simulation. Read `docs/PROGRESSION-V2.md` and `docs/VISUAL-DIRECTION-V2.md`.
+**2026-11-06 direction update:** Owner adopted the Living Arsenal as the core of the game and approved reworking mechanics without retaining prototype saves/progress. Permanent white-weapon attack + 1–5 gear/crafting/progression-derived automatic abilities, meaningful but recoverable investments, and a brighter adventurous tone. The original browser remains the stable baseline. An isolated browser prototype at `/lab/arsenal/` now runs the Living Arsenal systems engine separately from the original game simulation. Read `docs/PROGRESSION-V2.md` and `docs/VISUAL-DIRECTION-V2.md`.
 
 Godscar is a phone-first dark fantasy **continuous-combat idle ARPG**, potentially an online RPG in later phases. The current approved experience is Claude's original browser version, **not the custom Godot port**. The owner confirmed the live browser preview matches the direction they intended.
 
@@ -36,13 +36,12 @@ Godscar is a phone-first dark fantasy **continuous-combat idle ARPG**, potential
 - Loot from common through ascended, equipment, affixes, enchantments, augment mechanics, crafting, upgrades, salvage, socketed belts/Jewels, save migration and up to 24h offline catch-up.
 - Phone UI tabs: Fight, Gear, Bag, Build, Forge. Not a finished MMO; some future systems are explicitly not implemented.
 
-## Living Arsenal interface work (staged)
-- Browser route: `/lab/arsenal/`; the original game route `/` and original save are untouched.
-- The isolated route is a static, clickable shell of Fight, Gear, Bag, Build, and Forge using familiar Godscar names. Recent visual update adds authored SVG gear silhouettes and an animated, presentation-only combat scene. It does not load the lab engine, write localStorage, or change gameplay.
-- Screens include the always-visible combat ribbon, hero-to-monster attack visual, primary attack, all 11 gear-slot art placements, sample bag items with item art, weapon-centered Build screen, and Forge service entry points. Sample values and placeholder art are identified in the UI.
-- Earlier standalone Living Arsenal engine, catalog, and tests remain in the repository but are not imported by this Stage 1 interface. They remain separate from the original game.
-- Stage 1 was merged through PR #4 into `preview/browser` at `cda6a18412fe5b6a7b3558c495cb0844401b1d7f`; Railway deployment `4d80970c-5ae2-4377-bc07-55442735a1e6` reached SUCCESS. The public `/lab/arsenal/` route was verified in the browser, including the Fight, Gear, and Build screens. Physical-device review is still pending.
-- PR #5 merged into `preview/browser` at `772ebc07953c04b41c0541223bbbbd65a4c798fb`. Railway deployment `098ce66a-8515-4182-9e76-6cc0a0a3b773` reached SUCCESS, and the public route plus art module were HTTP-verified. Physical phone review remains pending. Next: review the shell on phone, then align it with current game state; this UI step adds no item or combat mechanics.
+## Living Arsenal prototype
+- Browser route: /lab/arsenal/; the original game route / and original save are untouched.
+- The route uses the existing standalone deterministic engine and tunable catalog. It supports continuous combat, three hunts, progression, weapon-family attack patterns, gear drops, inventory actions, skill assignment/supports, weapon refinement, charm engraving, protected Rare overflow, local saves and bounded offline catch-up.
+- Phone-first navigation: Fight, Character, Skills, Forge and Materials. Character opens to Equipment and includes Inventory, Crafting and Materials subtabs. Combat shows abbreviated live DPS.
+- The UI owns presentation and interaction; engine and catalog own behavior and tuning. Prototype balance remains experimental. Mechanics currently model nine equipment slots; separate /lab/combat/ art still shows a 12-slot concept.
+- Existing engine coverage remains in lab/arsenal/tests.mjs; workflow smoke checks now expect the connected prototype. Physical-device review is still pending.
 
 ## Current risks and known gaps
 1. **Prototype acceptance:** Does the live loop feel substantial and legible on the owner’s phone? Test the deployed isolated route before deciding on deeper integration.
@@ -56,11 +55,12 @@ Godscar is a phone-first dark fantasy **continuous-combat idle ARPG**, potential
 ## Immediate priorities (not authorization for speculative changes)
 1. Keep original browser experience stable and backup/verify the owner’s character-save path.
 2. Compare source against any later Claude artifact or owner screenshots; document verified differences without speculation.
-3. Collect owner feedback on the compact `/lab/combat/` HUD on a phone: inscription readability, visible effects, arena scale and the session-details entry. Decide what to connect to the real simulation after that review.
+3. Verify the playable `/lab/arsenal/` preview after deployment and collect phone feedback on combat readability, gear flow and saving. Keep the original game route isolated.
 4. Plan server integration only with a credible migration, secrets, database and abuse-prevention strategy; no rushed multiplayer claims.
 5. Improve clarity and structure incrementally, preserving reproducible combat behavior.
 
 ## Latest activity
+- 2026-11-10 UTC: Connected /lab/arsenal/ to the existing Living Arsenal engine. Combat, hunts, drops, equipment, abilities, crafting and materials now share live state; added a separate local save and offline catch-up, combat DPS display, and workflow checks. The original game route and save remain isolated. Prototype balance is not final; verify the preview deployment and review on phone.
 - 2026-11-09 UTC: Corrected the Character screen after owner review found the site version did not match the approved mockup. The screen now uses the original phone layout, all 12 pictured gear positions, actual item illustrations, Oathkeeper loadout, four Character tabs, and the matching bottom navigation. Fight stays primary and Character overlays it; the Fight nav button returns to the running battle. The page has a separate, allowlisted route and sample data only; verify PR checks and deployment.
 - 2026-11-09 UTC: Tightened `/lab/combat/` into a shorter HUD: inscriptions moved into the arena, weapon card and recent-hit list removed, auto-attack cast bar added, XP/material/kill strip consolidated, detailed session stats moved behind one button, and sample slash/ember/poison/blood effects added. No simulation or save changes. Confirm the current deployment and gather phone feedback.
 - 2026-11-08 UTC: PR #5 merged to `preview/browser` at `772ebc07953c04b41c0541223bbbbd65a4c798fb`; GitHub `test`, `lab`, and `handoff` checks passed. Railway deployment `098ce66a-8515-4182-9e76-6cc0a0a3b773` reached SUCCESS, and the public route/art module were HTTP-verified. Phone review remains pending.
