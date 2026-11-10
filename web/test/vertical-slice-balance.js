@@ -191,6 +191,19 @@ function main() {
     }
   }
 
+  const summaries = TESTS.map(test => {
+    const pairs = results.filter(row => row.test === test.name);
+    const bothClear = pairs.filter(row =>
+      row.withoutCounter.outcome === 'clear' && row.withCounter.outcome === 'clear').length;
+    const counterClears = pairs.filter(row =>
+      row.withoutCounter.outcome !== 'clear' && row.withCounter.outcome === 'clear').length;
+    const unresolved = pairs.filter(row =>
+      row.withoutCounter.outcome !== 'clear' && row.withCounter.outcome !== 'clear').length;
+    return test.name + ': both clear ' + bothClear + '/' + pairs.length +
+      '; counter-confirmed ' + counterClears + '/' + pairs.length +
+      '; unresolved ' + unresolved + '/' + pairs.length;
+  });
+
   const lines = [
     'Paladin vertical-slice balance — Step 1 counter ablations',
     'Source: web/src/sim.js at 494f7275f858d4352080d21fde0a18e88cbc750f (SIM_VERSION ' + S.SIM_VERSION + ')',
@@ -199,6 +212,9 @@ function main() {
     'Counters: Wisp=res_fire; Bellkeeper=lifeOnHit. Both use a valid Uncommon ring in ring1. Control keeps the same ring and all other affixes but removes only the planned counter.',
     'Attempt: first Wisp kill or death, max 150 seconds; boss mirrors the engine fightBoss seed and 150-second limit while recording damage before death.',
     'Wall rule: a candidate is counter-confirmed only when the same seed fails without the counter and clears with it.',
+    '',
+    'Summary:',
+    ...summaries,
     '',
     ...results.map(row => JSON.stringify(row))
   ];
