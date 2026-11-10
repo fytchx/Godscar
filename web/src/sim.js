@@ -2,7 +2,7 @@
 // One deterministic event simulation drives live play, offline catch-up, item verdicts, scouting and boss fights.
 // Every player change goes through ACTIONS (doAction), so a server can run this same file and verify them.
 'use strict';
-const SIM_VERSION = 4; // bump whenever a change alters simulation results; the server rejects clients on another version
+const SIM_VERSION = 7; // bump whenever a change alters simulation results; the server rejects clients on another version
 const own = (o, k) => typeof k === 'string' && Object.prototype.hasOwnProperty.call(o, k);
 const isInt = (v, lo, hi) => Number.isInteger(v) && v >= lo && v <= hi;
 
@@ -236,6 +236,7 @@ const MAT_NAMES = {
   shards: 'Scar Shards', phys: 'Ash Essence', fire: 'Ember Essence', frost: 'Rime Essence', light: 'Storm Essence', shadow: 'Rift Essence', holy: 'Dawn Essence',
   graveiron: 'Grave Iron', cinderheart: 'Cinder Heart', houndsinew: 'Hound Sinew', zealotash: 'Zealot Ash', shadesilk: 'Shade Silk'
 };
+const FAMILY_ESSENCE = { wisp: { mat: 'fire', every: 150 } };
 const ascCost = lvl => Math.ceil(2 * Math.pow(1.22, lvl));
 
 // ---------- RARITIES ----------
@@ -282,6 +283,8 @@ const BOSS_KEYS = Object.keys(BOSSES);
 const mdef = key => MONSTERS[key] || BOSSES[key];
 
 const RESPAWN = 0.6, RECOVERY = 12, PULSE = 1, DROP_CHANCE = 0.2, BAG_CAP = 36, OFFLINE_CAP = 24 * 3600, UNLOCK_KILLS = 30;
+// Tunable coefficient: armor K is this fraction of the attacker's average hit.
+const ARMOR_K_FACTOR = 0.001;
 const SIGIL_KILLS = 150, SIGIL_CAP = 5, BOSS_TIME = 150, PUSH_STREAK = 25;
 const xpToNext = lvl => Math.round(70 * Math.pow(1.19, lvl - 1) + 40 * lvl);
 
@@ -353,6 +356,10 @@ const socketCost = it => ({ gold: Math.round(2500 * Math.pow(1.12, it.ilvl)), es
 const unsocketCost = lvl => Math.round(150 * Math.pow(1.1, lvl));
 const CRAFT_MULT = { common: [1, 0, 0], uncommon: [2, 2, 0], rare: [5, 6, 0], epic: [15, 20, 2], legendary: [60, 60, 4] };
 const craftCost = (rarity, ilvl) => { const [gm, sh, es] = CRAFT_MULT[rarity]; return { gold: Math.round(30 * Math.pow(1.12, ilvl) * gm), shards: sh, essence: es }; };
+const COUNTER_CRAFTS = {
+  res_fire: { essence: 'fire', cost: 4, topRoll: 18 },
+  dmgPct: { essence: 'holy', cost: 10, topRoll: 20 }
+};
 
 // ---------- STATS ----------
 function jewelOf(g) { const b = g.equip.belt; return b && b.jewel && b.jewel.cls === g.hero.cls ? b.jewel : null; }
@@ -462,6 +469,10 @@ function spawnMonster(key, level) {
     burnDps: 0, burnUntil: 0, bleedDps: 0, bleedUntil: 0, chill: 0, chillUntil: 0, shockUntil: 0, shockAmt: 0, next: 0, stacks: 0 };
 }
 const afterArmor = (hit, armor) => Math.max(hit * 0.25, hit - armor);
+const afterPlayerArmor = (hit, armor, averageIncomingHit) => {
+  const k = averageIncomingHit * ARMOR_K_FACTOR;
+  return hit * k / (armor + k);
+};
 function newFight(t) { return { hp: null, mon: null, pNext: t, pulseNext: t + PULSE, respawnAt: t, deadUntil: 0, cd: {}, shield: 0, buffs: {}, cycle: 0, critCastAt: -99 }; }
 function condMet(cond, g) {
   const f = g.fight, hp = f.hp / g.stats.life;
@@ -624,7 +635,7 @@ function monsterAttack(g, out, log) {
   if (S.dodge && rand(r) * 100 < S.dodge) return;
   const ward = f.buffs.frostward > g.t;
   let d = m.dmg * rr(r, 0.85, 1.15);
-  d = M.dmgType === 'phys' ? afterArmor(d, S.armor * (ward ? 1.5 : 1)) : d * (1 - Math.min(85, S.res[M.dmgType] + (ward ? 25 : 0)) / 100);
+  d = M.dmgType === 'phys' ? afterPlayerArmor(d, S.armor * (ward ? 1.5 : 1), m.dmg) : d * (1 - Math.min(85, S.res[M.dmgType] + (ward ? 25 : 0)) / 100);
   if (f.shield > 0) { const a = Math.min(f.shield, d); f.shield -= a; d -= a; }
   f.hp -= d; out.dmgTaken += d;
   if (S.reflect > 0) {
@@ -654,6 +665,7 @@ function pulse(g, out, log) {
 
 function die(g, out, log) {
   const f = g.fight;
+  if (g.boss && f.mon) out.bossHpRemaining = Math.max(0, f.mon.hp);
   f.hp = 0; f.mon = null; f.deadUntil = g.t + RECOVERY; f.shield = 0;
   out.deaths++; g.life.deaths++;
   if (g.boss) return;
@@ -684,6 +696,16 @@ function killMonster(g, out, log) {
   // materials
   if (rand(r) < (M.zone === 'hollow' ? 0.45 : 0.3)) { const n = M.zone === 'hollow' ? 1 + (rand(r) < 0.4 ? 1 : 0) : 1; g.mats.shards += n; out.mats.shards = (out.mats.shards || 0) + n; notice(g, 'shards'); }
   if (M.ess && rand(r) < (M.essChance || 0.05)) { const e = pick(r, M.ess); g.mats[e] = (g.mats[e] || 0) + 1; out.mats[e] = (out.mats[e] || 0) + 1; notice(g, 'essence'); }
+  const familyEssence = FAMILY_ESSENCE[m.key];
+  if (familyEssence) {
+    g.familyProgress[m.key] = (g.familyProgress[m.key] || 0) + 1;
+    if (g.familyProgress[m.key] >= familyEssence.every) {
+      g.familyProgress[m.key] -= familyEssence.every;
+      g.mats[familyEssence.mat] = (g.mats[familyEssence.mat] || 0) + 1;
+      out.mats[familyEssence.mat] = (out.mats[familyEssence.mat] || 0) + 1;
+      notice(g, 'essence');
+    }
+  }
   if (g.asc.unlocked && M.mat && rand(r) < (m.key === 'colossus' ? 0.12 : 0.06)) { g.mats[M.mat] = (g.mats[M.mat] || 0) + 1; out.mats[M.mat] = (out.mats[M.mat] || 0) + 1; }
   g.sigilProg = (g.sigilProg || 0) + 1;
   if (g.sigilProg >= SIGIL_KILLS) { g.sigilProg = 0; if (g.sigils < SIGIL_CAP) { g.sigils++; out.sigils++; notice(g, 'boss'); log && log('A Boss Sigil formed.', 'level'); } }
@@ -740,7 +762,7 @@ function emptyOut() { return { kills: 0, xp: 0, gold: 0, deaths: 0, levels: 0, i
 // ---------- STATE ----------
 function blankState(cls, now, seed) {
   return {
-    v: 3, created: now, t: now, rng: { s: (seed >>> 0) || 1 },
+    v: 4, created: now, t: now, rng: { s: (seed >>> 0) || 1 },
     hero: { cls, level: 1, xp: 0, spec: null, points: 0, passives: {} },
     equip: {}, bag: [], jewels: [], gold: 0, mats: { shards: 0 }, filter: 'uncommon',
     zones: { fallfields: true, hollow: false }, target: { key: 'husk', level: 1 },
@@ -748,7 +770,7 @@ function blankState(cls, now, seed) {
     bossUnlocked: Object.fromEntries(BOSS_KEYS.map(k => [k, BOSSES[k].minLevel])),
     asc: { unlocked: false, base: 0, slots: Object.fromEntries(ARMOR_SLOTS.map(s => [s, 0])) },
     bar: { off: [null, null, null], util: [null, null] }, slotted: {},
-    sigils: 0, sigilProg: 0, kills: {}, autoPush: true, pushRetries: 1, streak: 0, deathsHere: 0,
+    sigils: 0, sigilProg: 0, bossCooldownUntil: 0, kills: {}, familyProgress: {}, autoPush: true, pushRetries: 1, streak: 0, deathsHere: 0,
     seen: {}, notices: [], life: { kills: 0, deaths: 0, offlineSec: 0, bosses: 0 }
   };
 }
@@ -783,7 +805,8 @@ function convertItem(r, o, cls) {
   return it;
 }
 function migrate(o) {
-  if (o.v === 3) return o;
+  if (o.v === 4) return o;
+  if (o.v === 3) { o.v = 4; o.familyProgress = {}; return o; }
   if (o.v === 1) { o.v = 2; o.mats = { shards: 0 }; o.bar = { off: [null, null, null], util: [null, null] }; o.zones = { fallfields: true }; o.bossUnlocked = {}; o.hero.passives = {}; o.hero.points = Math.max(0, o.hero.level - 1); }
   if (o.v !== 2) throw new Error('Unknown save version');
   const g = blankState(o.hero.cls, o.t, o.rng.s);
@@ -870,11 +893,33 @@ const ACTIONS = {
     const rar = a.rarity; if (!own(CRAFT_MULT, rar)) return 'Unknown rarity.'; if (!DROP_SLOTS.includes(a.slot)) return 'Unknown slot.';
     if (a.base != null && !(a.slot === 'weapon' ? own(WEAPONS, a.base) : a.slot === 'offhand' ? own(OFFHANDS, a.base) : false)) return 'Unknown base.';
     const ilvl = Math.max(1, Number(a.ilvl) | 0); const maxL = Math.max(...MONSTER_KEYS.map(k => g.unlocked[k])) + 4; if (ilvl > maxL) return 'You can\'t craft above your progress.';
+    const counter = a.counter || null, recipe = counter && COUNTER_CRAFTS[counter];
+    if (counter && (rar !== 'rare' || a.slot !== 'ring' || !recipe)) return 'Counter crafts require a rare ring and a supported counter.';
     const c = craftCost(rar, ilvl); const ess = TYPES.every(t => (g.mats[t] || 0) >= c.essence);
-    if (g.gold < c.gold || g.mats.shards < c.shards || !ess) return 'Not enough materials.';
-    if (g.bag.length >= BAG_CAP) return 'Bag is full.';
+    if (g.gold < c.gold || g.mats.shards < c.shards || !ess || (recipe && (g.mats[recipe.essence] || 0) < recipe.cost)) return 'Not enough materials.';
+    if (g.bag.length >= BAG_CAP) {
+      if (!recipe) return 'Bag is full.';
+      const discardIndex = g.bag.map((it, index) => ({ it, index }))
+        .filter(({ it }) => !it.locked && RANK[it.rarity] < RANK.legendary)
+        .sort((a, b) => RANK[a.it.rarity] - RANK[b.it.rarity] || a.it.ilvl - b.it.ilvl)[0]?.index;
+      if (discardIndex == null) return 'Bag is full; unlock an item to make room.';
+      const [discarded] = g.bag.splice(discardIndex, 1);
+      g.gold += salvageValue(discarded);
+      g.mats.shards += salvageShards(discarded);
+      if (discarded.jewel) g.jewels.push(discarded.jewel);
+    }
     g.gold -= c.gold; g.mats.shards -= c.shards; for (const t of TYPES) if (c.essence) g.mats[t] -= c.essence;
+    if (recipe) g.mats[recipe.essence] -= recipe.cost;
     const it = makeItem(g.rng, a.slot, ilvl, { rarity: rar, base: a.base, zone: g.zones.hollow ? 'hollow' : 'fallfields' });
+    if (recipe) {
+      const existing = it.affixes.findIndex(([key]) => key === counter);
+      if (existing >= 0) it.affixes.splice(existing, 1);
+      if (it.affixes.length >= AFFIX_COUNT[rar][1]) it.affixes.pop();
+      const definition = AFFIXES[counter];
+      const value = recipe.topRoll * (definition.pct ? 1 + ilvl * 0.008 : 1);
+      it.affixes.push([counter, value]);
+      it.name = itemName(it);
+    }
     g.bag.push(it); return null;
   },
   addSocket(g, a) {
@@ -917,9 +962,11 @@ const ACTIONS = {
   dismiss(g, a) { g.notices = (g.notices || []).filter(k => k !== a.key); return null; },
   boss(g, a) {
     const B = own(BOSSES, a.key) ? BOSSES[a.key] : null; if (!B || !g.zones[B.zone]) return 'Not available.'; if (g.sigils < 1) return 'No sigils.';
+    if (g.t < (g.bossCooldownUntil || 0)) return `Boss attempt recovering for ${Math.ceil(g.bossCooldownUntil - g.t)}s.`;
     const L = Math.max(B.minLevel, Math.min(g.bossUnlocked[a.key], Number(a.level) | 0));
     g.sigils--;
     const res = fightBoss(g, a.key, L);
+    if (!res.win) { g.sigils++; g.bossCooldownUntil = g.t + Math.max(1, res.time || 1); }
     g.lastBoss = { res: { key: res.key, level: res.level, win: res.win, died: res.died, time: res.time, pct: res.pct }, lines: res.lines.slice(-40) };
     if (res.win) g.lastBoss.rewards = bossRewards(g, res, emptyOut());
     return null;
@@ -970,7 +1017,7 @@ function fightBoss(g, key, level) {
   let t = 0;
   while (t < BOSS_TIME) { t += 1; advance(c, t, out, log); if (out.kills || out.deaths) break; }
   const bossMax = spawnMonster(key, level).max;
-  const left = out.kills ? 0 : (c.fight.mon ? Math.max(0, c.fight.mon.hp) : bossMax);
+  const left = out.kills ? 0 : (out.bossHpRemaining ?? (c.fight.mon ? Math.max(0, c.fight.mon.hp) : bossMax));
   return { key, level, win: out.kills > 0, died: out.deaths > 0, time: Math.min(t, BOSS_TIME), pct: 1 - left / bossMax, lines };
 }
 function bossRewards(g, res, out) {
@@ -983,6 +1030,7 @@ function bossRewards(g, res, out) {
   g.gold += gold; g.mats.shards += shards;
   const ess = {};
   if (B.zone === 'hollow') for (const e of TYPES) { const k = rand(r) < 0.6 ? 1 + Math.floor(rand(r) * 2) : 0; if (k) { g.mats[e] = (g.mats[e] || 0) + k; ess[e] = k; } }
+  if (res.key === 'bellkeeper') { g.mats.holy = (g.mats.holy || 0) + 2; ess.holy = (ess.holy || 0) + 2; }
   const xp = Math.round(8 * Math.pow(1.12, L - 1) * B.xp);
   gainXp(g, xp, out, null);
   for (const it of items) receiveItem(g, it, out, null);
@@ -1001,7 +1049,11 @@ function catchUp(g, now, log) {
   let elapsed = now - g.t; if (elapsed <= 0) return { out, elapsed: 0, capped: 0 };
   let capped = 0;
   if (elapsed > OFFLINE_CAP) { capped = elapsed - OFFLINE_CAP; shiftFight(g, now - OFFLINE_CAP - g.t); elapsed = OFFLINE_CAP; }
-  advance(g, now, out, log);
+  // Offline kills may grant loot, but must not satisfy the active-session auto-push streak.
+  const autoPush = g.autoPush;
+  g.autoPush = false;
+  try { advance(g, now, out, log); }
+  finally { g.autoPush = autoPush; g.streak = 0; }
   return { out, elapsed, capped };
 }
 function shiftFight(g, d) {
@@ -1013,7 +1065,7 @@ function shiftFight(g, d) {
 }
 
 if (typeof module !== 'undefined') module.exports = {
-  SIM_VERSION, ACTIONS, rand, TYPES, ELEMS, TYPE_NAMES, TYPE_RULES, ATTRS, ATTR_RULES, CLASSES, CLASS_KEYS, SPELLS, FOUND_SPELLS, CONDS, PASSIVES, PASSIVE_KEYS,
+  SIM_VERSION, ACTIONS, rand, afterArmor, afterPlayerArmor, ARMOR_K_FACTOR, TYPES, ELEMS, TYPE_NAMES, TYPE_RULES, ATTRS, ATTR_RULES, CLASSES, CLASS_KEYS, SPELLS, FOUND_SPELLS, CONDS, PASSIVES, PASSIVE_KEYS,
   EQUIP, DROP_SLOTS, ARMOR_SLOTS, SLOT_NAMES, WEAPONS, OFFHANDS, AFFIXES, ENCHANTS, AUGMENTS, SETS, ASC_MATS, MAT_NAMES, RARITIES, RARITY_NAMES, RANK,
   ZONES, ZONE_KEYS, MONSTERS, MONSTER_KEYS, BOSSES, BOSS_KEYS, mdef, makeItem, makeJewel, computeStats, refresh, availableSpells, advance, emptyOut,
   newGame, migrate, doAction, project, verdictSlot, fightBoss, bossRewards, catchUp, effIlvl, scaleOf, xpToNext, upgradeCost, salvageValue, salvageShards,
