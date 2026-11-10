@@ -116,13 +116,15 @@ function runMonsterAttempt(game, key, stage) {
         kills: out.kills,
         deaths: out.deaths,
         damageDealt: Number(out.dmgDealt.toFixed(2)),
+        armorPen: Number((game.stats.armorPen || 0).toFixed(3)),
+        physicalBase: Number((game.stats.pre.phys || 0).toFixed(2)),
         hitsLanded: hits,
         incomingDamage: Number(out.dmgTaken.toFixed(2))
       };
     }
   }
   return { outcome: 'timeout', seconds: BOSS_LIMIT, kills: out.kills, deaths: out.deaths,
-    damageDealt: Number(out.dmgDealt.toFixed(2)), hitsLanded: hits, incomingDamage: Number(out.dmgTaken.toFixed(2)) };
+    damageDealt: Number(out.dmgDealt.toFixed(2)), armorPen: Number((game.stats.armorPen || 0).toFixed(3)), physicalBase: Number((game.stats.pre.phys || 0).toFixed(2)), hitsLanded: hits, incomingDamage: Number(out.dmgTaken.toFixed(2)) };
 }
 
 function bossAttempt(game, level) {
