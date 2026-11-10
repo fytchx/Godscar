@@ -4,7 +4,7 @@
 
 **[Open Godscar](https://godscar-browser-preview-preview.up.railway.app/)**. The root page is the selected phone-first combat screen paired with the Equipment-first Character menu. It keeps the illustrated enemy arena central, the auto-attack bar subtle, and the compact DPS counter in the lower right. Character includes Equipment, Inventory, Crafting, and Materials.
 
-The older **/lab**, **/lab/combat/**, and **/lab/arsenal/** page routes redirect to **/** so there is one visible version to review. The combat and Character screens remain a presentation prototype: combat values, inventory, recipes, crafting, materials, and saves are not connected to the preserved simulation.
+The older **/lab**, **/lab/combat/**, and **/lab/arsenal/** page routes redirect to **/** so there is one visible version to review. The Fight view opens directly without a fake offline-rewards popup. The combat and Character screens remain a presentation prototype: combat values, inventory, recipes, crafting, materials, and saves are not connected to the preserved simulation.
 
 ## Source and preview
 

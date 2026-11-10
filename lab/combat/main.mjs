@@ -309,8 +309,6 @@ $("#resetDps").addEventListener("click", () => {
   updateSessionDetails();
   renderDamageRows();
 });
-$("#continue").addEventListener("click", () => $("#offline").close());
-closeOnBackdrop($("#offline"));
 closeOnBackdrop($("#damageModal"));
 
 applyLayout();
@@ -318,5 +316,4 @@ document.body.classList.toggle("reduced-effects", reducedEffects);
 $("#effects").classList.toggle("on", reducedEffects);
 updateProgressSummary();
 updateSessionDetails();
-$("#offline").showModal();
 setInterval(() => advanceTimers(.1), 100);
