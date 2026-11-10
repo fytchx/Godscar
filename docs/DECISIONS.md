@@ -1,5 +1,9 @@
 # Decisions log (owner decisions vs engineering observations)
 
+## 2026-11-09 UTC — Confirmed: Paladin vertical slice is current priority
+- **Owner direction:** Prioritize the one-zone, three-wall Paladin vertical slice using the existing `web/src/sim.js` over Living Arsenal work.
+- **Boundary:** Keep this priority scoped to the slice; do not implement Living Arsenal, multiplayer, or server-branch work as part of it. This does not by itself reverse the broader Living Arsenal direction.
+
 ## 2026-11-09 UTC — Make the combat + Character direction the only public website version
 - **Owner direction:** The illustrated combat screen and matching phone-first Character prototype shown in the approved references are where Godscar should continue. Remove earlier website versions from public routes so they cannot be confused with this direction.
 - **Implementation boundary:** Serve the selected presentation at `/`. Former `/lab`, `/lab/combat/`, and `/lab/arsenal/` page URLs redirect to `/`. Keep prior code recoverable in Git history; do not combine its game engine or saves with the selected UI by default.
