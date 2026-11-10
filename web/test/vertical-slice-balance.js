@@ -78,14 +78,21 @@ function createFixture(seed, level, options = {}) {
 
 function ringPair(base, keys, seed, level, gearType) {
   const count = gearType === 'rare' ? 4 : Math.max(2, keys.length);
+  const rarity = count >= 3 ? 'rare' : 'uncommon';
   const control = clone(base);
   const treatment = clone(base);
-  setRing(control, TYPICAL_RING.slice(0, count), level, seed ^ 0x13579, count >= 3 ? 'rare' : 'uncommon');
-  const retained = TYPICAL_RING.slice(0, count - keys.length);
-  setRing(treatment, keys.concat(retained), level, seed ^ 0x24680, count >= 3 ? 'rare' : 'uncommon');
+  const controlRng = { s: (seed ^ 0x13579 ^ (level * 0x45d9f3b)) >>> 0 };
+  const counterRng = { s: (seed ^ 0x24680 ^ (level * 0x45d9f3b)) >>> 0 };
+  const controlAffixes = TYPICAL_RING.slice(0, count).map(key => rollAffix(key, controlRng, level));
+  const retained = controlAffixes.slice(0, count - keys.length);
+  const treatmentAffixes = keys.map(key => rollAffix(key, counterRng, level)).concat(retained);
+  control.equip.ring1.rarity = rarity;
+  treatment.equip.ring1.rarity = rarity;
+  control.equip.ring1.affixes = controlAffixes;
+  treatment.equip.ring1.affixes = treatmentAffixes;
   S.refresh(control);
   S.refresh(treatment);
-  return { control, treatment, affixes: treatment.equip.ring1.affixes };
+  return { control, treatment, affixes: treatmentAffixes, controlAffixes };
 }
 
 function runMonsterAttempt(game, key, stage) {
@@ -211,22 +218,22 @@ function sweepMonster(key, counterName, stage, seed) {
 function sweepBossFixture(gear, level, seed) {
   const base = createFixture(seed, level, { gear });
   const packages = [];
-  const noCounter = clone(base);
-  S.refresh(noCounter);
-  const baseline = bossAttempt(noCounter, level);
   const different = createFixture(seed, level, { gear, classKey: 'rogue', weapon: 'dagger' });
   const differentBuild = bossAttempt(different, level);
 
   for (const counter of BOSS_COUNTERS) {
     const pair = ringPair(base, counter.keys, seed + counter.name.length, level, gear);
+    const noCounter = bossAttempt(pair.control, level);
     const result = bossAttempt(pair.treatment, level);
     packages.push({
       counter: counter.name,
+      controlAffixes: pair.controlAffixes.map(([key, value]) => [key, Number(value.toFixed(4))]),
       affixes: pair.affixes.map(([key, value]) => [key, Number(value.toFixed(4))]),
+      noCounter,
       result
     });
   }
-  return { gear, level, seed, noCounter: baseline, differentBuild, counters: packages };
+  return { gear, level, seed, differentBuild, counters: packages };
 }
 
 function firstNoCounterFailures(rows) {
@@ -262,18 +269,17 @@ function counterWallRows(rows, getCounters) {
 function bossWallRows(rows) {
   const walls = [];
   for (const row of rows) {
-    if (row.noCounter.outcome === 'clear') continue;
     for (const counter of row.counters) {
-      if (counter.result.outcome === 'clear') {
+      if (counter.noCounter.outcome !== 'clear' && counter.result.outcome === 'clear') {
         walls.push({
           fixture: row.gear,
           level: row.level,
           seed: row.seed,
-          noCounterFails: row.noCounter.outcome,
+          noCounterFails: counter.noCounter.outcome,
           counter: counter.counter,
           counterClears: counter.result.outcome,
           differentBuildClears: row.differentBuild.outcome === 'clear',
-          noCounter: row.noCounter,
+          noCounter: counter.noCounter,
           counterResult: counter.result,
           differentBuild: row.differentBuild
         });
@@ -306,18 +312,22 @@ function main() {
   for (const gear of ['common', 'rare']) {
     for (const counter of BOSS_COUNTERS) {
       const rows = bossRows.filter(row => row.gear === gear);
-      const firstNoCounter = rows.find(row => row.noCounter.outcome !== 'clear');
-      const firstWall = rows.flatMap(row => row.counters
-        .filter(item => item.counter === counter.name && row.noCounter.outcome !== 'clear' && item.result.outcome === 'clear')
-        .map(item => ({ level: row.level, seed: row.seed, noCounter: row.noCounter, counter: item.result, differentBuild: row.differentBuild })))
-        .sort((a, b) => a.level - b.level || a.seed - b.seed)[0] || null;
+      const paired = rows.map(row => ({ row, pair: row.counters.find(item => item.counter === counter.name) }));
+      const firstNoCounter = paired.find(item => item.pair.noCounter.outcome !== 'clear');
+      const firstWall = paired.find(item => item.pair.noCounter.outcome !== 'clear' && item.pair.result.outcome === 'clear');
       bossFirst[gear + ':' + counter.name] = {
-        firstNoCounterFailureLevel: firstNoCounter ? firstNoCounter.level : null,
+        firstNoCounterFailureLevel: firstNoCounter ? firstNoCounter.row.level : null,
         firstNoCounterFailureBySeed: Object.fromEntries(SEEDS.map(seed => {
-          const row = rows.find(item => item.seed === seed && item.noCounter.outcome !== 'clear');
-          return [seed, row ? row.level : null];
+          const item = paired.find(value => value.row.seed === seed && value.pair.noCounter.outcome !== 'clear');
+          return [seed, item ? item.row.level : null];
         })),
-        firstLevelNoCounterFailCounterClear: firstWall
+        firstLevelNoCounterFailCounterClear: firstWall ? {
+          level: firstWall.row.level,
+          seed: firstWall.row.seed,
+          noCounter: firstWall.pair.noCounter,
+          counter: firstWall.pair.result,
+          differentBuild: firstWall.row.differentBuild
+        } : null
       };
     }
   }
@@ -329,8 +339,8 @@ function main() {
     'Monster fixture: Paladin, player level equals target stage, level-matched Common gear, existing passive allocation, Templar at 10+. Wisp alternate: Rogue/Dagger. Grave Knight control weapon: Sword; alternate: Paladin/Mace.',
     'Wisp counter: ring1 fire resistance rolled by the sim. Wisp hits are counted from increases in dmgTaken; fire damage taken is the sim output.',
     'Grave Knight counter: armorPen=0.30 injected after stat calculation; weapon is Sword so physical damage is affected.',
-    'Boss fixtures: Paladin/Mace at player level equal to boss level; Common or generated Rare gear. Rare fixture uses seeded Rare rolls, removes damage/crit/attack-speed affixes outside the tested ring, and uses a four-affix defensive ring control.',
-    'Boss counter packages replace ring affixes with existing stat rolls: damage=dmgPct; crit=critChance+critMulti; attackSpeed=atkSpd; combined=dmgPct+critChance+critMulti+atkSpd. Same affix-count ring control is used. Boss limit=' + BOSS_LIMIT + 's. Alternate boss build: Rogue/Dagger with no damage package.',
+    'Boss fixtures: Paladin/Mace at player level equal to boss level; Common or generated Rare gear. Rare fixture uses seeded Rare rolls, removes damage/crit/attack-speed affixes outside the tested ring. Each pair uses the same ring rarity, affix count, and identical non-counter affix values.',
+    'Boss counter packages replace ring affixes with existing stat rolls: damage=dmgPct; crit=critChance+critMulti; attackSpeed=atkSpd; combined=dmgPct+critChance+critMulti+atkSpd. Counter affixes replace control affixes in ring1. Boss limit=' + BOSS_LIMIT + 's. Alternate boss build: Rogue/Dagger with no damage package.',
     'Wall rule: same-seed no-counter failure plus counter clear. Different-build field is the alternate build without the tested counter.',
     '',
     'Wisp first no-counter failure: ' + JSON.stringify(firstNoCounterFailures(wispRows)),
