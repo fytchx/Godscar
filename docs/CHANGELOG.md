@@ -1,8 +1,8 @@
-## 2026-11-09 UTC — Open directly to the selected fight screen
-- **Why:** The deployed page was covering the approved combat screen with a hard-coded offline recap and sample rewards.
-- **Changed:** Removed the fake recap dialog and its automatic launch. The root page now opens directly to the fight view; no sample offline rewards are claimed.
-- **Boundary:** This remains a presentation prototype. No gameplay simulation, saves, or offline progression were added.
-- **Verification:** Preview deployment completed; direct route review showed the recap overlay. The corrected root needs redeploy and follow-up review.
+## 2026-11-09 UTC — Remove the retired systems-preview card
+- **Why:** The selected root screen still linked to the retired Arsenal route, which redirected back to the current page and advertised an older version.
+- **Changed:** Removed the card and its panel-visibility setting. The footer now identifies this as the combat prototype.
+- **Boundary:** No gameplay systems, saves, or Character tabs changed.
+- **Verification:** Automated route and handoff checks run on the pull request; preview review follows merge.
 ## 2026-11-09 UTC — Make the approved combat + Character screens the sole website entry point
 - **Why:** The owner clarified that the illustrated Fight screen and matching phone-first Character prototype are the selected starting direction. Older published routes were creating version confusion.
 - **Changed:** The preview root serves the selected combat screen; previous `/lab`, `/lab/combat/`, and `/lab/arsenal/` page routes redirect to `/`. Updated route smoke checks and project handoff docs. The earlier simulation and experimental Arsenal source remain recoverable but are no longer exposed as alternate website versions.
