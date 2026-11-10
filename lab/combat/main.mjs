@@ -1,13 +1,12 @@
 import "./character.mjs";
 
 const $ = (selector, root = document) => root.querySelector(selector);
-const panelIds = ["character", "weapon", "combat", "summary", "systems"];
+const panelIds = ["character", "weapon", "combat", "summary"];
 const panelLabels = {
   character: "Character health",
   weapon: "Weapon cast bar",
   combat: "Combat scene",
-  summary: "Session summary",
-  systems: "Gear and build link"
+  summary: "Session summary"
 };
 const storageKey = "godscar.combat-preview";
 const defaultOrder = [...panelIds];
