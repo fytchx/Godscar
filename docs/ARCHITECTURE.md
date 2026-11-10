@@ -1,17 +1,17 @@
-# Architecture map for the original Godscar browser game
+# Architecture map for the current Godscar website direction
 
-## Focused combat screen preview
-`lab/combat/` is served through an explicit asset allowlist at `/lab/combat/`; `/lab` redirects there. Its HTML/CSS and `main.mjs` form a presentation-only screen concept, independent from `web/src/sim.js`. The UI keeps a slim weapon auto-attack cast bar above the arena and overlays fading inscription timers at its upper-left. Sample physical, fire, poison and bleed events drive transient slash/impact, ember, poison and blood-drop effects plus floating damage. XP/material/kill totals sit in a compact strip; a details dialog shows total DPS and ranked direct/DoT damage sources with manual reset. It does not claim authoritative combat results or load game saves. Layout order/visibility and reduced-effects preferences use isolated `godscar.combat-preview.*` localStorage keys. Assets are served only from `lab/combat/` by the preview server. The existing `/lab/arsenal/` and `/` routes remain separate.
+## Current website entry point
+`/` serves `lab/combat/index.html`, the selected combat + Character presentation. Old `/lab`, `/lab/combat/`, and `/lab/arsenal/` page routes redirect to `/` so the preview has one visible version. Combat CSS/modules and Character HTML/assets remain available only through the explicit `/lab/combat/*` asset allowlist. This is the chosen presentation starting point; sample combat values and character items are not yet connected to game state. Its HTML/CSS and `main.mjs` form a presentation-only screen concept, independent from `web/src/sim.js`. The UI keeps a slim weapon auto-attack cast bar above the arena and overlays fading inscription timers at its upper-left. Sample physical, fire, poison and bleed events drive transient slash/impact, ember, poison and blood-drop effects plus floating damage. XP/material/kill totals sit in a compact strip; a details dialog shows total DPS and ranked direct/DoT damage sources with manual reset. It does not claim authoritative combat results or load game saves. Layout order/visibility and reduced-effects preferences use isolated `godscar.combat-preview.*` localStorage keys. Assets are served only from `lab/combat/` by the preview server. The old `/lab/arsenal/` shell and original browser-game page are no longer exposed as alternate website routes.
 
-The combat route also serves the approved phone-first Character prototype as `character.html` inside a same-origin full-screen iframe. Its Fight button closes the overlay; the combat timer continues in the parent. Equipment is the first view and matches the approved 12-slot mockup, including the Oathkeeper loadout card, four sub-tabs, bottom navigation, and individual gear illustrations. `character.html` has isolated CSS design tokens at its top; its sample item data and appearance controls do not persist to the game save. Icons are served from `character-assets/` through a fixed allowlist. A compact abbreviated session damage-rate number remains in the battlefield footer; detailed source totals remain in Session Details.
+The root combat page also serves the approved phone-first Character prototype as `character.html` inside a same-origin full-screen iframe. Its Fight button closes the overlay; the combat timer continues in the parent. Equipment is the first view and matches the approved 12-slot mockup, including the Oathkeeper loadout card, four sub-tabs, bottom navigation, and individual gear illustrations. `character.html` has isolated CSS design tokens at its top; its sample item data and appearance controls do not persist to the game save. Icons are served from `character-assets/` through a fixed allowlist. A compact abbreviated session damage-rate number remains in the battlefield footer; detailed source totals remain in Session Details.
 
 
 This records what can be established from the repository and identifies where changes belong. See source for exact rules; avoid writing speculative architecture as fact.
 
-## Staged Living Arsenal interface preview (opt-in route)
-`lab/arsenal/` is served only at `/lab/arsenal/` by explicit allowlisted routes in `preview/server.mjs`. The interface `index.html`, `styles.css`, and `ui.mjs` render a static, clickable five-tab layout. `ui.mjs` owns only presentation state (active tab, selected gear slot/enemy, and expanded explanation); it does not import `engine.mjs`, access localStorage, simulate combat, or mutate a game save. `art.mjs` provides code-authored SVG silhouettes for 11 equipment slots and a separate decorative combat scene; the slash animation is visual feedback only and never reports simulated damage. The route uses the current game's labels and layout as its source, with preview-only sample values marked in the interface.
+## Historical interface and simulation source
+The former `/lab/arsenal/` screen and prior original browser-game page are not exposed by the current website server. `web/src/*` remains preserved simulation reference code and is still tested/built independently. The former Arsenal interface rendered a static, clickable five-tab layout. `ui.mjs` owns only presentation state (active tab, selected gear slot/enemy, and expanded explanation); it does not import `engine.mjs`, access localStorage, simulate combat, or mutate a game save. `art.mjs` provides code-authored SVG silhouettes for 11 equipment slots and a separate decorative combat scene; the slash animation is visual feedback only and never reports simulated damage. The route uses the current game's labels and layout as its source, with preview-only sample values marked in the interface.
 
-The earlier experimental `catalog.mjs`, `engine.mjs`, and `tests.mjs` remain separate and are not loaded by the Stage 1 interface. Neither the mock UI nor those files are integrated into original `web/src/`. The original route `/` and save format remain untouched. UI organization takes inspiration from Arcana's mobile navigation and panels; no Arcana assets or code are copied into Godscar.
+The earlier experimental `catalog.mjs`, `engine.mjs`, and `tests.mjs` remain separate and are not loaded by the current screen. Neither the mock UI nor those files are integrated into original `web/src/`. The former public root page and its save format remain in repository history; the current site does not load that page or read/write its save. UI organization takes inspiration from Arcana's mobile navigation and panels; no Arcana assets or code are copied into Godscar.
 
 ## Runtime and build
 ```text
@@ -23,22 +23,24 @@ web/src/shell.html  (phone-first HTML/CSS)
 preview/build.mjs or web/build.py  (inline scripts)
        |
        v
-web/dist/index.html  (standalone browser game)
+web/dist/index.html  (preserved earlier browser-game build; not served at root)
+
+lab/combat/index.html + explicit screen assets
        |
        v
-preview/server.mjs  (serves page /health only; NO gameplay server)
+preview/server.mjs  (serves chosen screen at /, plus /health; NO gameplay server)
        |
        v
 Railway: Godscar Browser Preview  (public preview/browser branch)
 ```
 
 ## What each layer is responsible for
-- **`web/src/sim.js`:** simulation rules, character and item definitions, deterministic RNG, stats, enemy event scheduling, damage, fight duration, offline catch-up, bosses, projections, migration, action validation. The `doAction` entrypoint is the only intended player-state mutation interface. `SIM_VERSION` currently equals 4.
-- **`web/src/ui.js`:** DOM, tabs, game presentation, event handlers, invoking `doAction`, live rendering, projections shown to player, browser save/load, import/export, single-tab lock, conditional Claude-only cloud-save integration. It holds local UI state and some gameplay state for current client prototype; this is **not a server-client separation yet**.
-- **`web/src/shell.html`:** current markup, styles, visual surface and inline composition placeholders.
+- **`web/src/sim.js`:** preserved earlier simulation rules, character and item definitions, deterministic RNG, stats, enemy event scheduling, damage, fight duration, offline catch-up, bosses, projections, migration, action validation. The `doAction` entrypoint is the only intended player-state mutation interface. `SIM_VERSION` equals 4 in that historical code.
+- **`web/src/ui.js`:** preserved earlier DOM, tabs, game presentation, event handlers, invoking `doAction`, live rendering, projections, browser save/load, import/export, and single-tab lock. This earlier UI is not served by the current website and is **not a server-client separation**.
+- **`web/src/shell.html`:** preserved earlier markup and styles; not the current public screen.
 - **`web/test/`:** actions fuzzing/determinism, class-evolution tests, migration, simulated balance and optional Playwright phone view tests.
 - **`preview/build.mjs`:** takes the three original source files and injects them unchanged into the shell's placeholders for local/Railway serving.
-- **`preview/server.mjs`:** trivial HTTP page server and health endpoint; **does not run multiplayer/game authority**.
+- **`preview/server.mjs`:** serves the chosen combat + Character presentation at `/`, its allowlisted assets, aliases that redirect old page routes to root, and `/health`; **does not run gameplay or multiplayer authority**.
 - **`feature/server-phase1` branch `server/`:** separate Node + PostgreSQL account/session and authoritative-action prototype; UI is not wired to it. Branch has production restrictions; read its `server/README.md`.
 - **`godot/` on `main`:** rejected fidelity-losing native rewrite; not source of current gameplay truth.
 

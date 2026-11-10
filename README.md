@@ -1,11 +1,16 @@
 # Godscar
 
-Online idle ARPG for the browser, phone first. One character, combat never stops, the build decides how far you get.
+Godscar is a phone-first dark-fantasy idle ARPG in development.
 
-The game lives in `web/`. See `web/README.md` for layout, build and tests.
+## Current website direction
 
-The earlier Godot/Android action prototype and its art packs were removed from this branch. They are kept on the `archive/godot` branch and in git history.
+The preview root serves the selected illustrated Combat screen and phone-first Character menu. Combat remains the home view; Character opens to Equipment, Inventory, Crafting, and Materials. See [the preview](https://godscar-browser-preview-preview.up.railway.app/) and [project handoff](START-HERE.md).
 
-## Next
+The current screen is a presentation prototype. Combat values, character items, crafting, and materials are sample content and are not connected to gameplay simulation or saves. Prior website page routes redirect to the current screen.
 
-Server-authoritative from day one: the server runs `web/src/sim.js` and every player change goes through `doAction`, so the client can't edit its own progress.
+## Preserved development material
+
+The earlier browser simulation remains in `web/src/` as reference code for deliberate systems reuse. It is not the current root screen. The former Arsenal interface and Living Arsenal experiment are not public site routes. The rejected Godot rewrite is historical only.
+
+See [docs/PROJECT-STATE.md](docs/PROJECT-STATE.md) for verified status and [docs/DECISIONS.md](docs/DECISIONS.md) for owner-approved direction.
+

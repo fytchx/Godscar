@@ -1,9 +1,9 @@
-# Godscar combat and character preview
+# Godscar current combat and Character screen
 
-A phone-first browser preview that keeps the current continuous-combat screen as the primary view. The Character button and bottom navigation open the approved Character prototype as a full-screen overlay; its Fight navigation button returns to the running combat page.
+This is the selected phone-first presentation and the only public game entry screen. The preview server serves index.html at /. Former page routes redirect there. Screen modules and art are served through a fixed /lab/combat/* allowlist.
 
-The Character view follows `Godscar_Character_Screen_Preview.png`: equipment first, 12 visible positions (helmet, pauldrons, chest, gloves, belt, leggings, boots, two rings, amulet, main hand and off hand), summary stats, Oathkeeper loadout, combat role, four character sections, and Fight / Character / World / Skills / Menu bottom navigation. Inventory, crafting and materials remain sample UI content.
+The fight screen keeps the monster arena central, with a subtle auto-attack bar, compact abbreviated lower-right DPS, inscription timers, status feedback, and reward summary. The Character button opens the approved Equipment-first view with 12 positions, stats, the Oathkeeper loadout, Inventory, Crafting, Materials, and Fight / Character / World / Skills / Menu navigation.
 
-Character presentation is isolated in `character.html`; its CSS design tokens are at the top of that file. Gear and RPG icons come from the approved Character prototype pack and are served through an explicit allowlist. The combat screen and timer remain in the parent page while Character is open. No original game simulation, inventory, crafting or saves are read or changed.
+CSS design tokens and appearance controls make the visual system adjustable. Preserve that customization structure when extending the screens.
 
-The combat page retains the compact lower-right DPS counter and muted auto-attack timer. Its hit effects and values remain illustrative.
+Combat, inventory, crafting, materials, and character numbers are illustrative. This presentation does not load the preserved earlier simulation, modify old saves, or claim server-authoritative gameplay.

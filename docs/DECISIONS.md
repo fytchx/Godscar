@@ -1,5 +1,11 @@
 # Decisions log (owner decisions vs engineering observations)
 
+## 2026-11-09 UTC — Make the combat + Character direction the only public website version
+- **Owner direction:** The illustrated combat screen and matching phone-first Character prototype shown in the approved references are where Godscar should continue. Remove earlier website versions from public routes so they cannot be confused with this direction.
+- **Implementation boundary:** Serve the selected presentation at `/`. Former `/lab`, `/lab/combat/`, and `/lab/arsenal/` page URLs redirect to `/`. Keep prior code recoverable in Git history; do not combine its game engine or saves with the selected UI by default.
+- **Data boundary:** Combat numbers, inventory, recipes and materials remain sample content until a separate explicit game-state integration is designed.
+
+
 ## 2026-11-09 UTC — Corrected: Character must match the approved phone preview
 - **Owner feedback:** The first site version did not look like the approved Character preview.
 - **Implementation:** Use the original prototype structure and actual individual art: 12 visible slots, stat deltas, Oathkeeper loadout, combat-role card, Character tabs, and the bottom navigation. Keep Fight as the existing parent combat view and place Character over it.

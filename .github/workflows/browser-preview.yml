@@ -1,4 +1,4 @@
-name: Godscar original browser preview checks
+name: Godscar current-site and preserved simulation checks
 
 on:
   push:
@@ -14,7 +14,7 @@ permissions:
   contents: read
 
 jobs:
-  original-game:
+  current-site:
     runs-on: ubuntu-latest
     timeout-minutes: 12
     steps:
@@ -22,11 +22,11 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Verify original game logic tests
+      - name: Verify preserved simulation logic
         run: npm test
-      - name: Build the preserved browser version
+      - name: Build preserved simulation reference bundle
         run: npm run build
-      - name: Serve and smoke-test the full game page
+      - name: Serve and smoke-test the selected combat and Character screen
         shell: bash
         run: |
           set -euo pipefail
@@ -38,10 +38,5 @@ jobs:
           done
           node -e "const h=require('/tmp/godscar-health.json');if(h.status!=='ok'||h.serverAuthoritative)process.exit(1)"
           curl -fsS http://127.0.0.1:3105/ > /tmp/godscar-browser.html
-          node -e "const fs=require('fs');const s=fs.readFileSync('/tmp/godscar-browser.html','utf8');for(const k of ['GODSCAR SIM CORE','The Ashen Hollow','Scarbound Jewel','Fight','Forge']){if(!s.includes(k))throw Error('Missing original feature: '+k)};if(s.includes('/*__SIM__*/')||s.includes('/*__UI__*/'))throw Error('Unbuilt page')"
-      - name: Upload standalone original browser game
-        uses: actions/upload-artifact@v4
-        with:
-          name: Godscar-Original-Browser-Preview
-          path: web/dist/index.html
-          retention-days: 30
+          node -e "const fs=require('fs');const s=fs.readFileSync('/tmp/godscar-browser.html','utf8');for(const k of ['id=\"characterMenu\"','id=\"arenaDps\"','COMBAT PREVIEW','ART REVIEW MOCKUP']){if(!s.includes(k))throw Error('Missing selected screen element: '+k)};if(s.includes('GODSCAR SIM CORE'))throw Error('Retired original page is still public')"
+          curl -fsSI http://127.0.0.1:3105/lab/arsenal/ | grep -qi 'location: /'
