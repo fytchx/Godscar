@@ -1,0 +1,91 @@
+Godscar Combat Model v1 early-game check — raw results
+No repository code changed. SIM_VERSION 7 source loaded in-memory with Combat Model v1: ratio armor, k=0.00045 × stage-scaled average unsplit monster hit; monster crit 8% chance/3x; 35% crit-reduction cap. Old comparison uses the earlier floor/no-monster-crit sim copied at ../Godscar-slice/web/src/sim.js.
+Fixed-stage tests: Paladin level 20 with realistic Rare gear fixture for seeds 31 and 2026; one sim-hour replay per row. Stages 10/20/30/40 tested against physical Husk and fire Wisp. Tiers: underprepared=0.75x armor/0% crit reduction; prepared=1x/0%; well-prepared=1.5x/35%. The well-prepared reduction is test-only. Old rules are prepared/1x armor only.
+Progression pace tests: same level-20 Rare Paladin starting fixture, seed, and bot policy; target stage 30 means highest unlocked stage. Optimizer checks every 5 minutes; lazy checks every 30 minutes, spends passives and equips its best projected-score item; it crafts a Rare fire-resistance ring only when all recipe materials are already held. No deliberate farming. Deaths/hour are observed over each run up to stage 30.
+Unverified: this is not a level-1 new-character start. Fixed-stage rows hold the starter fixture at one monster for a full hour and do not test all monster families, classes, gear variance, or player intervention. The test-only crit-reduction stat is not in the live simulation/UI. This comparison does not establish actual preview behavior or phone play.
+
+FIXED-STAGE RESULTS (deaths/hour; seeds listed 31/2026):
+husk 10 | v1 under 0/0 | prepared 0/0 | well 0/0 | old prepared 0/0
+husk 20 | v1 under 0/0 | prepared 0/0 | well 0/0 | old prepared 0/0
+husk 30 | v1 under 0/0 | prepared 0/0 | well 0/0 | old prepared 117/115
+husk 40 | v1 under 0/0 | prepared 0/0 | well 0/0 | old prepared 267/269
+wisp 10 | v1 under 0/0 | prepared 0/0 | well 0/0 | old prepared 0/0
+wisp 20 | v1 under 0/66 | prepared 0/66 | well 0/61 | old prepared 0/46
+wisp 30 | v1 under 143/233 | prepared 143/233 | well 143/232 | old prepared 130/228
+wisp 40 | v1 under 251/279 | prepared 251/279 | well 251/279 | old prepared 249/279
+
+STAGE-30 BOT PACE:
+{"rules":"old-floor-no-crit","seed":31,"policy":"optimizer","minutesToStage30":61.32,"deathsPerHour":24.46,"stage":30,"elapsedMin":61.32}
+{"rules":"old-floor-no-crit","seed":31,"policy":"lazy","minutesToStage30":63.5,"deathsPerHour":8.5,"stage":30,"elapsedMin":63.5}
+{"rules":"old-floor-no-crit","seed":2026,"policy":"optimizer","minutesToStage30":57.43,"deathsPerHour":20.89,"stage":30,"elapsedMin":57.43}
+{"rules":"old-floor-no-crit","seed":2026,"policy":"lazy","minutesToStage30":88.1,"deathsPerHour":6.81,"stage":30,"elapsedMin":88.1}
+{"rules":"v1","seed":31,"policy":"optimizer","minutesToStage30":49.57,"deathsPerHour":7.26,"stage":30,"elapsedMin":49.57}
+{"rules":"v1","seed":31,"policy":"lazy","minutesToStage30":47.57,"deathsPerHour":1.26,"stage":30,"elapsedMin":47.57}
+{"rules":"v1","seed":2026,"policy":"optimizer","minutesToStage30":56.28,"deathsPerHour":8.53,"stage":30,"elapsedMin":56.28}
+{"rules":"v1","seed":2026,"policy":"lazy","minutesToStage30":64.03,"deathsPerHour":1.87,"stage":30,"elapsedMin":64.03}
+
+FULL FIXED-STAGE JSONL:
+{"rules":"v1","seed":31,"monster":"husk","stage":10,"tierArmorMultiplier":1,"critReductionPct":0,"deaths":0,"deathsPerHour":0,"life":1161,"armor":203.79,"tier":"prepared"}
+{"rules":"v1","seed":31,"monster":"husk","stage":10,"tierArmorMultiplier":0.75,"critReductionPct":0,"deaths":0,"deathsPerHour":0,"life":1161,"armor":152.84,"tier":"underprepared"}
+{"rules":"v1","seed":31,"monster":"husk","stage":10,"tierArmorMultiplier":1.5,"critReductionPct":35,"deaths":0,"deathsPerHour":0,"life":1161,"armor":305.69,"tier":"well-prepared"}
+{"rules":"old-floor-no-crit","seed":31,"monster":"husk","stage":10,"tierArmorMultiplier":1,"critReductionPct":0,"deaths":0,"deathsPerHour":0,"life":1161,"armor":203.79,"tier":"prepared"}
+{"rules":"v1","seed":31,"monster":"husk","stage":20,"tierArmorMultiplier":1,"critReductionPct":0,"deaths":0,"deathsPerHour":0,"life":1232,"armor":205.95,"tier":"prepared"}
+{"rules":"v1","seed":31,"monster":"husk","stage":20,"tierArmorMultiplier":0.75,"critReductionPct":0,"deaths":0,"deathsPerHour":0,"life":1232,"armor":154.46,"tier":"underprepared"}
+{"rules":"v1","seed":31,"monster":"husk","stage":20,"tierArmorMultiplier":1.5,"critReductionPct":35,"deaths":0,"deathsPerHour":0,"life":1232,"armor":308.93,"tier":"well-prepared"}
+{"rules":"old-floor-no-crit","seed":31,"monster":"husk","stage":20,"tierArmorMultiplier":1,"critReductionPct":0,"deaths":0,"deathsPerHour":0,"life":1232,"armor":205.95,"tier":"prepared"}
+{"rules":"v1","seed":31,"monster":"husk","stage":30,"tierArmorMultiplier":1,"critReductionPct":0,"deaths":0,"deathsPerHour":0,"life":1161,"armor":203.79,"tier":"prepared"}
+{"rules":"v1","seed":31,"monster":"husk","stage":30,"tierArmorMultiplier":0.75,"critReductionPct":0,"deaths":0,"deathsPerHour":0,"life":1161,"armor":152.84,"tier":"underprepared"}
+{"rules":"v1","seed":31,"monster":"husk","stage":30,"tierArmorMultiplier":1.5,"critReductionPct":35,"deaths":0,"deathsPerHour":0,"life":1161,"armor":305.69,"tier":"well-prepared"}
+{"rules":"old-floor-no-crit","seed":31,"monster":"husk","stage":30,"tierArmorMultiplier":1,"critReductionPct":0,"deaths":117,"deathsPerHour":117,"life":1046,"armor":200.19,"tier":"prepared"}
+{"rules":"v1","seed":31,"monster":"husk","stage":40,"tierArmorMultiplier":1,"critReductionPct":0,"deaths":0,"deathsPerHour":0,"life":977,"armor":198.03,"tier":"prepared"}
+{"rules":"v1","seed":31,"monster":"husk","stage":40,"tierArmorMultiplier":0.75,"critReductionPct":0,"deaths":0,"deathsPerHour":0,"life":977,"armor":148.52,"tier":"underprepared"}
+{"rules":"v1","seed":31,"monster":"husk","stage":40,"tierArmorMultiplier":1.5,"critReductionPct":35,"deaths":0,"deathsPerHour":0,"life":977,"armor":297.05,"tier":"well-prepared"}
+{"rules":"old-floor-no-crit","seed":31,"monster":"husk","stage":40,"tierArmorMultiplier":1,"critReductionPct":0,"deaths":267,"deathsPerHour":267,"life":977,"armor":198.03,"tier":"prepared"}
+{"rules":"v1","seed":31,"monster":"wisp","stage":10,"tierArmorMultiplier":1,"critReductionPct":0,"deaths":0,"deathsPerHour":0,"life":1161,"armor":203.79,"tier":"prepared"}
+{"rules":"v1","seed":31,"monster":"wisp","stage":10,"tierArmorMultiplier":0.75,"critReductionPct":0,"deaths":0,"deathsPerHour":0,"life":1161,"armor":152.84,"tier":"underprepared"}
+{"rules":"v1","seed":31,"monster":"wisp","stage":10,"tierArmorMultiplier":1.5,"critReductionPct":35,"deaths":0,"deathsPerHour":0,"life":1161,"armor":305.69,"tier":"well-prepared"}
+{"rules":"old-floor-no-crit","seed":31,"monster":"wisp","stage":10,"tierArmorMultiplier":1,"critReductionPct":0,"deaths":0,"deathsPerHour":0,"life":1161,"armor":203.79,"tier":"prepared"}
+{"rules":"v1","seed":31,"monster":"wisp","stage":20,"tierArmorMultiplier":1,"critReductionPct":0,"deaths":0,"deathsPerHour":0,"life":1256,"armor":206.67,"tier":"prepared"}
+{"rules":"v1","seed":31,"monster":"wisp","stage":20,"tierArmorMultiplier":0.75,"critReductionPct":0,"deaths":0,"deathsPerHour":0,"life":1256,"armor":155,"tier":"underprepared"}
+{"rules":"v1","seed":31,"monster":"wisp","stage":20,"tierArmorMultiplier":1.5,"critReductionPct":35,"deaths":0,"deathsPerHour":0,"life":1256,"armor":310.01,"tier":"well-prepared"}
+{"rules":"old-floor-no-crit","seed":31,"monster":"wisp","stage":20,"tierArmorMultiplier":1,"critReductionPct":0,"deaths":0,"deathsPerHour":0,"life":1256,"armor":206.67,"tier":"prepared"}
+{"rules":"v1","seed":31,"monster":"wisp","stage":30,"tierArmorMultiplier":1,"critReductionPct":0,"deaths":143,"deathsPerHour":143,"life":1138,"armor":203.07,"tier":"prepared"}
+{"rules":"v1","seed":31,"monster":"wisp","stage":30,"tierArmorMultiplier":0.75,"critReductionPct":0,"deaths":143,"deathsPerHour":143,"life":1138,"armor":152.3,"tier":"underprepared"}
+{"rules":"v1","seed":31,"monster":"wisp","stage":30,"tierArmorMultiplier":1.5,"critReductionPct":35,"deaths":143,"deathsPerHour":143,"life":1138,"armor":304.61,"tier":"well-prepared"}
+{"rules":"old-floor-no-crit","seed":31,"monster":"wisp","stage":30,"tierArmorMultiplier":1,"critReductionPct":0,"deaths":130,"deathsPerHour":130,"life":1138,"armor":203.07,"tier":"prepared"}
+{"rules":"v1","seed":31,"monster":"wisp","stage":40,"tierArmorMultiplier":1,"critReductionPct":0,"deaths":251,"deathsPerHour":251,"life":977,"armor":198.03,"tier":"prepared"}
+{"rules":"v1","seed":31,"monster":"wisp","stage":40,"tierArmorMultiplier":0.75,"critReductionPct":0,"deaths":251,"deathsPerHour":251,"life":977,"armor":148.52,"tier":"underprepared"}
+{"rules":"v1","seed":31,"monster":"wisp","stage":40,"tierArmorMultiplier":1.5,"critReductionPct":35,"deaths":251,"deathsPerHour":251,"life":977,"armor":297.05,"tier":"well-prepared"}
+{"rules":"old-floor-no-crit","seed":31,"monster":"wisp","stage":40,"tierArmorMultiplier":1,"critReductionPct":0,"deaths":249,"deathsPerHour":249,"life":977,"armor":198.03,"tier":"prepared"}
+{"rules":"v1","seed":2026,"monster":"husk","stage":10,"tierArmorMultiplier":1,"critReductionPct":0,"deaths":0,"deathsPerHour":0,"life":1176,"armor":221.39,"tier":"prepared"}
+{"rules":"v1","seed":2026,"monster":"husk","stage":10,"tierArmorMultiplier":0.75,"critReductionPct":0,"deaths":0,"deathsPerHour":0,"life":1176,"armor":166.04,"tier":"underprepared"}
+{"rules":"v1","seed":2026,"monster":"husk","stage":10,"tierArmorMultiplier":1.5,"critReductionPct":35,"deaths":0,"deathsPerHour":0,"life":1176,"armor":332.08,"tier":"well-prepared"}
+{"rules":"old-floor-no-crit","seed":2026,"monster":"husk","stage":10,"tierArmorMultiplier":1,"critReductionPct":0,"deaths":0,"deathsPerHour":0,"life":1176,"armor":221.39,"tier":"prepared"}
+{"rules":"v1","seed":2026,"monster":"husk","stage":20,"tierArmorMultiplier":1,"critReductionPct":0,"deaths":0,"deathsPerHour":0,"life":1223,"armor":222.83,"tier":"prepared"}
+{"rules":"v1","seed":2026,"monster":"husk","stage":20,"tierArmorMultiplier":0.75,"critReductionPct":0,"deaths":0,"deathsPerHour":0,"life":1223,"armor":167.12,"tier":"underprepared"}
+{"rules":"v1","seed":2026,"monster":"husk","stage":20,"tierArmorMultiplier":1.5,"critReductionPct":35,"deaths":0,"deathsPerHour":0,"life":1223,"armor":334.24,"tier":"well-prepared"}
+{"rules":"old-floor-no-crit","seed":2026,"monster":"husk","stage":20,"tierArmorMultiplier":1,"critReductionPct":0,"deaths":0,"deathsPerHour":0,"life":1223,"armor":222.83,"tier":"prepared"}
+{"rules":"v1","seed":2026,"monster":"husk","stage":30,"tierArmorMultiplier":1,"critReductionPct":0,"deaths":0,"deathsPerHour":0,"life":1130,"armor":219.95,"tier":"prepared"}
+{"rules":"v1","seed":2026,"monster":"husk","stage":30,"tierArmorMultiplier":0.75,"critReductionPct":0,"deaths":0,"deathsPerHour":0,"life":1130,"armor":164.96,"tier":"underprepared"}
+{"rules":"v1","seed":2026,"monster":"husk","stage":30,"tierArmorMultiplier":1.5,"critReductionPct":35,"deaths":0,"deathsPerHour":0,"life":1130,"armor":329.92,"tier":"well-prepared"}
+{"rules":"old-floor-no-crit","seed":2026,"monster":"husk","stage":30,"tierArmorMultiplier":1,"critReductionPct":0,"deaths":115,"deathsPerHour":115,"life":1016,"armor":216.35,"tier":"prepared"}
+{"rules":"v1","seed":2026,"monster":"husk","stage":40,"tierArmorMultiplier":1,"critReductionPct":0,"deaths":0,"deathsPerHour":0,"life":1016,"armor":216.35,"tier":"prepared"}
+{"rules":"v1","seed":2026,"monster":"husk","stage":40,"tierArmorMultiplier":0.75,"critReductionPct":0,"deaths":0,"deathsPerHour":0,"life":1016,"armor":162.26,"tier":"underprepared"}
+{"rules":"v1","seed":2026,"monster":"husk","stage":40,"tierArmorMultiplier":1.5,"critReductionPct":35,"deaths":0,"deathsPerHour":0,"life":1016,"armor":324.52,"tier":"well-prepared"}
+{"rules":"old-floor-no-crit","seed":2026,"monster":"husk","stage":40,"tierArmorMultiplier":1,"critReductionPct":0,"deaths":269,"deathsPerHour":269,"life":1016,"armor":216.35,"tier":"prepared"}
+{"rules":"v1","seed":2026,"monster":"wisp","stage":10,"tierArmorMultiplier":1,"critReductionPct":0,"deaths":0,"deathsPerHour":0,"life":1199,"armor":222.11,"tier":"prepared"}
+{"rules":"v1","seed":2026,"monster":"wisp","stage":10,"tierArmorMultiplier":0.75,"critReductionPct":0,"deaths":0,"deathsPerHour":0,"life":1199,"armor":166.58,"tier":"underprepared"}
+{"rules":"v1","seed":2026,"monster":"wisp","stage":10,"tierArmorMultiplier":1.5,"critReductionPct":35,"deaths":0,"deathsPerHour":0,"life":1199,"armor":333.16,"tier":"well-prepared"}
+{"rules":"old-floor-no-crit","seed":2026,"monster":"wisp","stage":10,"tierArmorMultiplier":1,"critReductionPct":0,"deaths":0,"deathsPerHour":0,"life":1199,"armor":222.11,"tier":"prepared"}
+{"rules":"v1","seed":2026,"monster":"wisp","stage":20,"tierArmorMultiplier":1,"critReductionPct":0,"deaths":66,"deathsPerHour":66,"life":1223,"armor":222.83,"tier":"prepared"}
+{"rules":"v1","seed":2026,"monster":"wisp","stage":20,"tierArmorMultiplier":0.75,"critReductionPct":0,"deaths":66,"deathsPerHour":66,"life":1223,"armor":167.12,"tier":"underprepared"}
+{"rules":"v1","seed":2026,"monster":"wisp","stage":20,"tierArmorMultiplier":1.5,"critReductionPct":35,"deaths":61,"deathsPerHour":61,"life":1223,"armor":334.24,"tier":"well-prepared"}
+{"rules":"old-floor-no-crit","seed":2026,"monster":"wisp","stage":20,"tierArmorMultiplier":1,"critReductionPct":0,"deaths":46,"deathsPerHour":46,"life":1223,"armor":222.83,"tier":"prepared"}
+{"rules":"v1","seed":2026,"monster":"wisp","stage":30,"tierArmorMultiplier":1,"critReductionPct":0,"deaths":233,"deathsPerHour":233,"life":1016,"armor":216.35,"tier":"prepared"}
+{"rules":"v1","seed":2026,"monster":"wisp","stage":30,"tierArmorMultiplier":0.75,"critReductionPct":0,"deaths":233,"deathsPerHour":233,"life":1016,"armor":162.26,"tier":"underprepared"}
+{"rules":"v1","seed":2026,"monster":"wisp","stage":30,"tierArmorMultiplier":1.5,"critReductionPct":35,"deaths":232,"deathsPerHour":232,"life":1016,"armor":324.52,"tier":"well-prepared"}
+{"rules":"old-floor-no-crit","seed":2026,"monster":"wisp","stage":30,"tierArmorMultiplier":1,"critReductionPct":0,"deaths":228,"deathsPerHour":228,"life":1016,"armor":216.35,"tier":"prepared"}
+{"rules":"v1","seed":2026,"monster":"wisp","stage":40,"tierArmorMultiplier":1,"critReductionPct":0,"deaths":279,"deathsPerHour":279,"life":1016,"armor":216.35,"tier":"prepared"}
+{"rules":"v1","seed":2026,"monster":"wisp","stage":40,"tierArmorMultiplier":0.75,"critReductionPct":0,"deaths":279,"deathsPerHour":279,"life":1016,"armor":162.26,"tier":"underprepared"}
+{"rules":"v1","seed":2026,"monster":"wisp","stage":40,"tierArmorMultiplier":1.5,"critReductionPct":35,"deaths":279,"deathsPerHour":279,"life":1016,"armor":324.52,"tier":"well-prepared"}
+{"rules":"old-floor-no-crit","seed":2026,"monster":"wisp","stage":40,"tierArmorMultiplier":1,"critReductionPct":0,"deaths":279,"deathsPerHour":279,"life":1016,"armor":216.35,"tier":"prepared"}

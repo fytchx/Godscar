@@ -237,4 +237,4 @@ function main() {
 }
 
 if (require.main === module) main();
-module.exports = { runOptimizer, combatReplay, makeBuild, fixture };
+module.exports = { runOptimizer, combatReplay, makeBuild, fixture, target, checkin };
