@@ -1,0 +1,37 @@
+Godscar level-1 Combat Model v1 report — raw results
+Fresh Paladin, level 1, only the Common starter weapon, seeds 31 and 2026. Each bot was run up to six sim hours, or ten sim minutes after reaching stage 30. No repo simulation code was changed.
+V1 was a temporary in-memory replay variant: k factor 0.00045 using the monster stage average unsplit hit; monster crit 8% at 3x. Starter gear has no crit-reduction stat, so reduction is 0%. Old-rules comparison uses the same current sim content and bot rules, but restores the old physical afterArmor formula with its 25% floor and no monster crit.
+Optimizer: five-minute check-ins; passive allocation; equip if projected XP/min improves by at least 2% without more projected deaths; upgrades/salvage; choose best projected target. Lazy: 30-minute check-ins; passives; equip one best projected item; craft a Rare fire-resistance ring only when its required materials are already held; no deliberate farming.
+Deaths/hour are measured in active-stage bands: 10 means highest unlocked stage 10–19; 20 means 20–29; 30 means 30–39, for ten minutes after reaching 30. Rates include ordinary and boss deaths in the band. A dash means the bot did not reach that band in six hours.
+
+BOT RAW RESULTS (minutes to highest active unlocked stage; deaths/hour [minutes observed]):
+old optimizer seed 31 | stage 10/20/30: 26.14 / 47.98 / 87.48 | DPH band 10/20/30: 16.48 (21.84m) / 42.54 (39.49m) / 66.00 (10.00m)
+old lazy seed 31 | stage 10/20/30: 61.42 / >360 / >360 | DPH band 10/20/30: 4.22 (298.58m) / — / —
+old optimizer seed 2026 | stage 10/20/30: 17.65 / 28.77 / 65.00 | DPH band 10/20/30: 0.00 (11.12m) / 16.56 (36.23m) / 48.00 (10.00m)
+old lazy seed 2026 | stage 10/20/30: 75.88 / >360 / >360 | DPH band 10/20/30: 6.34 (284.12m) / — / —
+v1 optimizer seed 31 | stage 10/20/30: 15.76 / 29.61 / 69.96 | DPH band 10/20/30: 0.00 (13.85m) / 10.41 (40.34m) / 0.00 (10.00m)
+v1 lazy seed 31 | stage 10/20/30: 60.75 / 240.82 / >360 | DPH band 10/20/30: 0.00 (180.07m) / 2.01 (119.18m) / —
+v1 optimizer seed 2026 | stage 10/20/30: 28.27 / 45.49 / 92.33 | DPH band 10/20/30: 0.00 (17.21m) / 8.97 (46.85m) / 6.00 (10.00m)
+v1 lazy seed 2026 | stage 10/20/30: 77.54 / 167.58 / >360 | DPH band 10/20/30: 0.00 (90.04m) / 2.18 (192.42m) / —
+
+BOT JSONL:
+{"rules":"old","policy":"optimizer","seed":31,"timeToStages":{"10":26.14,"20":47.98,"30":87.48},"deathRateByBand":{"10":{"minutesObserved":21.84,"deaths":6,"dph":16.48},"20":{"minutesObserved":39.49,"deaths":28,"dph":42.54},"30":{"minutesObserved":10,"deaths":11,"dph":66}},"finalStage":31,"runMinutes":97.48,"heroLevel":44,"life":1628,"armor":478.35}
+{"rules":"old","policy":"lazy","seed":31,"timeToStages":{"10":61.42,"20":null,"30":null},"deathRateByBand":{"10":{"minutesObserved":298.58,"deaths":21,"dph":4.22},"20":{"minutesObserved":0,"deaths":0,"dph":null},"30":{"minutesObserved":0,"deaths":0,"dph":null}},"finalStage":16,"runMinutes":360,"heroLevel":20,"life":604,"armor":17.28}
+{"rules":"old","policy":"optimizer","seed":2026,"timeToStages":{"10":17.65,"20":28.77,"30":65},"deathRateByBand":{"10":{"minutesObserved":11.12,"deaths":0,"dph":0},"20":{"minutesObserved":36.23,"deaths":10,"dph":16.56},"30":{"minutesObserved":10,"deaths":8,"dph":48}},"finalStage":35,"runMinutes":75,"heroLevel":43,"life":3232,"armor":555.78}
+{"rules":"old","policy":"lazy","seed":2026,"timeToStages":{"10":75.88,"20":null,"30":null},"deathRateByBand":{"10":{"minutesObserved":284.12,"deaths":30,"dph":6.34},"20":{"minutesObserved":0,"deaths":0,"dph":null},"30":{"minutesObserved":0,"deaths":0,"dph":null}},"finalStage":17,"runMinutes":360,"heroLevel":23,"life":696,"armor":32.81}
+{"rules":"v1","policy":"optimizer","seed":31,"timeToStages":{"10":15.76,"20":29.61,"30":69.96},"deathRateByBand":{"10":{"minutesObserved":13.85,"deaths":0,"dph":0},"20":{"minutesObserved":40.34,"deaths":7,"dph":10.41},"30":{"minutesObserved":10,"deaths":0,"dph":0}},"finalStage":34,"runMinutes":79.96,"heroLevel":43,"life":2427,"armor":453.66}
+{"rules":"v1","policy":"lazy","seed":31,"timeToStages":{"10":60.75,"20":240.82,"30":null},"deathRateByBand":{"10":{"minutesObserved":180.07,"deaths":0,"dph":0},"20":{"minutesObserved":119.18,"deaths":4,"dph":2.01},"30":{"minutesObserved":0,"deaths":0,"dph":null}},"finalStage":23,"runMinutes":360,"heroLevel":21,"life":627,"armor":20.63}
+{"rules":"v1","policy":"optimizer","seed":2026,"timeToStages":{"10":28.27,"20":45.49,"30":92.33},"deathRateByBand":{"10":{"minutesObserved":17.21,"deaths":0,"dph":0},"20":{"minutesObserved":46.85,"deaths":7,"dph":8.97},"30":{"minutesObserved":10,"deaths":1,"dph":6}},"finalStage":34,"runMinutes":102.33,"heroLevel":42,"life":3698,"armor":427.15}
+{"rules":"v1","policy":"lazy","seed":2026,"timeToStages":{"10":77.54,"20":167.58,"30":null},"deathRateByBand":{"10":{"minutesObserved":90.04,"deaths":0,"dph":0},"20":{"minutesObserved":192.42,"deaths":7,"dph":2.18},"30":{"minutesObserved":0,"deaths":0,"dph":null}},"finalStage":29,"runMinutes":360,"heroLevel":26,"life":747,"armor":29.5}
+
+FIXED LEVEL-1 STARTER DAMAGE (expected average hit / maximum single hit; max life 121):
+{"enemy":"husk","stage":10,"type":"phys","avgHit":0.11,"maxHit":0.34,"life":121,"avgPctLife":0.1,"maxPctLife":0.3,"rawAverageHit":25.61,"armor":3,"k":0.012}
+{"enemy":"husk","stage":20,"type":"phys","avgHit":2,"maxHit":5.96,"life":121,"avgPctLife":1.7,"maxPctLife":4.9,"rawAverageHit":108.18,"armor":3,"k":0.049}
+{"enemy":"husk","stage":30,"type":"phys","avgHit":34.02,"maxHit":101.17,"life":121,"avgPctLife":28.1,"maxPctLife":83.6,"rawAverageHit":457.06,"armor":3,"k":0.206}
+{"enemy":"husk","stage":40,"type":"phys","avgHit":503.11,"maxHit":1496.33,"life":121,"avgPctLife":415.8,"maxPctLife":1236.6,"rawAverageHit":1931.06,"armor":3,"k":0.869}
+{"enemy":"wisp","stage":10,"type":"fire","avgHit":33.95,"maxHit":100.96,"life":121,"avgPctLife":28.1,"maxPctLife":83.4,"rawAverageHit":29.26,"armor":3,"k":0.013}
+{"enemy":"wisp","stage":20,"type":"fire","avgHit":143.42,"maxHit":426.55,"life":121,"avgPctLife":118.5,"maxPctLife":352.5,"rawAverageHit":123.64,"armor":3,"k":0.056}
+{"enemy":"wisp","stage":30,"type":"fire","avgHit":605.93,"maxHit":1802.13,"life":121,"avgPctLife":500.8,"maxPctLife":1489.4,"rawAverageHit":522.36,"armor":3,"k":0.235}
+{"enemy":"wisp","stage":40,"type":"fire","avgHit":2560.03,"maxHit":7613.89,"life":121,"avgPctLife":2115.7,"maxPctLife":6292.5,"rawAverageHit":2206.92,"armor":3,"k":0.993}
+
+Interpretation limit: stage 30+ DPH uses a ten-minute sample after stage 30 and may be noisy. The hit table holds the level-1 starter character fixed at each monster stage; actual bots gain levels and gear. These are headless sim results, not player or phone tests.
