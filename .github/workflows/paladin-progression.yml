@@ -1,0 +1,35 @@
+name: Paladin level-one progression bots
+on:
+  push:
+    branches:
+      - slice/paladin-defense
+    paths:
+      - .github/workflows/paladin-progression.yml
+      - web/test/paladin-progression.js
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  bot-progression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Record exact source and run fresh Paladin bots
+        run: |
+          echo "Repo=$GITHUB_REPOSITORY"
+          echo "Branch=$GITHUB_REF_NAME"
+          echo "Commit=$GITHUB_SHA"
+          node web/test/paladin-progression.js 360 | tee /tmp/paladin-bots.jsonl
+      - name: Upload full bot output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: paladin-level1-bots
+          path: /tmp/paladin-bots.jsonl
+          if-no-files-found: ignore

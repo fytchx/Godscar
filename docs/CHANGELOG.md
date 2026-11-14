@@ -1,3 +1,9 @@
+## 2026-11-13 UTC — Add reproducible fresh Paladin progression sweep
+- **Changed:** New `web/test/paladin-progression.js` and one-off/on-demand Actions workflow that prints source repo, branch, commit, command, two seeds, two decision policies and Wisp/Bellkeeper milestones.
+- **Policies:** Optimizer checks every five minutes, lazy every thirty; both start level 1 with Common starter mace, allocate passives, and select targets via the same projection strategy. Optimizer equips/upgrades and salvages; lazy equips one item and crafts fire-counter ring only when actual resources are available. Reports include stage 10/20/30, death bands, Wisp kills/Ember, Bellkeeper attempts/Dawn, and first 20-minute plateau.
+- **Boundary:** Test/report only. Does not change game rules, saved data, UI or deploy. Policies are not claimed to exactly match the archived v7 experimental bot implementation.
+- **Verification:** Workflow outcome to be checked against exact committed SHA; no baseline figures inferred before run.
+
 ## 2026-11-13 UTC — Implement Combat Model v1 in isolated Paladin simulation
 - **Rules:** Set armor coefficient from 0.001 to approved 0.00045 (unsplit stage hit); monster crit chance 8% at 3x; cap crit chance reduction at 35%; 30s death recovery; auto-hunt retreats one stage immediately on death. Death metadata records enemy, damage type, crit flag, time, and damage.
 - **Versioning:** `SIM_VERSION` 7 → 8 due to combat/RNG changes. Save-schema stays version 4 because added metadata/stat defaults are backward compatible; no save migration, UI wiring, or deployment.

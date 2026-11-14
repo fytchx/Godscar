@@ -1,3 +1,5 @@
+> **New v8 bot-run script:** `node web/test/paladin-progression.js 360` on the gameplay branch, seeds 31/2026, optimizer 5-minute and lazy 30-minute checks; an isolated Actions workflow captures exact commit and JSONL. Use generated v8 output rather than comparing it directly to the historical report as though policies were identical.
+
 > **Implementation update (2026-11-13):** The code now applies Combat Model v1 k=0.00045, 8% monster crit at 3x, capped 35% reduction (unobtainable until itemization agreed), 30-second recovery and one-stage auto-retreat; `SIM_VERSION=8`. The table below is the **pre-implementation v7 audit**, retained for comparison, not the current state. Do not run the old experimental scripts without checking their v7 source anchors.
 
 # Godscar gameplay resumption: Paladin slice (2026-11-13)
