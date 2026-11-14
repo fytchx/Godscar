@@ -1,3 +1,9 @@
+## 2026-11-13 UTC — Preserve verified Combat Model v1 level-one bot output
+- **Run source:** `fytchx/Godscar@slice/paladin-defense`, exact bot source commit `1b5808e49d5e986737618ed59d0ee1fa2fbe9da3` (`SIM_VERSION=8`); command `node web/test/paladin-progression.js 360`, seeds 31/2026, optimizer and lazy.
+- **Recorded:** `docs/results/combat-model-v1-paladin-level1.{md,jsonl}` with raw complete four-run results, stage 10/20/30, death rates, Bellkeeper outcomes, Wisp kills and controlled hypothetical fire-counter tests.
+- **Interpretation:** inconsistent early pacing and encounter exposure. No combat algorithm, itemization, simulations, saves, or UI integration changed.
+- **Tests:** dedicated `npm test` CI succeeded on bot source commit; older website dist-diff workflow is a separate inherited failure.
+
 ## 2026-11-13 UTC — Correct Paladin bot scope and add Wisp counter probes
 - **Scope fix:** bot target selection, stage checkpoints and boss attempts now remain in the one-zone Paladin slice, even when the general simulator opens Hollow. Earlier `0f70f21` bot outputs included unintended Woundwarden tests and are **not** the slice baseline.
 - **Lazy crafting fix:** checks equipped items and bag before crafting a fire-resistance ring, then equips the successfully crafted counter rather than consuming more essence on repeated copies.
