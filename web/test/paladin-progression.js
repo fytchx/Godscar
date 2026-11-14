@@ -27,14 +27,15 @@ console.log('BOT_RUN_METADATA ' + JSON.stringify(meta));
 
 const passives = ['might', 'vitality', 'swiftness', 'precision'];
 const timeKey = stage => stage < 10 ? '1-9' : stage < 20 ? '10-19' : stage < 30 ? '20-29' : '30+';
+// The slice intentionally hunts Fallfields only, even after the engine opens Hollow.
 const openStage = g => Math.max(...Sim.MONSTER_KEYS
-  .filter(key => g.zones[Sim.MONSTERS[key].zone])
+  .filter(key => Sim.MONSTERS[key].zone === 'fallfields')
   .map(key => g.unlocked[key]));
 function chooseTarget(g) {
   let best = null;
   for (const key of Sim.MONSTER_KEYS) {
     const monster = Sim.MONSTERS[key];
-    if (!g.zones[monster.zone]) continue;
+    if (monster.zone !== 'fallfields') continue;
     const ceiling = g.unlocked[key];
     for (const level of [...new Set([ceiling, Math.max(Sim.ZONES[monster.zone].minLevel, ceiling - 2)])]) {
       const p = Sim.project(g, { target: { key, level }, secs: 120 });
@@ -79,11 +80,17 @@ function checkin(g, policy) {
     }
   } else {
     // Lazy fires this counter recipe only when its actual material/gold costs are in hand.
-    const hasFireRing = Object.values(g.equip).some(x => x?.affixes?.some(([k]) => k === 'res_fire'));
+    const holdsFireRing = [...Object.values(g.equip), ...g.bag]
+      .some(x => x?.affixes?.some(([k]) => k === 'res_fire'));
     const canAfford = (g.mats.fire || 0) >= 4 && (g.mats.shards || 0) >= 10;
-    if (!hasFireRing && canAfford) {
-      Sim.doAction(g, { type: 'craft', rarity: 'rare', slot: 'ring',
+    if (!holdsFireRing && canAfford) {
+      const error = Sim.doAction(g, { type: 'craft', rarity: 'rare', slot: 'ring',
         ilvl: Math.max(1, Math.min(g.hero.level, openStage(g))), counter: 'res_fire' });
+      if (error === null) {
+        const ring = g.bag.at(-1);
+        if (ring?.affixes.some(([key]) => key === 'res_fire'))
+          Sim.doAction(g, { type: 'equip', id: ring.id, to: Sim.verdictSlot(g, ring) });
+      }
     }
   }
 
@@ -99,11 +106,30 @@ function run(seed, policy) {
   const deathsInBand = { '1-9': 0, '10-19': 0, '20-29': 0, '30+': 0 };
   const history = [{ time: 0, stage: openStage(g) }];
   const bossAttempts = [];
+  const wispProbes = {};
   let nextCheck = interval;
   let firstStall = null;
   function record() {
     const stage = openStage(g);
-    for (const n of TARGETS) if (stage >= n && reached[n] == null) reached[n] = Number((g.t / MINUTE).toFixed(2));
+    for (const n of TARGETS) if (stage >= n && reached[n] == null) {
+      reached[n] = Number((g.t / MINUTE).toFixed(2));
+      // Same seeded build, one hypothetical 15-minute Wisp stage, no enemy unlock requirement.
+      // Treatment equips a test-only +25 fire-resistance ring without altering game RNG.
+      const probe = Sim.project(g, { target: { key: 'wisp', level: n }, secs: 900 });
+      const counter = JSON.parse(JSON.stringify(g));
+      const ring = counter.equip.ring1 || Sim.makeItem({ s: (seed ^ (n * 9176)) >>> 0 }, 'ring', n, { rarity: 'rare' });
+      ring.affixes = [['res_fire', 25]];
+      counter.equip.ring1 = ring;
+      Sim.refresh(counter);
+      const protectedProbe = Sim.project(counter, { target: { key: 'wisp', level: n }, secs: 900 });
+      wispProbes[n] = {
+        fixedStage: n, hypothetical: true, seconds: 900,
+        baseFireRes: Number(g.stats.res.fire.toFixed(2)),
+        counterFireRes: Number(counter.stats.res.fire.toFixed(2)),
+        base: { killsPerMin: probe.kpm, deaths: probe.deaths },
+        counter: { killsPerMin: protectedProbe.kpm, deaths: protectedProbe.deaths }
+      };
+    }
     const last = history[history.length - 1];
     if (stage !== last.stage) {
       if (firstStall == null && g.t - last.time >= 20 * MINUTE)
@@ -128,7 +154,7 @@ function run(seed, policy) {
     if (g.t < nextCheck) continue;
     checkin(g, policy);
     if (g.sigils > 0 && g.t >= (g.bossCooldownUntil || 0)) {
-      const key = g.zones.hollow ? 'woundwarden' : 'bellkeeper';
+      const key = 'bellkeeper'; // the only slice boss; Hollow is explicitly out of scope
       const boss = Sim.BOSSES[key];
       if (boss && g.zones[boss.zone]) {
         const attempt = Sim.doAction(g, { type: 'boss', key, level: g.bossUnlocked[key] });
@@ -156,9 +182,9 @@ function run(seed, policy) {
     seed, policy, reachedMinutes: Object.fromEntries(TARGETS.map(k => [k, reached[k] ?? null])),
     finalStage: openStage(g), heroLevel: g.hero.level, firstStall: wall,
     deathRateByStageBand: bandRates, totalDeaths: Object.values(deathsInBand).reduce((a,b)=>a+b,0),
-    target: g.target, wispKills, emberEssence: g.mats.fire || 0,
+    target: g.target, wispKills, wispProbes, emberEssence: g.mats.fire || 0,
     dawnEssence: g.mats.holy || 0, bellkeeperAttempts: bossAttempts.filter(x=>x.key==='bellkeeper'),
-    bossAttempts, note: 'Enemy unlock stages include other open-zone monsters; minute resolution; no manual farming.'
+    bossAttempts, note: 'Only Fallfields is selected and measured; Hollow is ignored even if unlocked by engine. Wisp probes are hypothetical stage snapshots with test-only resistance, not actual loot. Minute resolution; no manual farming.'
   };
 }
 for (const seed of SEEDS) for (const policy of POLICIES) {

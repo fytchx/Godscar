@@ -1,3 +1,9 @@
+## 2026-11-13 UTC — Correct Paladin bot scope and add Wisp counter probes
+- **Scope fix:** bot target selection, stage checkpoints and boss attempts now remain in the one-zone Paladin slice, even when the general simulator opens Hollow. Earlier `0f70f21` bot outputs included unintended Woundwarden tests and are **not** the slice baseline.
+- **Lazy crafting fix:** checks equipped items and bag before crafting a fire-resistance ring, then equips the successfully crafted counter rather than consuming more essence on repeated copies.
+- **Counter evidence:** records 15-minute fixed-stage hypothetical Wisp exposure from first stage-10/20/30 snapshots, with and without a test-only +25 fire-resistance ring. Explicitly labels snapshots hypothetical and separate from the bot's actual chosen hunt.
+- **Boundary:** test harness only, no simulator, save, UI, bot mechanic, or production deploy changes. Rerun the workflow for the new exact SHA.
+
 ## 2026-11-13 UTC — Add reproducible fresh Paladin progression sweep
 - **Changed:** New `web/test/paladin-progression.js` and one-off/on-demand Actions workflow that prints source repo, branch, commit, command, two seeds, two decision policies and Wisp/Bellkeeper milestones.
 - **Policies:** Optimizer checks every five minutes, lazy every thirty; both start level 1 with Common starter mace, allocate passives, and select targets via the same projection strategy. Optimizer equips/upgrades and salvages; lazy equips one item and crafts fire-counter ring only when actual resources are available. Reports include stage 10/20/30, death bands, Wisp kills/Ember, Bellkeeper attempts/Dawn, and first 20-minute plateau.
