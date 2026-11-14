@@ -1,3 +1,10 @@
+## 2026-11-13 UTC — Implement Combat Model v1 in isolated Paladin simulation
+- **Rules:** Set armor coefficient from 0.001 to approved 0.00045 (unsplit stage hit); monster crit chance 8% at 3x; cap crit chance reduction at 35%; 30s death recovery; auto-hunt retreats one stage immediately on death. Death metadata records enemy, damage type, crit flag, time, and damage.
+- **Versioning:** `SIM_VERSION` 7 → 8 due to combat/RNG changes. Save-schema stays version 4 because added metadata/stat defaults are backward compatible; no save migration, UI wiring, or deployment.
+- **Tests:** Updated ratio-armor invariant; added seeded monster crit, capped reduction, lethal fire hit, retreat, death recovery, and reproducibility checks under `web/test/combat-model-v1.js`. Existing `npm test` script includes the new suite.
+- **Unresolved:** Crit reduction is a mechanic/stat placeholder with no player equipment source; stage-specific elemental resistance scaling is not implemented. Real-time browser simulation remains disconnected.
+- **Verification:** CI pending this commit; older v7 experimental harnesses expect v7 patch anchors and may need adaptation before reuse.
+
 ## 2026-11-13 UTC — Isolate gameplay regression CI from retired website build
 - **Changed:** New `.github/workflows/paladin-slice.yml` runs the existing `npm test` on the `slice/paladin-defense` branch and logs the repository, branch and exact commit.
 - **Why:** The inherited browser workflow fails `web/dist/index.html` generated-file diff before gameplay tests even start. This happened on the prior approved code commit too.

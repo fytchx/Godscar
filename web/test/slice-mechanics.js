@@ -3,9 +3,9 @@
 const assert = require('node:assert/strict');
 const S = require('../src/sim.js');
 
-assert.equal(S.ARMOR_K_FACTOR, 0.001, 'ratio armor uses the approved, explicit tuning coefficient');
+assert.equal(S.ARMOR_K_FACTOR, 0.00045, 'ratio armor uses accepted Combat Model v1 coefficient');
 assert.equal(S.afterPlayerArmor(100, 0, 1000), 100, 'zero armor leaves physical damage unchanged');
-assert.ok(Math.abs(S.afterPlayerArmor(100, 100, 1000) - (100 / 101)) < 1e-10,
+assert.ok(Math.abs(S.afterPlayerArmor(100, 100, 1000) - (100 * 0.45 / 100.45)) < 1e-10,
   'player armor uses armor / (armor + k), with k based on average attacker damage and no 25% floor');
 assert.ok(S.afterPlayerArmor(100, 100, 1000) < S.afterArmor(100, 100), 'the ratio formula replaces the old damage floor');
 

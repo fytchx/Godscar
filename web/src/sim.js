@@ -2,7 +2,7 @@
 // One deterministic event simulation drives live play, offline catch-up, item verdicts, scouting and boss fights.
 // Every player change goes through ACTIONS (doAction), so a server can run this same file and verify them.
 'use strict';
-const SIM_VERSION = 7; // bump whenever a change alters simulation results; the server rejects clients on another version
+const SIM_VERSION = 8; // bump whenever a change alters simulation results; the server rejects clients on another version
 const own = (o, k) => typeof k === 'string' && Object.prototype.hasOwnProperty.call(o, k);
 const isInt = (v, lo, hi) => Number.isInteger(v) && v >= lo && v <= hi;
 
@@ -282,9 +282,17 @@ const BOSSES = {
 const BOSS_KEYS = Object.keys(BOSSES);
 const mdef = key => MONSTERS[key] || BOSSES[key];
 
-const RESPAWN = 0.6, RECOVERY = 12, PULSE = 1, DROP_CHANCE = 0.2, BAG_CAP = 36, OFFLINE_CAP = 24 * 3600, UNLOCK_KILLS = 30;
+const RESPAWN = 0.6, RECOVERY = 30, PULSE = 1, DROP_CHANCE = 0.2, BAG_CAP = 36, OFFLINE_CAP = 24 * 3600, UNLOCK_KILLS = 30;
 // Tunable coefficient: armor K is this fraction of the attacker's average hit.
-const ARMOR_K_FACTOR = 0.001;
+const ARMOR_K_FACTOR = 0.00045;
+// Incoming monster criticals. Reduction is a capped percentage reduction to crit CHANCE,
+// not incoming crit damage. The slice has no gear source for this stat yet.
+const MONSTER_CRIT_CHANCE = 0.08;
+const MONSTER_CRIT_MULTIPLIER = 3;
+const MONSTER_CRIT_REDUCTION_CAP = 35;
+const effectiveMonsterCritChance = reductionPct =>
+  MONSTER_CRIT_CHANCE * (1 - Math.min(MONSTER_CRIT_REDUCTION_CAP, Math.max(0, reductionPct || 0)) / 100);
+const rollMonsterCrit = (rng, reductionPct = 0) => rand(rng) < effectiveMonsterCritChance(reductionPct);
 const SIGIL_KILLS = 150, SIGIL_CAP = 5, BOSS_TIME = 150, PUSH_STREAK = 25;
 const xpToNext = lvl => Math.round(70 * Math.pow(1.19, lvl - 1) + 40 * lvl);
 
@@ -370,7 +378,7 @@ function computeStats(g) {
   const s = {
     life: C.life + C.lifePer * (lvl - 1), armor: C.armor + C.armorPer * (lvl - 1), regen: C.regen * (1 + 0.06 * (lvl - 1)),
     lifeOnHit: 0, reflect: 0, critChance: 5 + C.crit, critMulti: 150, atkSpd: 0, dmgPct: 0, elemPct: 0, goldFind: 0,
-    spellPct: 0, cdr: 0, dodge: 0, armorPen: 0, companionPct: 0, atkDmg: 0, doubleCast: 0,
+    spellPct: 0, cdr: 0, dodge: 0, monsterCritReduction: 0, armorPen: 0, companionPct: 0, atkDmg: 0, doubleCast: 0,
     flat: Object.fromEntries(TYPES.map(t => [t, 0])), res: Object.fromEntries(ELEMS.map(t => [t, 0])),
     attr: {}, aug: {}, sets: {}, itemSpells: [], evo: jw ? hero.cls : null, evoPot: jw ? jw.pot : 0
   };
@@ -406,6 +414,7 @@ function computeStats(g) {
   const allRes = (spec.allRes || 0) + 0.5 * (P.bulwark || 0);
   for (const t of ELEMS) s.res[t] = Math.min(75, s.res[t] + allRes);
   s.dodge = s.evo === 'rogue' ? 0 : Math.min(50, s.dodge + (spec.dodge || 0));
+  s.monsterCritReduction = Math.min(MONSTER_CRIT_REDUCTION_CAP, Math.max(0, s.monsterCritReduction));
   s.armorPen += spec.armorPen || 0;
   s.cdr = Math.min(40, s.cdr + (spec.cdr || 0));
   s.life *= (1 + (spec.lifeMore || 0)) * (1 + 0.03 * (P.vitality || 0)) * (1 + 0.002 * STR);
@@ -464,7 +473,7 @@ function refresh(g) {
 // ---------- COMBAT ----------
 function spawnMonster(key, level) {
   const M = mdef(key), gr = monG(level), tf = ZONES[M.zone].tough;
-  return { key, level, hp: M.hp * gr * tf, max: M.hp * gr * tf, dmg: M.dmg * gr * tf, armor: M.armor * gr * tf, interval: M.interval,
+  return { key, level, hp: M.hp * gr * tf, max: M.hp * gr * tf, dmg: M.dmg * gr * tf, averageUnsplitHit: M.dmg * gr * tf, armor: M.armor * gr * tf, interval: M.interval,
     res: M.res || {}, regenPct: M.regenPct || 0, evade: M.evade || 0, blighted: !!M.blighted,
     burnDps: 0, burnUntil: 0, bleedDps: 0, bleedUntil: 0, chill: 0, chillUntil: 0, shockUntil: 0, shockAmt: 0, next: 0, stacks: 0 };
 }
@@ -635,7 +644,9 @@ function monsterAttack(g, out, log) {
   if (S.dodge && rand(r) * 100 < S.dodge) return;
   const ward = f.buffs.frostward > g.t;
   let d = m.dmg * rr(r, 0.85, 1.15);
-  d = M.dmgType === 'phys' ? afterPlayerArmor(d, S.armor * (ward ? 1.5 : 1), m.dmg) : d * (1 - Math.min(85, S.res[M.dmgType] + (ward ? 25 : 0)) / 100);
+  const critical = rollMonsterCrit(r, S.monsterCritReduction);
+  if (critical) { d *= MONSTER_CRIT_MULTIPLIER; out.monsterCrits++; }
+  d = M.dmgType === 'phys' ? afterPlayerArmor(d, S.armor * (ward ? 1.5 : 1), m.averageUnsplitHit) : d * (1 - Math.min(85, S.res[M.dmgType] + (ward ? 25 : 0)) / 100);
   if (f.shield > 0) { const a = Math.min(f.shield, d); f.shield -= a; d -= a; }
   f.hp -= d; out.dmgTaken += d;
   if (S.reflect > 0) {
@@ -644,7 +655,10 @@ function monsterAttack(g, out, log) {
     else th = afterArmor(th, m.armor);
     m.hp -= th; out.dmgDealt += th;
   }
-  if (f.hp <= 0) { die(g, out, log); return; }
+  if (f.hp <= 0) {
+    die(g, out, log, { enemy: M.name, type: TYPE_NAMES[M.dmgType] || M.dmgType, critical, damage: d });
+    return;
+  }
   if (m.hp <= 0) killMonster(g, out, log);
 }
 function pulse(g, out, log) {
@@ -663,17 +677,28 @@ function pulse(g, out, log) {
   if (f.mon && f.mon.hp <= 0) killMonster(g, out, log);
 }
 
-function die(g, out, log) {
+function die(g, out, log, cause = null) {
   const f = g.fight;
   if (g.boss && f.mon) out.bossHpRemaining = Math.max(0, f.mon.hp);
+  const target = mdef(g.target.key);
+  g.lastDeath = {
+    enemy: cause?.enemy || target.name,
+    type: cause?.type || 'unknown',
+    critical: !!cause?.critical,
+    damage: Math.round((cause?.damage || 0) * 100) / 100,
+    at: g.t
+  };
   f.hp = 0; f.mon = null; f.deadUntil = g.t + RECOVERY; f.shield = 0;
   out.deaths++; g.life.deaths++;
   if (g.boss) return;
-  log && log(`Slain by the ${mdef(g.target.key).name}. Recovering for ${RECOVERY}s.`, 'death');
+  const reason = cause ? `Slain by ${cause.enemy} (${cause.type}${cause.critical ? ', critical hit' : ''}).`
+    : `Slain while fighting ${target.name}.`;
+  log && log(`${reason} Recovering for ${RECOVERY}s.`, 'death');
   g.streak = 0;
   g.deathsHere = (g.deathsHere || 0) + 1;
-  const minL = ZONES[mdef(g.target.key).zone].minLevel;
-  if (g.autoPush && g.deathsHere > (g.pushRetries ?? 1) && g.target.level > minL) {
+  // The automatic hunt retreats exactly one stage per death; manually chosen stages stay put.
+  const minL = ZONES[target.zone].minLevel;
+  if (g.autoPush && g.target.level > minL) {
     g.target.level--; g.deathsHere = 0;
     log && log(`Auto-push: back to stage ${g.target.level}.`, 'sys');
   }
@@ -757,7 +782,7 @@ function receiveItem(g, it, out, log) {
   log && log(`Found ${it.name} (${RARITY_NAMES[it.rarity]}).`, 'loot:' + it.rarity);
 }
 function receiveJewel(g, j, out, log) { g.jewels.push(j); out.jewels = (out.jewels || 0) + 1; notice(g, 'jewel'); log && log('A Scarbound Jewel pulses in the ash.', 'loot:jewel'); }
-function emptyOut() { return { kills: 0, xp: 0, gold: 0, deaths: 0, levels: 0, items: 0, salvaged: 0, salvageGold: 0, notable: [], dmgDealt: 0, dmgTaken: 0, mats: {}, sigils: 0, jewels: 0 }; }
+function emptyOut() { return { kills: 0, xp: 0, gold: 0, deaths: 0, monsterCrits: 0, levels: 0, items: 0, salvaged: 0, salvageGold: 0, notable: [], dmgDealt: 0, dmgTaken: 0, mats: {}, sigils: 0, jewels: 0 }; }
 
 // ---------- STATE ----------
 function blankState(cls, now, seed) {
@@ -1065,7 +1090,7 @@ function shiftFight(g, d) {
 }
 
 if (typeof module !== 'undefined') module.exports = {
-  SIM_VERSION, ACTIONS, rand, afterArmor, afterPlayerArmor, ARMOR_K_FACTOR, TYPES, ELEMS, TYPE_NAMES, TYPE_RULES, ATTRS, ATTR_RULES, CLASSES, CLASS_KEYS, SPELLS, FOUND_SPELLS, CONDS, PASSIVES, PASSIVE_KEYS,
+  SIM_VERSION, ACTIONS, rand, afterArmor, afterPlayerArmor, ARMOR_K_FACTOR, MONSTER_CRIT_CHANCE, MONSTER_CRIT_MULTIPLIER, MONSTER_CRIT_REDUCTION_CAP, effectiveMonsterCritChance, rollMonsterCrit, TYPES, ELEMS, TYPE_NAMES, TYPE_RULES, ATTRS, ATTR_RULES, CLASSES, CLASS_KEYS, SPELLS, FOUND_SPELLS, CONDS, PASSIVES, PASSIVE_KEYS,
   EQUIP, DROP_SLOTS, ARMOR_SLOTS, SLOT_NAMES, WEAPONS, OFFHANDS, AFFIXES, ENCHANTS, AUGMENTS, SETS, ASC_MATS, MAT_NAMES, RARITIES, RARITY_NAMES, RANK,
   ZONES, ZONE_KEYS, MONSTERS, MONSTER_KEYS, BOSSES, BOSS_KEYS, mdef, makeItem, makeJewel, computeStats, refresh, availableSpells, advance, emptyOut,
   newGame, migrate, doAction, project, verdictSlot, fightBoss, bossRewards, catchUp, effIlvl, scaleOf, xpToNext, upgradeCost, salvageValue, salvageShards,

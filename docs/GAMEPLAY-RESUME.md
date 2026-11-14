@@ -1,3 +1,5 @@
+> **Implementation update (2026-11-13):** The code now applies Combat Model v1 k=0.00045, 8% monster crit at 3x, capped 35% reduction (unobtainable until itemization agreed), 30-second recovery and one-stage auto-retreat; `SIM_VERSION=8`. The table below is the **pre-implementation v7 audit**, retained for comparison, not the current state. Do not run the old experimental scripts without checking their v7 source anchors.
+
 # Godscar gameplay resumption: Paladin slice (2026-11-13)
 
 This is the current gameplay-handoff contract for `fytchx/Godscar@slice/paladin-defense`. It **overrides the older preview/browser directions for this branch**. It is not a UI design change.

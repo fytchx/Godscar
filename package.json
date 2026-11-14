@@ -10,6 +10,6 @@
   "scripts": {
     "build": "node preview/build.mjs",
     "start": "npm run build && node preview/server.mjs",
-    "test": "node --check web/src/sim.js && node --check web/src/ui.js && node web/test/actions.js && node web/test/evo.js && node web/test/migrate.js && node web/test/slice-mechanics.js"
+    "test": "node --check web/src/sim.js && node --check web/src/ui.js && node web/test/actions.js && node web/test/evo.js && node web/test/migrate.js && node web/test/slice-mechanics.js && node web/test/combat-model-v1.js"
   }
 }
