@@ -1,0 +1,26 @@
+name: Paladin gameplay slice tests
+on:
+  push:
+    branches:
+      - slice/paladin-defense
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  simulation:
+    name: Version-7 simulation regressions
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify exact source revision
+        run: |
+          echo "Repository: $GITHUB_REPOSITORY"
+          echo "Branch: $GITHUB_REF_NAME"
+          echo "Commit: $GITHUB_SHA"
+      - name: Run isolated simulation tests
+        run: npm test

@@ -1,3 +1,9 @@
+## 2026-11-13 UTC — Isolate gameplay regression CI from retired website build
+- **Changed:** New `.github/workflows/paladin-slice.yml` runs the existing `npm test` on the `slice/paladin-defense` branch and logs the repository, branch and exact commit.
+- **Why:** The inherited browser workflow fails `web/dist/index.html` generated-file diff before gameplay tests even start. This happened on the prior approved code commit too.
+- **Boundary:** No simulation rules, balance parameters, bot policy, saves, or UI deployment changed. The old browser workflow is intentionally not modified; verify the new gameplay job independently.
+- **Verification:** CI outcome to be checked against the commit containing this workflow.
+
 ## 2026-11-13 UTC — Re-establish verified Paladin gameplay source
 - Audited `fytchx/Godscar@slice/paladin-defense` at `4e04564d9a134c1f335971c2e52d540a0f5f73c6`; actual `SIM_VERSION=7`.
 - Added `docs/GAMEPLAY-RESUME.md` and updated entry-point documentation to separate currently implemented mechanics from accepted v1 experimental settings and to identify the approved Fight UI repository.
