@@ -1,3 +1,5 @@
+> **2026-11-13 gameplay-slice handoff:** For the Paladin simulation use `fytchx/Godscar@slice/paladin-defense`, audited source commit `4e04564d9a134c1f335971c2e52d540a0f5f73c6`, `SIM_VERSION=7`. Read [GAMEPLAY-RESUME.md](GAMEPLAY-RESUME.md). The older `preview/browser` and version-4 directions below are historical for this task; current Fight UI is isolated and not simulation-backed. This handoff makes **no sim, save, bot or UI changes**.
+
 # Project state and immediate handoff
 
 **Last documented:** 2026-11-09 (UTC). **Active source branch:** `preview/browser` (verify current commit before work). The website's sole intended entry screen is the selected combat + Character direction.

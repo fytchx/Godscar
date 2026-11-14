@@ -1,3 +1,5 @@
+> **Current gameplay-slice override (2026-11-13):** For work on `slice/paladin-defense`, first read [docs/GAMEPLAY-RESUME.md](docs/GAMEPLAY-RESUME.md). The older `preview/browser` website and `SIM_VERSION=4` instructions below are historical **for this slice**. The actual sim here exports version **7**. Current Fight UI: `fytchx/Godscar-playtest@ui/fight-skeleton` (mock data; integration not yet authorized).
+
 # START HERE | Godscar continuity guide
 
 ## Current direction

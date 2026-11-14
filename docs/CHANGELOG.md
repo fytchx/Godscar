@@ -1,3 +1,9 @@
+## 2026-11-13 UTC — Re-establish verified Paladin gameplay source
+- Audited `fytchx/Godscar@slice/paladin-defense` at `4e04564d9a134c1f335971c2e52d540a0f5f73c6`; actual `SIM_VERSION=7`.
+- Added `docs/GAMEPLAY-RESUME.md` and updated entry-point documentation to separate currently implemented mechanics from accepted v1 experimental settings and to identify the approved Fight UI repository.
+- **Documentation-only:** no combat logic, saves, UI wiring, tests, bot runs or deployment were performed during this handoff.
+- Next: run the current tests and stage-seeded optimizer/lazy baselines before implementing v1 values.
+
 ## 2026-11-09 UTC — Remove the retired systems-preview card
 - **Why:** The selected root screen still linked to the retired Arsenal route, which redirected back to the current page and advertised an older version.
 - **Changed:** Removed the card and its panel-visibility setting. The footer now identifies this as the combat prototype.
